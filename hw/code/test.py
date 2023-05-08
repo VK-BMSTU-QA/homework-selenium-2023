@@ -27,7 +27,6 @@ class TestLogin(BasePage):
 
     def test_login(self):
         helper.login()
-        # time.sleep(2)
         helper.logout()
 
 class TestFilmPage(BasePage):

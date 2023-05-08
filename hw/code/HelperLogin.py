@@ -55,12 +55,12 @@ class HelperLogin(BasePage):
         input_password = self.find((By.XPATH, X_INPUT_PASSWORD)).send_keys(self.PASSWD)
 
         self.find((By.XPATH, X_BUTTON_LOGIN)).click()
-        # try:
-        #     err = self.find((By.XPATH, '/html/body/div/div[1]/div/div/div/div[1]/form/div[1]/div'), 2).text
-        #     if err == 'Такой пользователь не зарегистирован':
-        #         self.register()
-        # except:
-        #     self.is_logined = True
+        try:
+            err = self.find((By.XPATH, '/html/body/div/div[1]/div/div/div/div[1]/form/div[1]/div'), 2).text
+            if err == 'Такой пользователь не зарегистирован':
+                self.register()
+        except:
+            self.is_logined = True
 
     def logout(self):
         self.del_session()

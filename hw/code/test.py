@@ -7,6 +7,7 @@ import shutil
 import sys
 import time
 import random
+import re
 
 from BasePage import BasePage
 from HelperLogin import HelperLogin
@@ -279,6 +280,7 @@ class TestCollectionPage(BasePage):
     url = URL
 
     def test_coll_has_film(self):
+        helper.logout()
         helper.login()
         self.render(f'{URL}/film/39/')
         time.sleep(2)
@@ -298,6 +300,7 @@ class TestCollectionPage(BasePage):
         helper.logout()
 
     def test_adding_film_in_col(self):
+        helper.logout()
         helper.login()
         self.render(f'{URL}/film/39/')
         time.sleep(2)
@@ -320,6 +323,7 @@ class TestCollectionPage(BasePage):
         helper.logout()
 
     def test_delete_film_from_col(self):
+        helper.logout()
         helper.login()
         self.render(f'{URL}/film/39/')
         time.sleep(2)
@@ -335,6 +339,7 @@ class TestCollectionPage(BasePage):
         helper.logout()
 
     def test_public_coll_has_film(self):
+        helper.logout()
         helper.login()
         self.render(f'{URL}/film/39/')
         time.sleep(2)
@@ -353,6 +358,7 @@ class TestCollectionPage(BasePage):
             raise Exception("wrong redirect", public_author_name, author_name)
 
     def test_public_coll_copy_url(self):
+        helper.logout()
         helper.login()
         self.render(f'{URL}/film/39/')
         time.sleep(2)
@@ -366,4 +372,3 @@ class TestCollectionPage(BasePage):
         self.find((By.CLASS_NAME, self.CLASS_SHARE_ICON)).click()
         self.find((By.XPATH, self.X_TOSTER))
         self.wait_hide((By.XPATH, self.X_TOSTER))
-

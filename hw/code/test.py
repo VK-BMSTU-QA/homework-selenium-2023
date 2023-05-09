@@ -17,6 +17,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from Driver import dvr
 
 URL = 'https://movie-gate.online'
 helper = HelperLogin(URL)
@@ -251,5 +252,118 @@ class TestSearch(BasePage):
         if (films_field != film_title):
             raise Exception("stings does not equal", films_field, film_title)
 
+class TestPerson(BasePage):
+    X_FIRST_FOUNDED_FILM = '/html/body/div/div/div[2]/div/div[2]/div/div/a/div/div[1]'
+    REDIRECTED_PAGE_URL = 'https://movie-gate.online/film/'
+    url = URL
 
+    def test_person(self):
+        self.render(f'{URL}/person/27/')
+        self.find((By.XPATH, self.X_FIRST_FOUNDED_FILM)).click()
+        pattern = self.REDIRECTED_PAGE_URL
+        current__url = dvr.get_instance().current_url
+        if (re.search(current__url, pattern)):
+            raise Exception("wrong redirect", pattern, current__url)
+
+
+class TestCollectionPage(BasePage):
+    CLASS_WILL_WATCH_ICON = "about-film__button_bookmark"
+    CLASS_TITLE_FILM_IN_WILL_WATCH = 'about-film__title'
+    CLASS_LIST_WILL_WATCH_ICON = 'about-film__button_plus'
+    CLASS_DELETE_BUTTON = 'film__delete-svg'
+    CLASS_AUTHOR_NAME = 'header__userbar-name'
+    CLASS_AVATAR_AUTHOR = 'header__avatar'
+    CLASS_SHARE_ICON = 'page__collection__share-icon'
+    X_TOSTER = '/html/body/div/div[2]'
+    REDIRECTED_PAGE_URL = 'https://movie-gate.online/film/'
+    url = URL
+
+    def test_coll_has_film(self):
+        helper.login()
+        self.render(f'{URL}/film/39/')
+        time.sleep(2)
+        film_title = self.find((By.CLASS_NAME, self.CLASS_TITLE_FILM_IN_WILL_WATCH)).text
+        self.find((By.CLASS_NAME, self.CLASS_WILL_WATCH_ICON)).click()
+
+        self.render(f'{URL}/user/collections/')
+        self.find((By.XPATH, "//div[contains(text(), 'Буду смотреть')]//preceding-sibling::div")).click()
+        xpath = f"//div[contains(text(), '{film_title}')]//preceding-sibling::div"
+        self.find((By.XPATH, xpath)).click()
+        pattern = self.REDIRECTED_PAGE_URL
+        current__url = dvr.get_instance().current_url
+        if (re.search(current__url, pattern)):
+            raise Exception("wrong redirect", pattern, current__url)
+
+        self.find((By.CLASS_NAME, self.CLASS_WILL_WATCH_ICON)).click()
+        helper.logout()
+
+    def test_adding_film_in_col(self):
+        helper.login()
+        self.render(f'{URL}/film/39/')
+        time.sleep(2)
+        film_title = self.find((By.CLASS_NAME, self.CLASS_TITLE_FILM_IN_WILL_WATCH)).text
+        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
+        time.sleep(2)
+        self.find((By.XPATH, "//div[contains(text(), 'Избранное')]")).click()
+
+        self.render(f'{URL}/user/collections/')
+        self.find((By.XPATH, "//div[contains(text(), 'Избранное')]//preceding-sibling::div")).click()
+        xpath = f"//div[contains(text(), '{film_title}')]//preceding-sibling::div"
+        self.find((By.XPATH, xpath)).click()
+        pattern = self.REDIRECTED_PAGE_URL
+        current__url = dvr.get_instance().current_url
+        if (re.search(current__url, pattern)):
+            raise Exception("wrong redirect", pattern, current__url)
+
+        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
+        self.find((By.XPATH, "//div[contains(text(), 'Избранное')]")).click()
+        helper.logout()
+
+    def test_delete_film_from_col(self):
+        helper.login()
+        self.render(f'{URL}/film/39/')
+        time.sleep(2)
+        film_title = self.find((By.CLASS_NAME, self.CLASS_TITLE_FILM_IN_WILL_WATCH)).text
+        self.find((By.CLASS_NAME, self.CLASS_WILL_WATCH_ICON)).click()
+
+        self.render(f'{URL}/user/collections/')
+        self.find((By.XPATH, "//div[contains(text(), 'Буду смотреть')]//preceding-sibling::div")).click()
+        xpath = f"//div[contains(text(), '{film_title}')]"
+        self.find((By.XPATH, xpath)).click()
+        self.find((By.CLASS_NAME, self.CLASS_DELETE_BUTTON)).click()
+
+        helper.logout()
+
+    def test_public_coll_has_film(self):
+        helper.login()
+        self.render(f'{URL}/film/39/')
+        time.sleep(2)
+        author_name = self.find((By.CLASS_NAME, self.CLASS_AUTHOR_NAME)).text
+        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
+        time.sleep(2)
+        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]")).click()
+        self.render(f'{URL}/user/collections/')
+        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]//preceding-sibling::div")).click()
+        helper.logout()
+
+        self.find((By.CLASS_NAME, self.CLASS_AVATAR_AUTHOR)).click()
+        xpath = f"//div[contains(text(), '{author_name}')]"
+        public_author_name = self.find((By.XPATH, xpath)).text
+        if (public_author_name != author_name):
+            raise Exception("wrong redirect", public_author_name, author_name)
+
+    def test_public_coll_copy_url(self):
+        helper.login()
+        self.render(f'{URL}/film/39/')
+        time.sleep(2)
+        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
+        time.sleep(2)
+        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]")).click()
+        self.render(f'{URL}/user/collections/')
+        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]//preceding-sibling::div")).click()
+        helper.logout()
+
+        self.find((By.CLASS_NAME, self.CLASS_SHARE_ICON)).click()
+        self.find((By.XPATH, self.X_TOSTER))
+        self.wait_hide((By.XPATH, self.X_TOSTER))
 

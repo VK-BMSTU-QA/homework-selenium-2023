@@ -20,6 +20,7 @@ class BasePage(object):
     driver = dvr.get_instance()
 
     def render(self, url):
+        self.driver.maximize_window()
         self.driver.get(url)
 
     def refresh(self):

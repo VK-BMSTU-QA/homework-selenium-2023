@@ -1,22 +1,9 @@
-from contextlib import contextmanager
-import allure
-import pytest
-from _pytest.fixtures import FixtureRequest
-import os
-import shutil
-import sys
 import time
-import random
 
 from BasePage import BasePage
 from HelperLogin import HelperLogin
-
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
 
 URL = 'https://movie-gate.online'
 helper = HelperLogin(URL)
@@ -29,6 +16,7 @@ class TestLogin(BasePage):
         helper.login()
         helper.logout()
 
+
 class TestFilmPage(BasePage):
     X_BUTTON_PLUS = '/html/body/div/div/div[1]/div/div[2]/div[7]/div/a/div'
     X_BUTTON_BOOKMARK = '/html/body/div/div/div[1]/div/div[2]/div[7]/a[2]/div'
@@ -37,7 +25,7 @@ class TestFilmPage(BasePage):
     X_PRODUCER_ON_PAGE = '/html/body/div/div/div[1]/div/div/div/div[1]'
     X_TOSTER = '/html/body/div/div[2]'
     X_TRAILER_CONTAINER = '/html/body/div/div[1]/div/div/iframe'
-    X_BUTTON_RATE_9 = '/html/body/div/div/div[2]/div[2]/div[2]/form/div/div[2]/div[1]/button[2]/div'
+    X_BUTTON_RATE_9 = '/html/body/div/div/div[2]/div[2]/div[2]/form/div/div[2]/div[1]/button[2]'
     X_BUTTON_RATE_1 = '/html/body/div/div/div[2]/div[2]/div[2]/form/div/div[2]/div[1]/button[10]'
     X_BUTTON_RATE_CONTAINER = '/html/body/div/div/div[2]/div[2]/div[2]/form/div/div[2]/div[1]'
     X_BUTTON_RATE_DELETE = '/html/body/div/div/div[2]/div[2]/div[2]/form/div/div[4]/button'
@@ -59,7 +47,7 @@ class TestFilmPage(BasePage):
     def test_click_producer(self):
         self.render(f'{URL}/film/1')
 
-        prod = self.find((By.XPATH, self.X_PRODUCER)).text.strip()
+        prod = self.find((By.XPATH, self.X_PRODUCER), 3).text.strip()
         self.find((By.XPATH, self.X_PRODUCER), 3).click()
 
         prod_on_page = self.find((By.XPATH, self.X_PRODUCER_ON_PAGE), 3).text.strip()
@@ -188,14 +176,15 @@ class TestFilmPage(BasePage):
         self.wait_hide((By.XPATH, self.X_TOSTER))
 
         title = self.find((By.XPATH, self.X_UPPER_REVIEW_TITLE)).text
-        if (title != self.TITLE):
+        if title != self.TITLE:
             raise Exception("names does not equal", title, self.TITLE)
 
         text = self.find((By.XPATH, self.X_UPPER_REVIEW_TEXT)).text
-        if (text != self.TEXT):
+        if text != self.TEXT:
             raise Exception("names does not equal", text, self.TEXT)
 
         helper.logout()
+
 
 class TestSearch(BasePage):
     X_INPUT_SEARCH = '/html/body/div/header/form/input'
@@ -217,8 +206,8 @@ class TestSearch(BasePage):
         self.render(URL)
         self.find((By.XPATH, self.X_INPUT_SEARCH)).send_keys(Keys.ENTER)
         title = self.find((By.XPATH, self.X_TITLE_SEARCH)).text
-        if (title != self.TITLE_SEARCH):
-            raise Exception("stings does not equal", text, self.TITLE_SEARCH)
+        if title != self.TITLE_SEARCH:
+            raise Exception("stings does not equal", title, self.TITLE_SEARCH)
 
     def test_check_empty(self):
         self.render(URL)
@@ -230,16 +219,16 @@ class TestSearch(BasePage):
         self.find((By.XPATH, self.X_INPUT_SEARCH)).send_keys(self.ALL_GROUP_SEARCH, Keys.ENTER)
 
         films_field = self.find((By.XPATH, self.X_SEARCH_GROUP_FILMS)).text
-        if (films_field != self.SEARCH_GROUP_FILMS):
-            raise Exception("stings does not equal", text, self.SEARCH_GROUP_FILMS)
+        if films_field != self.SEARCH_GROUP_FILMS:
+            raise Exception("stings does not equal", films_field, self.SEARCH_GROUP_FILMS)
 
         serials_field = self.find((By.XPATH, self.X_SEARCH_GROUP_SERAILS)).text
-        if (serials_field != self.SEARCH_GROUP_SERAILS):
-            raise Exception("stings does not equal", text, self.SEARCH_GROUP_SERAILS)
+        if serials_field != self.SEARCH_GROUP_SERAILS:
+            raise Exception("stings does not equal", serials_field, self.SEARCH_GROUP_SERAILS)
 
         persons_field = self.find((By.XPATH, self.X_SEARCH_GROUP_PERSONS)).text
-        if (persons_field != self.SEARCH_GROUP_PERSONS):
-            raise Exception("stings does not equal", text, self.SEARCH_GROUP_PERSONS)
+        if persons_field != self.SEARCH_GROUP_PERSONS:
+            raise Exception("stings does not equal", persons_field, self.SEARCH_GROUP_PERSONS)
 
     def test_correct_results(self):
         self.render(URL)
@@ -248,8 +237,75 @@ class TestSearch(BasePage):
         films_field = self.find((By.XPATH, self.X_FIRST_FOUNDED_TITLE)).text
         self.find((By.XPATH, self.X_FIRST_FOUNDED_FILM)).click()
         film_title = self.find((By.XPATH, self.X_TITLE_ON_FILM_PAGE)).text
-        if (films_field != film_title):
+        if films_field != film_title:
             raise Exception("stings does not equal", films_field, film_title)
 
 
+class TestNavigationPanel(BasePage):
+    X_LOGO = '/html/body/div/header/a[1]'
+    PREVIEW_FILM__CLASS_NAME = 'js-main-page-preview-film'
+    X_POPULAR_HEADER_BUTTON = '/html/body/div/header/a[2]'
+    COLLECTION_PAGE_TITLE_CLASS_NAME = 'page__collection__title'
+    POPULAR_COLLECTION_PAGE_TITLE = 'Популярное'
+    X_PREMIERES_HEADER_BUTTON = '/html/body/div/header/a[4]'
+    PREMIERES_PAGE_TITLE_CLASS_NAME = 'premiere-page__title'
+    PREMIERES_PAGE_TITLE = 'Премьеры'
+    X_COLLECTIONS_HEADER_BUTTON = '/html/body/div/header/a[3]'
+    COLLECTIONS_HEADER_BUTTON_CLASS_NAME = 'header__navlink js-header__navlink-my-colls'
+    MODAL_AUTH_CLASS_NAME = 'auth__wrapper'
+    X_LOGIN_BUTTON = '/html/body/div/header/a[5]'
+    USER_COLLECTION_PAGE_TITLE_CLASS_NAME = 'user-collection-list__title'
+    USER_COLLECTION_PAGE_TITLE = 'Ваши коллекции'
 
+    def test_click_logo(self):
+        self.render(f'{URL}/collection/tag-popular/')
+
+        self.find((By.XPATH, self.X_LOGO), 3).click()
+
+        assert self.find((By.CLASS_NAME, self.PREVIEW_FILM__CLASS_NAME), 3)
+
+    def test_click_popular_button(self):
+        self.render(URL)
+
+        self.find((By.XPATH, self.X_POPULAR_HEADER_BUTTON), 3).click()
+
+        title = self.find((By.CLASS_NAME, self.COLLECTION_PAGE_TITLE_CLASS_NAME), 3).text
+
+        if title != self.POPULAR_COLLECTION_PAGE_TITLE:
+            raise Exception("title does not equal", title, self.POPULAR_COLLECTION_PAGE_TITLE)
+
+    def test_click_premieres_button(self):
+        self.render(URL)
+
+        self.find((By.XPATH, self.X_PREMIERES_HEADER_BUTTON), 3).click()
+
+        title = self.find((By.CLASS_NAME, self.PREMIERES_PAGE_TITLE_CLASS_NAME), 3).text
+
+        if title != self.PREMIERES_PAGE_TITLE:
+            raise Exception("title does not equal", title, self.PREMIERES_PAGE_TITLE)
+
+    def test_click_collections_button_unauthorized(self):
+        self.render(URL)
+
+        self.find((By.XPATH, self.X_COLLECTIONS_HEADER_BUTTON), 3).click()
+
+        assert self.find((By.CLASS_NAME, self.MODAL_AUTH_CLASS_NAME), 3)
+
+    def test_click_login_button(self):
+        self.render(URL)
+
+        self.find((By.XPATH, self.X_LOGIN_BUTTON), 3).click()
+
+        assert self.find((By.CLASS_NAME, self.MODAL_AUTH_CLASS_NAME), 3)
+
+    def test_click_collections_button_authorized(self):
+        helper.login()
+
+        self.find((By.XPATH, self.X_COLLECTIONS_HEADER_BUTTON), 5).click()
+
+        title = self.find((By.CLASS_NAME, self.USER_COLLECTION_PAGE_TITLE_CLASS_NAME), 3).text
+
+        if title != self.USER_COLLECTION_PAGE_TITLE:
+            raise Exception("title does not equal", title, self.USER_COLLECTION_PAGE_TITLE)
+
+        helper.logout()

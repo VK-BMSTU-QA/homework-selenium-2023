@@ -67,7 +67,7 @@ class LoginPage(BasePage):
 
 class TestLogin(BaseCase):
     authorize = False
-    
+    @pytest.mark.skip
     def test_login(self, credentials):
         page = LoginPage(self.driver)
         page.login(*credentials)

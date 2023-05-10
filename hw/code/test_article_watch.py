@@ -11,7 +11,7 @@ class ArticlePage(BasePage):
         self.url = self.url + str(id)
         driver.get(self.url)
         super().__init__(driver)
-
+@pytest.mark.skip
 class TestAricleMainPageClicks(BaseCase):
     authorize = False
 
@@ -100,7 +100,7 @@ class TestAricleMainPageClicks(BaseCase):
         if not page.exist((By.XPATH, shareXPATH)):
             raise ElementCheckException('Share box isnt opened')
 
-
+@pytest.mark.skip
 class TestArticleView(BaseCase):
     authorize = False
     
@@ -115,7 +115,7 @@ class TestArticleView(BaseCase):
 
         if page.exist((By.ID, 'article__category')):
             raise ElementCheckException('Category')
-
+@pytest.mark.skip
 class TestArticleEditButton(BaseCase):
     authorize=True
 

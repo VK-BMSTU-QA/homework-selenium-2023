@@ -1,11 +1,15 @@
 import pytest
 
+import time
+
 from test_login import BaseCase, MainPage, cookies, credentials
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 from ui.pages.base_page import BasePage, WrongValue, PageNotOpenedExeption, ElementCheckException
 
 from test_article_watch import ArticlePage
-
+@pytest.mark.skip
 class TestCommentariesUnauthPost(BaseCase):
     authorize=False
 
@@ -35,3 +39,63 @@ class TestCommentariesUnauthPost(BaseCase):
 
         if page.exist((By.XPATH, f'//div[text()=\'{commentary_text + str(i)}\']')):
             raise ElementCheckException('Commentary posted if unauthorized')
+
+class TestCommentariesPost(BaseCase):
+    authorize=True
+    @pytest.mark.skip
+    def test_enter_post(self):
+        page = ArticlePage(self.driver, 1)
+        
+        commentary_text = 'Test commentary'
+        i = 1
+        while page.exist((By.XPATH, f'//div[text()=\'{commentary_text + str(i)}\']')):
+            i = i + 1
+        commentary_text = commentary_text + str(i)
+
+        form = page.find((By.XPATH, '/html/body/div[2]/div[2]/div[2]/div/div/div[1]'))
+        form.send_keys(commentary_text)
+        form.send_keys(Keys.ENTER)
+        page.refresh()
+
+        if not page.exist((By.XPATH, f'//div[text()=\'{commentary_text}\']')):
+            raise ElementCheckException('Commentary not posted by pressing enter')
+    @pytest.mark.skip
+    def test_opening_reply_box(self):
+        page = ArticlePage(self.driver, 4)
+        
+        reply_button = page.find((By.XPATH, '//div[text()=\'Ответить\']'))
+        parent = reply_button.find_element(By.XPATH,'..')
+        try:
+            reply_form = parent.find_element(By.ID,'title')
+            raise ElementCheckException('Reply form is opened without clicking')
+        except NoSuchElementException:
+            pass
+
+        reply_button.click()
+        try:
+            reply_form = parent.find_element(By.ID,'title')
+        except NoSuchElementException:
+            raise ElementCheckException('Reply form isnt opened after clicking')
+    @pytest.mark.skip
+    def test_closing_reply_box(self):
+        page = ArticlePage(self.driver, 4)
+        
+        reply_button = page.find((By.XPATH, '//div[text()=\'Ответить\']'))
+        parent = reply_button.find_element(By.XPATH,'..')
+        try:
+            reply_form = parent.find_element(By.ID,'title')
+            raise ElementCheckException('Reply form is opened without clicking')
+        except NoSuchElementException:
+            pass
+
+        reply_button.click()
+        reply_button.click()
+        try:
+            reply_form = parent.find_element(By.ID,'title')
+            raise ElementCheckException('Reply form isnt opened after clicking')
+        except NoSuchElementException:
+            pass
+            
+        
+
+

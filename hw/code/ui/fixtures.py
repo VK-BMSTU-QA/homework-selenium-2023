@@ -28,6 +28,8 @@ def driver(config, temp_dir):
     selenoid = config['selenoid']
     vnc = config['vnc']
     options = Options()
+    options.add_argument('--ignore-ssl-errors=yes')
+    options.add_argument('--ignore-certificate-errors')
     options.add_experimental_option("prefs", {"download.default_directory": temp_dir})
     if selenoid:
         capabilities = {

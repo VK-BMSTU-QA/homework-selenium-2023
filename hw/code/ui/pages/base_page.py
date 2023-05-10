@@ -10,11 +10,13 @@ from selenium.webdriver.support import expected_conditions as EC
 class PageNotOpenedExeption(Exception):
     pass
 
+class WrongValue(Exception):
+    pass
 
 class BasePage(object):
 
     locators = basic_locators.BasePageLocators()
-    url = 'https://target-sandbox.my.com/'
+    url = 'https://95.163.213.142/article/'
 
     def is_opened(self, timeout=15):
         started = time.time()

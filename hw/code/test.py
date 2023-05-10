@@ -21,7 +21,7 @@ class TestFilmPage(BasePage):
     X_BUTTON_PLUS = '/html/body/div/div/div[1]/div/div[2]/div[7]/div/a/div'
     X_BUTTON_BOOKMARK = '/html/body/div/div/div[1]/div/div[2]/div[7]/a[2]/div'
     X_BUTTON_TRAILER = '/html/body/div/div/div[1]/div/div[2]/div[7]/a[1]/div'
-    X_PRODUCER = '/html/body/div/div/div[1]/div/div[2]/div[5]/div[2]/a'
+    X_PRODUCER = '/html/body/div/div/div[1]/div/div[2]/div[5]/div[2]'
     X_PRODUCER_ON_PAGE = '/html/body/div/div/div[1]/div/div/div/div[1]'
     X_TOSTER = '/html/body/div/div[2]'
     X_TRAILER_CONTAINER = '/html/body/div/div[1]/div/div/iframe'
@@ -48,7 +48,7 @@ class TestFilmPage(BasePage):
         self.render(f'{URL}/film/1')
 
         prod = self.find((By.XPATH, self.X_PRODUCER), 3).text.strip()
-        self.find((By.XPATH, self.X_PRODUCER), 3).click()
+        self.find((By.XPATH, self.X_PRODUCER), 5).click()
 
         prod_on_page = self.find((By.XPATH, self.X_PRODUCER_ON_PAGE), 3).text.strip()
         if prod != prod_on_page:
@@ -243,7 +243,7 @@ class TestSearch(BasePage):
 
 class TestNavigationPanel(BasePage):
     X_LOGO = '/html/body/div/header/a[1]'
-    PREVIEW_FILM__CLASS_NAME = 'js-main-page-preview-film'
+    PREVIEW_FILM_CLASS_NAME = 'js-main-page-preview-film'
     X_POPULAR_HEADER_BUTTON = '/html/body/div/header/a[2]'
     COLLECTION_PAGE_TITLE_CLASS_NAME = 'page__collection__title'
     POPULAR_COLLECTION_PAGE_TITLE = 'Популярное'
@@ -262,7 +262,7 @@ class TestNavigationPanel(BasePage):
 
         self.find((By.XPATH, self.X_LOGO), 3).click()
 
-        assert self.find((By.CLASS_NAME, self.PREVIEW_FILM__CLASS_NAME), 3)
+        assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_CLASS_NAME), 3)
 
     def test_click_popular_button(self):
         self.render(URL)
@@ -309,3 +309,81 @@ class TestNavigationPanel(BasePage):
             raise Exception("title does not equal", title, self.USER_COLLECTION_PAGE_TITLE)
 
         helper.logout()
+
+
+class TestMainPage(BasePage):
+    PREVIEW_FILM_CLASS_NAME = 'js-main-page-preview-film'
+    PREVIEW_FILM_TITLE_CLASS_NAME = 'preview-film__film-title'
+
+    PAGE_COLLECTION_TITLE_CLASS_NAME = 'page__collection__title'
+
+    X_POPULAR_SECTION_BUTTON = '/html/body/div/div/div[2]/div[1]/div/div[1]'
+    X_POPULAR_SECTION_SLIDER_FILM = '/html/body/div/div/div[2]/div[1]/div/div[2]/div/div[2]'
+    PAGE_POPULAR_COLLECTION_TITLE = 'Популярное'
+
+    X_IN_CINEMA_SECTION_BUTTON = '/html/body/div/div/div[2]/div[2]/div/div[1]'
+    X_IN_CINEMA_SECTION_SLIDER_FILM = '/html/body/div/div/div[2]/div[2]/div/div[2]/div/div[1]'
+    PAGE_IN_CINEMA_COLLECTION_TITLE = 'Сейчас в кино'
+
+    X_GENRES_SECTION_BUTTON = '/html/body/div/div/div[2]/div[3]/div/div[1]'
+    X_GENRES_SECTION_SLIDER_GENRE = '/html/body/div/div/div[2]/div[3]/div/div[2]/div/div[1]'
+    PAGE_GENRES_COLLECTION_TITLE = 'Жанры'
+
+    def test_preview_film_existing(self):
+        self.render(URL)
+
+        assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_CLASS_NAME), 3)
+
+        assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_TITLE_CLASS_NAME), 3)
+
+    def test_popular_section(self):
+        self.render(URL)
+
+        assert self.find((By.XPATH, self.X_POPULAR_SECTION_SLIDER_FILM), 3)
+
+        self.find((By.XPATH, self.X_POPULAR_SECTION_BUTTON), 3).click()
+
+        title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
+
+        if title != self.PAGE_POPULAR_COLLECTION_TITLE:
+            raise Exception("title does not equal", title, self.PAGE_POPULAR_COLLECTION_TITLE)
+
+    def test_in_cinema_section(self):
+        self.render(URL)
+
+        assert self.find((By.XPATH, self.X_IN_CINEMA_SECTION_SLIDER_FILM), 3)
+
+        self.find((By.XPATH, self.X_IN_CINEMA_SECTION_BUTTON), 3).click()
+
+        title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
+
+        if title != self.PAGE_IN_CINEMA_COLLECTION_TITLE:
+            raise Exception("title does not equal", title, self.PAGE_IN_CINEMA_COLLECTION_TITLE)
+
+    def test_genres_section(self):
+        self.render(URL)
+
+        assert self.find((By.XPATH, self.X_GENRES_SECTION_SLIDER_GENRE), 3)
+
+        self.find((By.XPATH, self.X_GENRES_SECTION_BUTTON), 3).click()
+
+        title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
+
+        if title != self.PAGE_GENRES_COLLECTION_TITLE:
+            raise Exception("title does not equal", title, self.PAGE_GENRES_COLLECTION_TITLE)
+
+
+class TestPremieresPage(BasePage):
+    X_PREMIERES_TITLE_CLASS_NAME = 'premiere-page__title'
+    PREMIERES_TITLE = 'Премьеры'
+    PREMIERES_DAY_CLASS_NAME = 'premiere-day'
+
+    def test_premieres_exist(self):
+        self.render(f'{URL}/premieres/')
+
+        title = self.find((By.CLASS_NAME, self.X_PREMIERES_TITLE_CLASS_NAME), 3).text
+
+        if title != self.PREMIERES_TITLE:
+            raise Exception("title does not equal", title, self.PREMIERES_TITLE)
+
+        assert self.find((By.CLASS_NAME, self.PREMIERES_DAY_CLASS_NAME), 3)

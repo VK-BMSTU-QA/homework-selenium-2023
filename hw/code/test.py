@@ -1,9 +1,11 @@
 import time
+import re
 
 from BasePage import BasePage
 from HelperLogin import HelperLogin
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from Driver import dvr
 
 URL = 'https://movie-gate.online'
 helper = HelperLogin(URL)
@@ -240,6 +242,87 @@ class TestSearch(BasePage):
         if films_field != film_title:
             raise Exception("stings does not equal", films_field, film_title)
 
+class TestPerson(BasePage):
+    X_FIRST_FOUNDED_FILM = '/html/body/div/div/div[2]/div/div[2]/div/div/a/div/div[1]'
+    REDIRECTED_PAGE_URL = 'https://movie-gate.online/film/'
+    url = URL
+
+    def test_person(self):
+        self.render(f'{URL}/person/27/')
+        self.find((By.XPATH, self.X_FIRST_FOUNDED_FILM)).click()
+        pattern = self.REDIRECTED_PAGE_URL
+        current__url = dvr.get_instance().current_url
+        if (re.search(current__url, pattern)):
+            raise Exception("wrong redirect", pattern, current__url)
+
+class TestNavigationPanel(BasePage):
+    X_LOGO = '/html/body/div/header/a[1]'
+    PREVIEW_FILM_CLASS_NAME = 'js-main-page-preview-film'
+    X_POPULAR_HEADER_BUTTON = '/html/body/div/header/a[2]'
+    COLLECTION_PAGE_TITLE_CLASS_NAME = 'page__collection__title'
+    POPULAR_COLLECTION_PAGE_TITLE = 'Популярное'
+    X_PREMIERES_HEADER_BUTTON = '/html/body/div/header/a[4]'
+    PREMIERES_PAGE_TITLE_CLASS_NAME = 'premiere-page__title'
+    PREMIERES_PAGE_TITLE = 'Премьеры'
+    X_COLLECTIONS_HEADER_BUTTON = '/html/body/div/header/a[3]'
+    COLLECTIONS_HEADER_BUTTON_CLASS_NAME = 'header__navlink js-header__navlink-my-colls'
+    MODAL_AUTH_CLASS_NAME = 'auth__wrapper'
+    X_LOGIN_BUTTON = '/html/body/div/header/a[5]'
+    USER_COLLECTION_PAGE_TITLE_CLASS_NAME = 'user-collection-list__title'
+    USER_COLLECTION_PAGE_TITLE = 'Ваши коллекции'
+
+    def test_click_logo(self):
+        self.render(f'{URL}/collection/tag-popular/')
+
+        self.find((By.XPATH, self.X_LOGO), 3).click()
+
+        assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_CLASS_NAME), 3)
+
+    def test_click_popular_button(self):
+        self.render(URL)
+
+        self.find((By.XPATH, self.X_POPULAR_HEADER_BUTTON), 3).click()
+
+        title = self.find((By.CLASS_NAME, self.COLLECTION_PAGE_TITLE_CLASS_NAME), 3).text
+
+        if title != self.POPULAR_COLLECTION_PAGE_TITLE:
+            raise Exception("title does not equal", title, self.POPULAR_COLLECTION_PAGE_TITLE)
+
+    def test_click_premieres_button(self):
+        self.render(URL)
+
+        self.find((By.XPATH, self.X_PREMIERES_HEADER_BUTTON), 3).click()
+
+        title = self.find((By.CLASS_NAME, self.PREMIERES_PAGE_TITLE_CLASS_NAME), 3).text
+
+        if title != self.PREMIERES_PAGE_TITLE:
+            raise Exception("title does not equal", title, self.PREMIERES_PAGE_TITLE)
+
+    def test_click_collections_button_unauthorized(self):
+        self.render(URL)
+
+        self.find((By.XPATH, self.X_COLLECTIONS_HEADER_BUTTON), 3).click()
+
+        assert self.find((By.CLASS_NAME, self.MODAL_AUTH_CLASS_NAME), 3)
+
+    def test_click_login_button(self):
+        self.render(URL)
+
+        self.find((By.XPATH, self.X_LOGIN_BUTTON), 3).click()
+
+        assert self.find((By.CLASS_NAME, self.MODAL_AUTH_CLASS_NAME), 3)
+
+    def test_click_collections_button_authorized(self):
+        helper.login()
+
+        self.find((By.XPATH, self.X_COLLECTIONS_HEADER_BUTTON), 5).click()
+
+        title = self.find((By.CLASS_NAME, self.USER_COLLECTION_PAGE_TITLE_CLASS_NAME), 3).text
+
+        if title != self.USER_COLLECTION_PAGE_TITLE:
+            raise Exception("title does not equal", title, self.USER_COLLECTION_PAGE_TITLE)
+
+        helper.logout()
 
 class TestNavigationPanel(BasePage):
     X_LOGO = '/html/body/div/header/a[1]'
@@ -372,6 +455,187 @@ class TestMainPage(BasePage):
         if title != self.PAGE_GENRES_COLLECTION_TITLE:
             raise Exception("title does not equal", title, self.PAGE_GENRES_COLLECTION_TITLE)
 
+class TestMainPage(BasePage):
+    PREVIEW_FILM_CLASS_NAME = 'js-main-page-preview-film'
+    PREVIEW_FILM_TITLE_CLASS_NAME = 'preview-film__film-title'
+
+    PAGE_COLLECTION_TITLE_CLASS_NAME = 'page__collection__title'
+
+    X_POPULAR_SECTION_BUTTON = '/html/body/div/div/div[2]/div[1]/div/div[1]'
+    X_POPULAR_SECTION_SLIDER_FILM = '/html/body/div/div/div[2]/div[1]/div/div[2]/div/div[2]'
+    PAGE_POPULAR_COLLECTION_TITLE = 'Популярное'
+
+    X_IN_CINEMA_SECTION_BUTTON = '/html/body/div/div/div[2]/div[2]/div/div[1]'
+    X_IN_CINEMA_SECTION_SLIDER_FILM = '/html/body/div/div/div[2]/div[2]/div/div[2]/div/div[1]'
+    PAGE_IN_CINEMA_COLLECTION_TITLE = 'Сейчас в кино'
+
+    X_GENRES_SECTION_BUTTON = '/html/body/div/div/div[2]/div[3]/div/div[1]'
+    X_GENRES_SECTION_SLIDER_GENRE = '/html/body/div/div/div[2]/div[3]/div/div[2]/div/div[1]'
+    PAGE_GENRES_COLLECTION_TITLE = 'Жанры'
+
+    def test_preview_film_existing(self):
+        self.render(URL)
+
+        assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_CLASS_NAME), 3)
+
+        assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_TITLE_CLASS_NAME), 3)
+
+    def test_popular_section(self):
+        self.render(URL)
+
+        assert self.find((By.XPATH, self.X_POPULAR_SECTION_SLIDER_FILM), 3)
+
+        self.find((By.XPATH, self.X_POPULAR_SECTION_BUTTON), 3).click()
+
+        title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
+
+        if title != self.PAGE_POPULAR_COLLECTION_TITLE:
+            raise Exception("title does not equal", title, self.PAGE_POPULAR_COLLECTION_TITLE)
+
+    def test_in_cinema_section(self):
+        self.render(URL)
+
+        assert self.find((By.XPATH, self.X_IN_CINEMA_SECTION_SLIDER_FILM), 3)
+
+        self.find((By.XPATH, self.X_IN_CINEMA_SECTION_BUTTON), 3).click()
+
+        title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
+
+        if title != self.PAGE_IN_CINEMA_COLLECTION_TITLE:
+            raise Exception("title does not equal", title, self.PAGE_IN_CINEMA_COLLECTION_TITLE)
+
+    def test_genres_section(self):
+        self.render(URL)
+
+        assert self.find((By.XPATH, self.X_GENRES_SECTION_SLIDER_GENRE), 3)
+
+        self.find((By.XPATH, self.X_GENRES_SECTION_BUTTON), 3).click()
+
+        title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
+
+        if title != self.PAGE_GENRES_COLLECTION_TITLE:
+            raise Exception("title does not equal", title, self.PAGE_GENRES_COLLECTION_TITLE)
+
+class TestCollectionPage(BasePage):
+    CLASS_WILL_WATCH_ICON = "about-film__button_bookmark"
+    CLASS_TITLE_FILM_IN_WILL_WATCH = 'about-film__title'
+    CLASS_LIST_WILL_WATCH_ICON = 'about-film__button_plus'
+    CLASS_DELETE_BUTTON = 'film__delete-svg'
+    CLASS_AUTHOR_NAME = 'header__userbar-name'
+    CLASS_AVATAR_AUTHOR = 'header__avatar'
+    CLASS_SHARE_ICON = 'page__collection__share-icon'
+    X_TOSTER = '/html/body/div/div[2]'
+    REDIRECTED_PAGE_URL = 'https://movie-gate.online/film/'
+    url = URL
+
+    def test_coll_has_film(self):
+        helper.logout()
+        helper.login()
+        self.render(f'{URL}/film/39/')
+        time.sleep(2)
+        film_title = self.find((By.CLASS_NAME, self.CLASS_TITLE_FILM_IN_WILL_WATCH)).text
+        self.find((By.CLASS_NAME, self.CLASS_WILL_WATCH_ICON)).click()
+
+        self.render(f'{URL}/user/collections/')
+        self.find((By.XPATH, "//div[contains(text(), 'Буду смотреть')]//preceding-sibling::div")).click()
+        xpath = f"//div[contains(text(), '{film_title}')]//preceding-sibling::div"
+        self.find((By.XPATH, xpath)).click()
+        pattern = self.REDIRECTED_PAGE_URL
+        current__url = dvr.get_instance().current_url
+        if (re.search(current__url, pattern)):
+            raise Exception("wrong redirect", pattern, current__url)
+
+        self.find((By.CLASS_NAME, self.CLASS_WILL_WATCH_ICON)).click()
+        helper.logout()
+
+    def test_adding_film_in_col(self):
+        helper.logout()
+        helper.login()
+        self.render(f'{URL}/film/39/')
+        time.sleep(2)
+        film_title = self.find((By.CLASS_NAME, self.CLASS_TITLE_FILM_IN_WILL_WATCH)).text
+        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
+        time.sleep(2)
+        self.find((By.XPATH, "//div[contains(text(), 'Избранное')]")).click()
+
+        self.render(f'{URL}/user/collections/')
+        self.find((By.XPATH, "//div[contains(text(), 'Избранное')]//preceding-sibling::div")).click()
+        xpath = f"//div[contains(text(), '{film_title}')]//preceding-sibling::div"
+        self.find((By.XPATH, xpath)).click()
+        pattern = self.REDIRECTED_PAGE_URL
+        current__url = dvr.get_instance().current_url
+        if (re.search(current__url, pattern)):
+            raise Exception("wrong redirect", pattern, current__url)
+
+        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
+        self.find((By.XPATH, "//div[contains(text(), 'Избранное')]")).click()
+        helper.logout()
+
+    def test_delete_film_from_col(self):
+        helper.logout()
+        helper.login()
+        self.render(f'{URL}/film/39/')
+        time.sleep(2)
+        film_title = self.find((By.CLASS_NAME, self.CLASS_TITLE_FILM_IN_WILL_WATCH)).text
+        self.find((By.CLASS_NAME, self.CLASS_WILL_WATCH_ICON)).click()
+
+        self.render(f'{URL}/user/collections/')
+        self.find((By.XPATH, "//div[contains(text(), 'Буду смотреть')]//preceding-sibling::div")).click()
+        xpath = f"//div[contains(text(), '{film_title}')]"
+        self.find((By.XPATH, xpath)).click()
+        self.find((By.CLASS_NAME, self.CLASS_DELETE_BUTTON)).click()
+
+        helper.logout()
+
+    def test_public_coll_has_film(self):
+        helper.logout()
+        helper.login()
+        self.render(f'{URL}/film/39/')
+        time.sleep(2)
+        author_name = self.find((By.CLASS_NAME, self.CLASS_AUTHOR_NAME)).text
+        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
+        time.sleep(2)
+        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]")).click()
+        self.render(f'{URL}/user/collections/')
+        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]//preceding-sibling::div")).click()
+        helper.logout()
+
+        self.find((By.CLASS_NAME, self.CLASS_AVATAR_AUTHOR)).click()
+        xpath = f"//div[contains(text(), '{author_name}')]"
+        public_author_name = self.find((By.XPATH, xpath)).text
+        if (public_author_name != author_name):
+            raise Exception("wrong redirect", public_author_name, author_name)
+
+    def test_public_coll_copy_url(self):
+        helper.logout()
+        helper.login()
+        self.render(f'{URL}/film/39/')
+        time.sleep(2)
+        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
+        time.sleep(2)
+        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]")).click()
+        self.render(f'{URL}/user/collections/')
+        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]//preceding-sibling::div")).click()
+        helper.logout()
+
+        self.find((By.CLASS_NAME, self.CLASS_SHARE_ICON)).click()
+        self.find((By.XPATH, self.X_TOSTER))
+        self.wait_hide((By.XPATH, self.X_TOSTER))
+
+class TestPremieresPage(BasePage):
+    X_PREMIERES_TITLE_CLASS_NAME = 'premiere-page__title'
+    PREMIERES_TITLE = 'Премьеры'
+    PREMIERES_DAY_CLASS_NAME = 'premiere-day'
+
+    def test_premieres_exist(self):
+        self.render(f'{URL}/premieres/')
+
+        title = self.find((By.CLASS_NAME, self.X_PREMIERES_TITLE_CLASS_NAME), 3).text
+
+        if title != self.PREMIERES_TITLE:
+            raise Exception("title does not equal", title, self.PREMIERES_TITLE)
+
+        assert self.find((By.CLASS_NAME, self.PREMIERES_DAY_CLASS_NAME), 3)
 
 class TestPremieresPage(BasePage):
     X_PREMIERES_TITLE_CLASS_NAME = 'premiere-page__title'

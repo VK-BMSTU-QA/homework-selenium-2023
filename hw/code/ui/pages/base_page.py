@@ -20,7 +20,7 @@ class ElementCheckException(Exception):
 class BasePage(object):
 
     locators = basic_locators.BasePageLocators()
-    url = 'https://95.163.213.142/article/'
+    url = 'https://95.163.213.142/'
 
     def is_opened(self, timeout=15):
         started = time.time()
@@ -47,9 +47,9 @@ class BasePage(object):
         go_button = self.find(self.locators.GO_BUTTON_LOCATOR)
         go_button.click()
 
-    def exist(self,locator):
+    def exist(self,locator, timeout=5):
         try:
-            self.find(locator,0)
+            self.find(locator,timeout)
         except TimeoutException:
             return False
         return True

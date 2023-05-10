@@ -1,14 +1,25 @@
 import creds
 
+import time
+
 import pytest
 from test_login import BaseCase, MainPage
 from selenium.webdriver.common.by import By
-from ui.pages.base_page import WrongValue, PageNotOpenedExeption, ElementCheckException
+from ui.pages.base_page import BasePage, WrongValue, PageNotOpenedExeption, ElementCheckException
 
-class TestAricleView(BaseCase):
+class ArticlePage(BasePage):
+    url = 'https://95.163.213.142/article/'
+
+    def __init__(self, driver, id: int):
+        self.url = self.url + str(id)
+        driver.get(self.url)
+        super().__init__(driver)
+
+
+class TestAricleMainPageClicks(BaseCase):
     authorize = False
 
-    @pytest.mark.skip
+    
     def test_title_click(self):
         timeout = 15
         page = MainPage(self.driver)
@@ -27,7 +38,7 @@ class TestAricleView(BaseCase):
         if title != new_title:
             raise WrongValue(f'title must be {title} but it is {new_title}')
 
-    @pytest.mark.skip
+    
     def test_commentary_click(self):
         timeout = 15
         page = MainPage(self.driver)
@@ -51,7 +62,7 @@ class TestAricleView(BaseCase):
         if title != new_title:
             raise WrongValue(f'title must be {title} but it is {new_title}')
 
-    @pytest.mark.skip
+    
     def test_category_click(self):
         timeout = 15
         page = MainPage(self.driver)
@@ -62,7 +73,7 @@ class TestAricleView(BaseCase):
         if not page.driver.current_url.startswith(url):
             raise PageNotOpenedExeption(f'{url} did not open in {timeout} sec, current url {self.driver.current_url}')
 
-    @pytest.mark.skip
+    
     def test_author_click(self):
         timeout = 15
         page = MainPage(self.driver)
@@ -73,7 +84,7 @@ class TestAricleView(BaseCase):
         if not page.driver.current_url.startswith(url):
             raise PageNotOpenedExeption(f'{url} did not open in {timeout} sec, current url {self.driver.current_url}')
 
-    @pytest.mark.skip
+    
     def test_tag_click(self):
         timeout = 15
         page = MainPage(self.driver)
@@ -97,3 +108,19 @@ class TestAricleView(BaseCase):
         page.click((By.XPATH, '/html/body/div[2]/div[2]/div[1]/div[2]/div[2]/div[3]'), timeout)
         if not page.exist((By.XPATH, shareXPATH)):
             raise ElementCheckException('Share box isnt opened')
+
+
+class TestArticleView(BaseCase):
+    authorize = False
+    
+    def test_category_shown(self):
+        page = ArticlePage(self.driver, 8)
+        
+        if not page.exist((By.ID, 'article__category')):
+            raise ElementCheckException('No category')
+    
+    def test_category_not_shown(self):
+        page = ArticlePage(self.driver, 3)
+
+        if page.exist((By.ID, 'article__category')):
+            raise ElementCheckException('Category')

@@ -61,7 +61,7 @@ class LoginPage(BasePage):
         self.find((By.ID, 'login_form__email_login')).send_keys(user)
         self.find((By.ID, 'login_form__password')).send_keys(password)
 
-        self.click((By.XPATH, '//*[@id="login_form__submit_button"]'))
+        self.click((By.ID, 'login_form__submit_button'))
 
         return MainPage(self.driver)
 

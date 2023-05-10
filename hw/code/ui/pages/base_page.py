@@ -5,12 +5,16 @@ from selenium.webdriver.remote.webelement import WebElement
 from ui.locators import basic_locators
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 
 class PageNotOpenedExeption(Exception):
     pass
 
 class WrongValue(Exception):
+    pass
+
+class ElementCheckException(Exception):
     pass
 
 class BasePage(object):
@@ -42,6 +46,13 @@ class BasePage(object):
         elem.send_keys(query)
         go_button = self.find(self.locators.GO_BUTTON_LOCATOR)
         go_button.click()
+
+    def exist(self,locator):
+        try:
+            self.find(locator,0)
+        except TimeoutException:
+            return False
+        return True
 
     @allure.step('Click')
     def click(self, locator, timeout=None) -> WebElement:

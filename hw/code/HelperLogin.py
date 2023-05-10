@@ -1,6 +1,6 @@
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.common.action_chains import ActionChains
 from contextlib import contextmanager
 
 from BasePage import BasePage
@@ -64,3 +64,11 @@ class HelperLogin(BasePage):
 
     def logout(self):
         self.del_session()
+        # X_PROFILE1 = '/html/body/div/header/div/div[1]/img'
+        # X_BUTTON_LOGOUT = '/html/body/div/header/div/div[2]/a[4]'
+        # menu = self.find((By.XPATH, X_PROFILE1))
+        # actions = ActionChains(self.driver)
+        # actions.move_to_element(menu)
+        # actions.click_and_hold()
+        # actions.perform()
+        # self.find((By.XPATH, X_BUTTON_LOGOUT)).click()

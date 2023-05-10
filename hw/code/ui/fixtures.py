@@ -56,8 +56,11 @@ def driver(config, temp_dir):
 
 
 def get_driver(browser_name):
+    options = Options()
+    options.add_argument('--ignore-ssl-errors=yes')
+    options.add_argument('--ignore-certificate-errors')
     if browser_name == 'chrome':
-        browser = webdriver.Chrome(executable_path=ChromeDriverManager().install())
+        browser = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=options)
     elif browser_name == 'firefox':
         browser = webdriver.Firefox(executable_path=GeckoDriverManager().install())
     else:

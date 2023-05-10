@@ -1,11 +1,14 @@
 import time, os
 
+import creds
+
 import pytest
 from _pytest.fixtures import FixtureRequest
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
 
 from ui.fixtures import get_driver
-from ui.pages.base_page import BasePage, PageNotOpenedExeption
+from ui.pages.base_page import BasePage, PageNotOpenedExeption, ElementCheckException
 
 
 class BaseCase:
@@ -24,7 +27,6 @@ class BaseCase:
                 self.driver.add_cookie(cookie)
 
             self.driver.refresh()
-            self.main_page = MainPage(driver)
 
 @pytest.fixture(scope='session')
 def credentials():
@@ -43,7 +45,7 @@ def cookies(credentials, config):
     driver.get(config['url'])
     login_page = LoginPage(driver)
     login_page.login(*credentials)
-
+    WebDriverWait(driver, timeout=5).until(lambda d: d.get_cookie('session_id'))
     cookies = driver.get_cookies()
     driver.quit()
     return cookies
@@ -63,3 +65,9 @@ class LoginPage(BasePage):
 
         return MainPage(self.driver)
 
+class TestLogin(BaseCase):
+    authorize = False
+    
+    def test_login(self, credentials):
+        page = LoginPage(self.driver)
+        page.login(*credentials)

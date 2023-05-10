@@ -47,7 +47,7 @@ class BasePage(object):
         go_button = self.find(self.locators.GO_BUTTON_LOCATOR)
         go_button.click()
 
-    def exist(self,locator, timeout=5):
+    def exist(self,locator, timeout=1):
         try:
             self.find(locator,timeout)
         except TimeoutException:

@@ -30,13 +30,7 @@ class BaseCase:
 
 @pytest.fixture(scope='session')
 def credentials():
-    script_dir = os.path.dirname(__file__)
-    rel_path = "/creds"
-    with open(script_dir + rel_path, 'r') as f:
-        user = f.readline().strip()
-        password = f.readline().strip()
-
-    return user, password
+    return creds.email, creds.password
 
 
 @pytest.fixture(scope='session')

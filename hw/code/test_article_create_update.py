@@ -38,7 +38,7 @@ class TestArticlCreate(BaseCase):
         new_value = select_menu.first_selected_option.get_attribute("value")
 
         if new_value != text_category:
-            raise ElementCheckException('Category dont selected')
+            raise ElementCheckException('Category isnt selected')
 
     def test_tag_selected(self):
         timeout = 20
@@ -54,7 +54,7 @@ class TestArticlCreate(BaseCase):
         text_el_value = text_el.text
 
         if text_el_value != text_tag:
-            raise ElementCheckException('Tag dont selected')
+            raise ElementCheckException('Tag isnt selected')
 
     def test_tag_delete(self):
         timeout = 20
@@ -73,7 +73,7 @@ class TestArticlCreate(BaseCase):
         tags_count = len(list(row_div.find_elements(By.TAG_NAME, 'div')))
 
         if tags_count != 1:
-            raise ElementCheckException('Tag dont deleted. Tags count == ', tags_count)
+            raise ElementCheckException('Tag isnt deleted. Tags count == ', tags_count)
 
     def test_tag_delete_message(self):
         timeout = 20
@@ -97,7 +97,7 @@ class TestArticlCreate(BaseCase):
             i += 1
 
         if not page.exist((By.XPATH, f'//div[text()=\'Теги не выбраны\']')):
-            raise ElementCheckException('Tag dont deleted')
+            raise ElementCheckException('Tag isnt deleted')
 
     def test_publish_all_fill(self):
         timeout = 20
@@ -178,7 +178,7 @@ class TestArticlCreate(BaseCase):
 
         error_text = 'Необходим заголовок'
         if not page.exist((By.XPATH, f'//div[text()=\'{error_text}\']')):
-            raise ElementCheckException('Commentary not posted by pressing enter')
+            raise ElementCheckException('Article is not posted')
 
     def test_publish_without_all(self):
         timeout = 20
@@ -196,7 +196,7 @@ class TestArticlCreate(BaseCase):
 
         error_text = 'Вы не можте сохранить пустую статью'
         if not page.exist((By.XPATH, f'//div[text()=\'{error_text}\']')):
-            raise ElementCheckException('Commentary not posted by pressing enter')
+            raise ElementCheckException('No error message when trying to pucblish empty article')
 
 
 class TestArticlEdit(BaseCase):
@@ -223,7 +223,7 @@ class TestArticlEdit(BaseCase):
         new_value = select_menu.first_selected_option.get_attribute("value")
 
         if new_value != text_category:
-            raise ElementCheckException('Category dont selected')
+            raise ElementCheckException('Category isnt selected')
 
     def test_tag_add_update(self):
         timeout = 20
@@ -241,7 +241,7 @@ class TestArticlEdit(BaseCase):
         last_div_text = last_div.text
 
         if text_tag != last_div_text:
-            raise ElementCheckException('Tag dont selected')
+            raise ElementCheckException('Tag isnt selected')
 
     def test_tag_update_delete(self):
         timeout = 20
@@ -261,7 +261,7 @@ class TestArticlEdit(BaseCase):
         tags_count = len(divs)
 
         if tags_count != 1:
-            raise ElementCheckException('Tag dont deleted')
+            raise ElementCheckException('Tag isnt deleted')
 
     def test_tag_update_delete_all(self):
         timeout = 20
@@ -283,7 +283,7 @@ class TestArticlEdit(BaseCase):
             i += 1
 
         if not page.exist((By.XPATH, f'//div[text()=\'Теги не выбраны\']')):
-            raise ElementCheckException('Tag dont deleted')
+            raise ElementCheckException('Tag isnt deleted')
 
     def test_edit_all_fill(self):
         timeout = 20
@@ -412,5 +412,5 @@ class TestArticlEdit(BaseCase):
         
         deletedpage = EditArticlePage(self.driver, 1)
         if not deletedpage.driver.getPageSource().contains("404"):
-            raise ElementCheckException('Page dont deleted')
+            raise ElementCheckException('Article isnt deleted')
         

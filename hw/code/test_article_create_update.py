@@ -8,9 +8,10 @@ from ui.pages.base_case import BaseCase, cookies, credentials
 from ui.pages.main_page import MainPage
 from ui.pages.create_article_page import CreateArticlePage
 from ui.pages.edit_article_page import EditArticlePage
+from ui.pages.article_page import ArticlePage
 from selenium.webdriver.support.ui import Select
 
-
+ 
 class TestAricleMainPageClickCreate(BaseCase):
     authorize = True
 
@@ -25,7 +26,7 @@ class TestAricleMainPageClickCreate(BaseCase):
         if not page.driver.current_url.startswith(url):
             raise PageNotOpenedExeption(f'{url} did not open in {timeout} sec, current url {self.driver.current_url}')
 
-
+ 
 class TestArticlCreate(BaseCase):
     authorize = True
 
@@ -201,7 +202,7 @@ class TestArticlCreate(BaseCase):
 
 class TestArticlEdit(BaseCase):
     authorize = True
-
+     
     def test_click_edit_aricle_button(self):
         timeout = 20
         page = MainPage(self.driver)
@@ -213,7 +214,7 @@ class TestArticlEdit(BaseCase):
 
         if not page.driver.current_url.startswith(url) or not page.driver.current_url.endswith('/edit/'):
             raise PageNotOpenedExeption(f'{url} did not open in {timeout} sec, current url {self.driver.current_url}')
-
+     
     def test_category_update(self):
         timeout = 20
         page = EditArticlePage(self.driver, 1)
@@ -224,7 +225,7 @@ class TestArticlEdit(BaseCase):
 
         if new_value != text_category:
             raise ElementCheckException('Category isnt selected')
-
+     
     def test_tag_add_update(self):
         timeout = 20
         page = EditArticlePage(self.driver, 1)
@@ -242,7 +243,7 @@ class TestArticlEdit(BaseCase):
 
         if text_tag != last_div_text:
             raise ElementCheckException('Tag isnt selected')
-
+     
     def test_tag_update_delete(self):
         timeout = 20
         page = EditArticlePage(self.driver, 1)
@@ -262,7 +263,7 @@ class TestArticlEdit(BaseCase):
 
         if tags_count != 1:
             raise ElementCheckException('Tag isnt deleted')
-
+     
     def test_tag_update_delete_all(self):
         timeout = 20
         page = EditArticlePage(self.driver, 1)
@@ -284,7 +285,7 @@ class TestArticlEdit(BaseCase):
 
         if not page.exist((By.XPATH, f'//div[text()=\'Теги не выбраны\']')):
             raise ElementCheckException('Tag isnt deleted')
-
+     
     def test_edit_all_fill(self):
         timeout = 20
         page = EditArticlePage(self.driver, 1)
@@ -315,7 +316,7 @@ class TestArticlEdit(BaseCase):
         url = 'https://95.163.213.142/article/' + str(1) + '/edit/'
         if not page.driver.current_url.startswith(url):
             raise PageNotOpenedExeption(f'{url} did not open in {timeout} sec, current url {self.driver.current_url}')
-
+     
     def test_edit_without_description(self):
         timeout = 20
         page = EditArticlePage(self.driver, 1)
@@ -342,7 +343,7 @@ class TestArticlEdit(BaseCase):
         url = 'https://95.163.213.142/article/' + str(1) + '/edit/'
         if not page.driver.current_url.startswith(url):
             raise PageNotOpenedExeption(f'{url} did not open in {timeout} sec, current url {self.driver.current_url}')
-
+     
     def test_edit_without_title(self):
         timeout = 20
         page = EditArticlePage(self.driver, 1)
@@ -365,7 +366,7 @@ class TestArticlEdit(BaseCase):
         error_text = 'Необходим заголовок'
         if not page.exist((By.XPATH, f'//div[text()=\'{error_text}\']')):
             raise ElementCheckException('No error message')
-
+     
     def test_edit_without_all(self):
         timeout = 20
         page = EditArticlePage(self.driver, 1)
@@ -377,7 +378,7 @@ class TestArticlEdit(BaseCase):
         error_text = 'Вы не можте сохранить пустую статью'
         if not page.exist((By.XPATH, f'//div[text()=\'{error_text}\']')):
             raise ElementCheckException('No error message')
-
+     
     def test_delete_article_show(self):
         timeout = 20
         page = EditArticlePage(self.driver, 1)
@@ -395,9 +396,35 @@ class TestArticlEdit(BaseCase):
             raise ElementCheckException('No yes button')
         if not page.exist((By.XPATH, f'//div[text()=\'{no_button}\']')):
             raise ElementCheckException('No no button')
+
     def test_delete_article(self):
         timeout = 20
-        page = EditArticlePage(self.driver, 1)
+        page = CreateArticlePage(self.driver)
+        time.sleep(1)
+        page.refresh()
+
+        title = 'Article To Delete'
+        description = 'a'
+        body = 'a'
+
+        form = page.find((By.XPATH, '/html/body/div[2]/div[2]/div/div[2]/div[1]'))
+        form.send_keys(title)
+
+        form = page.find((By.XPATH, '/html/body/div[2]/div[2]/div/div[2]/div[2]'))
+        form.send_keys(description)
+
+        form = page.find((By.XPATH, '/html/body/div[2]/div[2]/div/div[2]/div[3]'))
+        form.send_keys(body)
+
+        page.click((By.XPATH, '/html/body/div[2]/div[2]/div/div[3]/div'), timeout)
+
+        time.sleep(1)
+        page.refresh()
+
+        page.click((By.XPATH, f'//div[text()=\'{title}\']'))
+        id = page.driver.current_url.split('/')[-1]
+
+        page = EditArticlePage(self.driver, id)
         time.sleep(1)
         page.refresh()
 
@@ -406,11 +433,7 @@ class TestArticlEdit(BaseCase):
         yes_button = 'Да'
         page.click((By.XPATH, f'//div[text()=\'{yes_button}\']'), timeout)
 
-        url = 'https://95.163.213.142/feed'
-        if not page.driver.current_url.startswith(url):
-            raise PageNotOpenedExeption(f'{url} did not open in {timeout} sec, current url {self.driver.current_url}')
-        
-        deletedpage = EditArticlePage(self.driver, 1)
-        if not deletedpage.driver.getPageSource().contains("404"):
+        deletedpage = ArticlePage(self.driver, id)
+        if not deletedpage.find((By.CLASS_NAME, 'error_page__content'), 5):
             raise ElementCheckException('Article isnt deleted')
         

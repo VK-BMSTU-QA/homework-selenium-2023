@@ -26,9 +26,6 @@ class BasePage(object):
     def refresh(self):
         self.driver.refresh()
 
-    # def navigate(self, url):
-    #     self.driver.navigate().to(url)
-
     def wait(self, timeout=None):
         if timeout is None:
             timeout = 5

@@ -646,6 +646,8 @@ class TestPremieresPage(BasePage):
         assert self.find((By.CLASS_NAME, self.PREMIERES_DAY_CLASS_NAME), 3)
 
 class TestSignup(BasePage):
+    LOGIN = 'Qwe123@a.a'
+    PASSWD = 'Qwe123@a.a'
     X_BUTTON_OPEN_REG_WINDOW = '/html/body/div/div[1]/div/div/div/div[2]/div/a'
     X_BUTTON_OPEN_LOGIN_WINDOW = '/html/body/div/div[1]/div/div/div/div[1]/div/a'
     X_INPUT_NICKNAME = '/html/body/div/div[1]/div/div/div/div[2]/form/div[1]/input'
@@ -734,6 +736,8 @@ class TestSignup(BasePage):
             raise Exception("wrong register msg", msg_already_register, "Пользователь с таким email уже зарегистрирован")
 
 class TestLogin(BasePage):
+    LOGIN = 'Qwe123@a.a'
+    PASSWD = 'Qwe123@a.a'
     X_BUTTON_OPEN_REG_WINDOW = '/html/body/div/div[1]/div/div/div/div[2]/div/a'
     X_BUTTON_OPEN_LOGIN_WINDOW = '/html/body/div/div[1]/div/div/div/div[1]/div/a'
     X_INPUT_EMAIL = '/html/body/div/div[1]/div/div/div/div[1]/form/div[1]/input'
@@ -767,7 +771,7 @@ class TestLogin(BasePage):
         is_wrong = self.CLASS_WRONG_INPUT in input_email.get_attribute("class").split()
         if (is_wrong != True):
             raise Exception("wrong check", input_email, wrong_email)
-
+        
     def test_invalid_password(self):
         self.render(self.URL_PAGE_LOGIN)
         wrong_password = '123456'

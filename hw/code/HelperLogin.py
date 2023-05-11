@@ -19,8 +19,8 @@ class HelperLogin(BasePage):
 
     def __init__(self, url):
         self.url = url
-        self.LOGIN = os.environ.get('LOGIN')
-        self.PASSWD = os.environ.get('PASSWORD')
+        self.LOGIN = 'HW3testname@gmail.com' #os.environ.get('LOGIN')
+        self.PASSWD = 'HW3testname' #os.environ.get('PASSWORD')
         self.is_registered = False
         self.is_logined = False
 

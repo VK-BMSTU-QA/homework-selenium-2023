@@ -284,17 +284,19 @@ class TestNavigationPanelUnauthorized(BasePage):
 
     def test_click_logo(self):
         self.render(f'{URL}/collection/tag-popular/')
-        time.sleep(2)
+        time.sleep(1)
 
         self.find((By.XPATH, self.X_LOGO), 3).click()
+        time.sleep(1)
 
         assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_CLASS_NAME), 3)
 
     def test_click_popular_button(self):
         self.render(URL)
-        time.sleep(2)
+        time.sleep(1)
 
         self.find((By.XPATH, self.X_POPULAR_HEADER_BUTTON), 3).click()
+        time.sleep(1)
 
         title = self.find((By.CLASS_NAME, self.COLLECTION_PAGE_TITLE_CLASS_NAME), 3).text
 
@@ -303,9 +305,10 @@ class TestNavigationPanelUnauthorized(BasePage):
 
     def test_click_premieres_button(self):
         self.render(URL)
-        time.sleep(2)
+        time.sleep(1)
 
         self.find((By.XPATH, self.X_PREMIERES_HEADER_BUTTON), 3).click()
+        time.sleep(1)
 
         title = self.find((By.CLASS_NAME, self.PREMIERES_PAGE_TITLE_CLASS_NAME), 3).text
 
@@ -367,6 +370,7 @@ class TestMainPage(BasePage):
 
     def test_preview_film_existing(self):
         self.render(URL)
+        time.sleep(1)
 
         assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_CLASS_NAME), 3)
 
@@ -374,10 +378,12 @@ class TestMainPage(BasePage):
 
     def test_popular_section(self):
         self.render(URL)
+        time.sleep(1)
 
         assert self.find((By.XPATH, self.X_POPULAR_SECTION_SLIDER_FILM), 3)
 
         self.find((By.XPATH, self.X_POPULAR_SECTION_BUTTON), 3).click()
+        time.sleep(1)
 
         title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
 
@@ -386,10 +392,12 @@ class TestMainPage(BasePage):
 
     def test_in_cinema_section(self):
         self.render(URL)
+        time.sleep(1)
 
         assert self.find((By.XPATH, self.X_IN_CINEMA_SECTION_SLIDER_FILM), 3)
 
         self.find((By.XPATH, self.X_IN_CINEMA_SECTION_BUTTON), 3).click()
+        time.sleep(1)
 
         title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
 
@@ -398,10 +406,12 @@ class TestMainPage(BasePage):
 
     def test_genres_section(self):
         self.render(URL)
+        time.sleep(1)
 
         assert self.find((By.XPATH, self.X_GENRES_SECTION_SLIDER_GENRE), 3)
 
         self.find((By.XPATH, self.X_GENRES_SECTION_BUTTON), 3).click()
+        time.sleep(1)
 
         title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
 

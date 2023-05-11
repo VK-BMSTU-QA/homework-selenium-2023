@@ -1,21 +1,16 @@
 import pytest
 
-from test_login import BaseCase, MainPage, cookies, credentials
 from selenium.webdriver.common.by import By
-from ui.pages.base_page import BasePage, WrongValue, PageNotOpenedExeption, ElementCheckException
 
-class ArticlePage(BasePage):
-    url = 'https://95.163.213.142/article/'
+from ui.pages.base_page import WrongValue, PageNotOpenedExeption, ElementCheckException
+from ui.pages.base_case import BaseCase, cookies, credentials
+from ui.pages.main_page import MainPage
+from ui.pages.article_page import ArticlePage
 
-    def __init__(self, driver, id: int):
-        self.url = self.url + str(id)
-        driver.get(self.url)
-        super().__init__(driver)
-@pytest.mark.skip
+
 class TestAricleMainPageClicks(BaseCase):
     authorize = False
 
-    
     def test_title_click(self):
         timeout = 15
         page = MainPage(self.driver)
@@ -100,7 +95,7 @@ class TestAricleMainPageClicks(BaseCase):
         if not page.exist((By.XPATH, shareXPATH)):
             raise ElementCheckException('Share box isnt opened')
 
-@pytest.mark.skip
+
 class TestArticleView(BaseCase):
     authorize = False
     
@@ -115,7 +110,8 @@ class TestArticleView(BaseCase):
 
         if page.exist((By.ID, 'article__category')):
             raise ElementCheckException('Category')
-@pytest.mark.skip
+
+
 class TestArticleEditButton(BaseCase):
     authorize=True
 

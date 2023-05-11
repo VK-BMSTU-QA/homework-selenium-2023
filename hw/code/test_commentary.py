@@ -2,14 +2,15 @@ import pytest
 
 import time
 
-from test_login import BaseCase, MainPage, cookies, credentials
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from ui.pages.base_page import BasePage, WrongValue, PageNotOpenedExeption, ElementCheckException
 
-from test_article_watch import ArticlePage
-@pytest.mark.skip
+from ui.pages.base_page import BasePage, WrongValue, PageNotOpenedExeption, ElementCheckException
+from ui.pages.base_case import BaseCase, cookies, credentials
+from ui.pages.article_page import ArticlePage
+
+
 class TestCommentariesUnauthPost(BaseCase):
     authorize=False
 
@@ -39,6 +40,7 @@ class TestCommentariesUnauthPost(BaseCase):
 
         if page.exist((By.XPATH, f'//div[text()=\'{commentary_text + str(i)}\']')):
             raise ElementCheckException('Commentary posted if unauthorized')
+
 
 class TestCommentariesReplyBox(BaseCase):
     authorize=True
@@ -82,7 +84,7 @@ class TestCommentariesReplyBox(BaseCase):
 
 class TestCommentariesPost(BaseCase):
     authorize=True
-    @pytest.mark.skip
+    
     def test_enter_post(self):
         page = ArticlePage(self.driver, 1)
         

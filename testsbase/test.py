@@ -107,7 +107,7 @@ class TestFilmPageAuthorized(BasePage):
 
     def test_check_correct_review(self):
         self.render(f'{DOMAIN}/film/1')
-        
+
         self.find((By.XPATH, self.X_BUTTON_REVIEW)).click()
         self.find((By.XPATH, self.X_BUTTON_REVIEW_CONTAINER))
 
@@ -170,7 +170,7 @@ class TestFilmPageUnauthorized(BasePage):
 
     def test_click_plus_unauth(self):
         self.render(f'{DOMAIN}/film/1')
-        
+
         self.find((By.XPATH, self.X_BUTTON_PLUS)).click()
         self.find((By.XPATH, self.X_TOSTER))
         self.wait_hide((By.XPATH, self.X_TOSTER))
@@ -186,7 +186,7 @@ class TestFilmPageUnauthorized(BasePage):
 
     def test_click_review_unauth(self):
         self.render(f'{DOMAIN}/film/1')
-        
+
         self.find((By.XPATH, self.X_BUTTON_REVIEW)).click()
 
         self.find((By.XPATH, self.X_TOSTER))
@@ -264,19 +264,15 @@ class TestNavigationPanelUnauthorized(BasePage):
 
     def test_click_logo(self):
         self.render(f'{DOMAIN}/collection/tag-popular/')
-        time.sleep(1)
 
         self.find((By.XPATH, self.X_LOGO), 3).click()
-        time.sleep(1)
 
         assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_CLASS_NAME), 3)
 
     def test_click_popular_button(self):
         self.render(DOMAIN)
-        time.sleep(1)
 
         self.find((By.XPATH, self.X_POPULAR_HEADER_BUTTON), 3).click()
-        time.sleep(1)
 
         title = self.find((By.CLASS_NAME, self.COLLECTION_PAGE_TITLE_CLASS_NAME), 3).text
 
@@ -285,10 +281,8 @@ class TestNavigationPanelUnauthorized(BasePage):
 
     def test_click_premieres_button(self):
         self.render(DOMAIN)
-        time.sleep(1)
 
         self.find((By.XPATH, self.X_PREMIERES_HEADER_BUTTON), 3).click()
-        time.sleep(1)
 
         title = self.find((By.CLASS_NAME, self.PREMIERES_PAGE_TITLE_CLASS_NAME), 3).text
 
@@ -297,18 +291,16 @@ class TestNavigationPanelUnauthorized(BasePage):
 
     def test_click_collections_button_unauthorized(self):
         self.render(DOMAIN)
-        time.sleep(1)
 
         self.find((By.XPATH, self.X_COLLECTIONS_HEADER_BUTTON)).click()
-        time.sleep(1)
+
         assert self.find((By.CLASS_NAME, self.MODAL_AUTH_CLASS_NAME))
 
     def test_click_login_button(self):
         self.render(DOMAIN)
-        time.sleep(1)
 
         self.find((By.XPATH, self.X_LOGIN_BUTTON)).click()
-        time.sleep(1)
+
         assert self.find((By.CLASS_NAME, self.MODAL_AUTH_CLASS_NAME))
 
 
@@ -320,7 +312,6 @@ class TestNavigationPanelAuthorized(BasePage):
     @needed_auth
     def test_click_collections_button_authorized(self):
         self.render(DOMAIN)
-        
 
         self.find((By.XPATH, self.X_COLLECTIONS_HEADER_BUTTON)).click()
 
@@ -350,7 +341,6 @@ class TestMainPage(BasePage):
 
     def test_preview_film_existing(self):
         self.render(DOMAIN)
-        time.sleep(1)
 
         assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_CLASS_NAME), 3)
 
@@ -358,12 +348,10 @@ class TestMainPage(BasePage):
 
     def test_popular_section(self):
         self.render(DOMAIN)
-        time.sleep(1)
 
         assert self.find((By.XPATH, self.X_POPULAR_SECTION_SLIDER_FILM), 3)
 
         self.find((By.XPATH, self.X_POPULAR_SECTION_BUTTON), 3).click()
-        time.sleep(1)
 
         title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
 
@@ -372,12 +360,10 @@ class TestMainPage(BasePage):
 
     def test_in_cinema_section(self):
         self.render(DOMAIN)
-        time.sleep(1)
 
         assert self.find((By.XPATH, self.X_IN_CINEMA_SECTION_SLIDER_FILM), 3)
 
         self.find((By.XPATH, self.X_IN_CINEMA_SECTION_BUTTON), 3).click()
-        time.sleep(1)
 
         title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
 
@@ -386,12 +372,10 @@ class TestMainPage(BasePage):
 
     def test_genres_section(self):
         self.render(DOMAIN)
-        time.sleep(1)
 
         assert self.find((By.XPATH, self.X_GENRES_SECTION_SLIDER_GENRE), 3)
 
         self.find((By.XPATH, self.X_GENRES_SECTION_BUTTON), 3).click()
-        time.sleep(1)
 
         title = self.find((By.CLASS_NAME, self.PAGE_COLLECTION_TITLE_CLASS_NAME), 3).text
 
@@ -596,9 +580,8 @@ class TestProfile(BasePage):
 
     @needed_auth
     def test_open_change_input(self):
-        time.sleep(1)
+
         self.render(self.URL_PAGE_PROFILE)
-        time.sleep(3)
         self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG)).click()
         form_change = self.find((By.CLASS_NAME, self.CLASS_FORM_CHANGE))
         is_opened = self.CLASS_FORM_DISPLAY_FLEX in form_change.get_attribute("class").split()
@@ -611,9 +594,8 @@ class TestProfile(BasePage):
 
     @needed_auth
     def test_change_name(self):
-        time.sleep(1)
+
         self.render(self.URL_PAGE_PROFILE)
-        time.sleep(3)
         self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG), 3).click()
         field_Input_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"), 3)
         field_Input_new_name.send_keys('Zxc543')
@@ -625,7 +607,6 @@ class TestProfile(BasePage):
             raise Exception("can't change name", new_name)
 
         self.render(self.URL_PAGE_PROFILE)
-        time.sleep(3)
         self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG), 3).click()
         field_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"), 3)
         field_new_name.send_keys('Admin')
@@ -635,13 +616,11 @@ class TestProfile(BasePage):
         if (bool(new_name) != True):
             raise Exception("can't return name", new_name)
 
-        
-
     @needed_auth
     def test_check_value_num_of_rates(self):
-        time.sleep(1)
+
         self.render(self.URL_PAGE_PROFILE)
-        
+
         field_num_of_rates = self.find((By.XPATH, "//div[contains(text(), 'Оценок:')]//following-sibling::div"), 3).text
         if (not field_num_of_rates):
             raise Exception("empty field")
@@ -650,9 +629,9 @@ class TestProfile(BasePage):
 
     @needed_auth
     def test_check_value_num_of_coll(self):
-        time.sleep(1)
+
         self.render(self.URL_PAGE_PROFILE)
-        
+
         field_num_of_coll = self.find((By.XPATH, "//div[contains(text(), 'Коллекций:')]//following-sibling::div"),
                                       3).text
         if (not field_num_of_coll):
@@ -662,9 +641,9 @@ class TestProfile(BasePage):
 
     @needed_auth
     def test_check_value_num_of_rewiews(self):
-        time.sleep(1)
+
         self.render(self.URL_PAGE_PROFILE)
-        
+
         field_num_of_rewiews = self.find((By.XPATH, "//div[contains(text(), 'Рецензий:')]//following-sibling::div"),
                                          3).text
         if (not field_num_of_rewiews):
@@ -674,9 +653,8 @@ class TestProfile(BasePage):
 
     @needed_auth
     def test_check_main_fields(self):
-        time.sleep(1)
+
         self.render(self.URL_PAGE_PROFILE)
-        time.sleep(3)
         date_of_reg = self.find((By.XPATH, "//div[contains(text(), 'Дата регистрации:')]"), 5)
         if not bool(date_of_reg):
             raise Exception("can't find 'Дата регистрации:' field")

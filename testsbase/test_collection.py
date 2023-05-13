@@ -1,5 +1,3 @@
-import time
-
 from selenium.webdriver.common.by import By
 
 from driver import dvr
@@ -25,9 +23,6 @@ class CollectionHelper(BasePage):
 
 
 class TestPersonalCollectionAddFilm(CollectionHelper):
-    CLASS_NAME_WILL_WATCH_ICON = "about-film__button_bookmark"
-    CLASS_NAME_DELETE_BUTTON = 'film__delete-svg'
-
     EXPECTED_REDIRECTED_PAGE_URL_PART = 'https://movie-gate.online/film/'
 
     CLASS_NAME_FILM_TITLE = 'film__title'
@@ -64,8 +59,6 @@ class TestPersonalCollectionAddFilm(CollectionHelper):
 
         # rollback env
         self.add_remove_film_in_collection(film_id, collection)
-
-        self.refresh()
 
 
 class TestPersonalCollectionDeleteFilm(CollectionHelper):
@@ -106,8 +99,6 @@ class TestPersonalCollectionDeleteFilm(CollectionHelper):
         # check result. Exception by timeout if wrong
         self.find((By.XPATH, self.X_TOSTER))
         self.wait_hide((By.XPATH, self.X_TOSTER))
-
-        self.refresh()
 
 
 class TestPersonalCollectionHasFilm(CollectionHelper):
@@ -161,7 +152,6 @@ class TestPersonalCollectionHasFilm(CollectionHelper):
         # rollback env
         self.add_remove_film_in_collection(film_id, collection)
 
-        self.refresh()
 
 
 class TestPersonalCollectionHasAuthor(CollectionHelper):
@@ -214,8 +204,6 @@ class TestPersonalCollectionHasAuthor(CollectionHelper):
 
         self.add_remove_film_in_collection(film_id, collection)
 
-        self.refresh()
-
 
 class TestPersonalCollectionShare(CollectionHelper):
     CLASS_NAME_WILL_WATCH_ICON = "about-film__button_bookmark"
@@ -263,5 +251,3 @@ class TestPersonalCollectionShare(CollectionHelper):
 
         # rollback
         self.add_remove_film_in_collection(film_id, collection)
-
-        self.refresh()

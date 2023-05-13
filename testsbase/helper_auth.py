@@ -6,7 +6,7 @@ from base_page import BasePage
 from const import DOMAIN
 
 
-class HelperLogin(BasePage):
+class HelperAuth(BasePage):
     CLASS_BUTTON_OPEN_MODAL = 'header__login__btn'
     CLASS_BUTTON_OPEN_REG_WINDOW = 'modal__login__switch__btn'
     X_INPUT_NICKNAME = "//input[@placeholder='Введите имя пользователя']"
@@ -18,6 +18,9 @@ class HelperLogin(BasePage):
 
     def __init__(self, domain):
         self.DOMAIN = domain
+
+        self.NICKNAME = 'Admin'
+
         self.LOGIN = os.environ.get("LOGIN")  # 'HW3testname@gmail.com'
         if self.LOGIN is None:
             self.LOGIN = "HW3testname@gmail.com"
@@ -28,8 +31,6 @@ class HelperLogin(BasePage):
 
         self.IS_REGISTERED = False
         self.IS_LOGIN = False
-
-        self.NICKNAME = 'Admin'
 
     def register(self):
         self.render(self.DOMAIN)
@@ -48,6 +49,9 @@ class HelperLogin(BasePage):
         self.IS_REGISTERED = True
 
     def login(self):
+        if self.IS_LOGIN:
+            return
+
         self.render(self.DOMAIN)
         self.find((By.CLASS_NAME, self.CLASS_BUTTON_OPEN_MODAL), 10).click()
 
@@ -67,7 +71,7 @@ class HelperLogin(BasePage):
         self.del_session()
 
 
-helper = HelperLogin(DOMAIN)
+helper = HelperAuth(DOMAIN)
 
 
 def needed_auth(method):

@@ -4,4 +4,7 @@ echo $LOGIN $PASSWORD
 
 # pytest --numprocesses=1 testsbase/test_person.py
 # pytest --numprocesses=1 testsbase/test_collection.py
-pytest --numprocesses=1 testsbase/test.py
+# pytest --numprocesses=1 testsbase/test.py
+pytest testsbase/test_login.py
+pytest testsbase/test_signup.py
+pytest testsbase/test_profile.py

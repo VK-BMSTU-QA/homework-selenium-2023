@@ -107,7 +107,7 @@ class TestFilmPageAuthorized(BasePage):
 
     def test_check_correct_review(self):
         self.render(f'{DOMAIN}/film/1')
-        time.sleep(2)
+        
         self.find((By.XPATH, self.X_BUTTON_REVIEW)).click()
         self.find((By.XPATH, self.X_BUTTON_REVIEW_CONTAINER))
 
@@ -170,7 +170,7 @@ class TestFilmPageUnauthorized(BasePage):
 
     def test_click_plus_unauth(self):
         self.render(f'{DOMAIN}/film/1')
-        time.sleep(2)
+        
         self.find((By.XPATH, self.X_BUTTON_PLUS)).click()
         self.find((By.XPATH, self.X_TOSTER))
         self.wait_hide((By.XPATH, self.X_TOSTER))
@@ -186,7 +186,7 @@ class TestFilmPageUnauthorized(BasePage):
 
     def test_click_review_unauth(self):
         self.render(f'{DOMAIN}/film/1')
-        time.sleep(2)
+        
         self.find((By.XPATH, self.X_BUTTON_REVIEW)).click()
 
         self.find((By.XPATH, self.X_TOSTER))
@@ -320,7 +320,7 @@ class TestNavigationPanelAuthorized(BasePage):
     @needed_auth
     def test_click_collections_button_authorized(self):
         self.render(DOMAIN)
-        time.sleep(2)
+        
 
         self.find((By.XPATH, self.X_COLLECTIONS_HEADER_BUTTON)).click()
 
@@ -635,13 +635,13 @@ class TestProfile(BasePage):
         if (bool(new_name) != True):
             raise Exception("can't return name", new_name)
 
-        time.sleep(2)
+        
 
     @needed_auth
     def test_check_value_num_of_rates(self):
         time.sleep(1)
         self.render(self.URL_PAGE_PROFILE)
-        time.sleep(2)
+        
         field_num_of_rates = self.find((By.XPATH, "//div[contains(text(), 'Оценок:')]//following-sibling::div"), 3).text
         if (not field_num_of_rates):
             raise Exception("empty field")
@@ -652,7 +652,7 @@ class TestProfile(BasePage):
     def test_check_value_num_of_coll(self):
         time.sleep(1)
         self.render(self.URL_PAGE_PROFILE)
-        time.sleep(2)
+        
         field_num_of_coll = self.find((By.XPATH, "//div[contains(text(), 'Коллекций:')]//following-sibling::div"),
                                       3).text
         if (not field_num_of_coll):
@@ -664,7 +664,7 @@ class TestProfile(BasePage):
     def test_check_value_num_of_rewiews(self):
         time.sleep(1)
         self.render(self.URL_PAGE_PROFILE)
-        time.sleep(2)
+        
         field_num_of_rewiews = self.find((By.XPATH, "//div[contains(text(), 'Рецензий:')]//following-sibling::div"),
                                          3).text
         if (not field_num_of_rewiews):

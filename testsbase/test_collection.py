@@ -18,9 +18,8 @@ class CollectionHelper(BasePage):
         film_title = self.find((By.CLASS_NAME, self.CLASS_NAME_TITLE_FILM_IN_WILL_WATCH)).text
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_LIST_WILL_WATCH_ICON)).click()
-        time.sleep(2)
+
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]')).click()
-        time.sleep(2)
 
         return film_title
 
@@ -52,12 +51,10 @@ class TestPersonalCollectionAddFilm(CollectionHelper):
         # to collections
         self.render(f'{DOMAIN}/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
-        time.sleep(2)
 
         # in collection
         xpath = f'//div[contains(text(), \'{film_title}\')]//preceding-sibling::div'
         self.find((By.XPATH, xpath)).click()
-        time.sleep(2)
 
         # check redirect film
         expected_full_url = self.EXPECTED_REDIRECTED_PAGE_URL_PART + f'{film_id}/'
@@ -67,6 +64,8 @@ class TestPersonalCollectionAddFilm(CollectionHelper):
 
         # rollback env
         self.add_remove_film_in_collection(film_id, collection)
+
+        self.refresh()
 
 
 class TestPersonalCollectionDeleteFilm(CollectionHelper):
@@ -96,20 +95,19 @@ class TestPersonalCollectionDeleteFilm(CollectionHelper):
         # to collections
         self.render(f'{DOMAIN}/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
-        time.sleep(2)
 
         # to film
         xpath = f"//div[contains(text(), '{film_title}')]"
         self.find((By.XPATH, xpath)).click()
-        time.sleep(2)
 
         # delete film
         self.find((By.CLASS_NAME, self.CLASS_NAME_DELETE_BUTTON)).click()
-        time.sleep(2)
 
         # check result. Exception by timeout if wrong
         self.find((By.XPATH, self.X_TOSTER))
         self.wait_hide((By.XPATH, self.X_TOSTER))
+
+        self.refresh()
 
 
 class TestPersonalCollectionHasFilm(CollectionHelper):
@@ -138,7 +136,6 @@ class TestPersonalCollectionHasFilm(CollectionHelper):
         # to collections
         self.render(f'{DOMAIN}/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
-        time.sleep(2)
 
         # get collection_id
         actual_collection_id = dvr.get_instance().current_url
@@ -154,7 +151,6 @@ class TestPersonalCollectionHasFilm(CollectionHelper):
         # in collection
         xpath = f'//div[contains(text(), \'{film_title}\')]//preceding-sibling::div'
         self.find((By.XPATH, xpath)).click()
-        time.sleep(2)
 
         # check redirect film
         expected_full_url = self.EXPECTED_REDIRECTED_PAGE_URL_PART + f'{film_id}/'
@@ -164,6 +160,8 @@ class TestPersonalCollectionHasFilm(CollectionHelper):
 
         # rollback env
         self.add_remove_film_in_collection(film_id, collection)
+
+        self.refresh()
 
 
 class TestPersonalCollectionHasAuthor(CollectionHelper):
@@ -192,7 +190,6 @@ class TestPersonalCollectionHasAuthor(CollectionHelper):
         # to collections
         self.render(f'{DOMAIN}/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
-        time.sleep(2)
 
         # get collection_id
         actual_collection_id = dvr.get_instance().current_url
@@ -209,13 +206,15 @@ class TestPersonalCollectionHasAuthor(CollectionHelper):
 
         # to profile
         self.find((By.CLASS_NAME, self.CLASS_NAME_AVATAR_AUTHOR)).click()
-        time.sleep(2)
+
         xpath = f"//div[contains(text(), '{author_name}')]"
         public_author_name = self.find((By.XPATH, xpath)).text
         if public_author_name != author_name:
             raise Exception("wrong redirect: user name not expected", public_author_name, author_name)
 
         self.add_remove_film_in_collection(film_id, collection)
+
+        self.refresh()
 
 
 class TestPersonalCollectionShare(CollectionHelper):
@@ -244,7 +243,6 @@ class TestPersonalCollectionShare(CollectionHelper):
         # to collections
         self.render(f'{DOMAIN}/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
-        time.sleep(2)
 
         # get collection_id
         actual_collection_id = dvr.get_instance().current_url
@@ -259,7 +257,6 @@ class TestPersonalCollectionShare(CollectionHelper):
 
         # in collection
         self.find((By.CLASS_NAME, self.CLASS_NAME_SHARE_ICON)).click()
-        time.sleep(2)
 
         self.find((By.XPATH, self.X_TOSTER))
         self.wait_hide((By.XPATH, self.X_TOSTER))
@@ -267,3 +264,4 @@ class TestPersonalCollectionShare(CollectionHelper):
         # rollback
         self.add_remove_film_in_collection(film_id, collection)
 
+        self.refresh()

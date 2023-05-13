@@ -23,6 +23,8 @@ class BasePage(object):
         return self.wait(timeout).until(EC.invisibility_of_element_located(locator))
 
     def find(self, locator, timeout=None):
+        if timeout is None:
+            timeout = 10
         return self.wait(timeout).until(EC.presence_of_element_located(locator))
 
     def del_session(self):

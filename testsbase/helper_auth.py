@@ -1,3 +1,5 @@
+import os
+
 from selenium.webdriver.common.by import By
 
 from base_page import BasePage
@@ -16,8 +18,14 @@ class HelperLogin(BasePage):
 
     def __init__(self, domain):
         self.DOMAIN = domain
-        self.LOGIN = 'HW3testname@gmail.com'
-        self.PASSWD = 'HW3testname'
+        self.LOGIN = os.environ.get("LOGIN")  # 'HW3testname@gmail.com'
+        if self.LOGIN is None:
+            self.LOGIN = "HW3testname@gmail.com"
+
+        self.PASSWD = os.environ.get("PASSWORD")  # 'HW3testname'
+        if self.PASSWD is None:
+            self.PASSWD = "HW3testname"
+
         self.IS_REGISTERED = False
         self.IS_LOGIN = False
 

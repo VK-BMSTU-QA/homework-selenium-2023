@@ -1,18 +1,13 @@
 import time
-import random
-import re
 
-from BasePage import BasePage
-from HelperLogin import HelperLogin
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
-from Driver import dvr
+from driver import dvr
+from base_page import BasePage
+from const import *
+from helper_auth import needed_auth
 
-URL = 'https://movie-gate.online'
-helper = HelperLogin(URL)
 
 class TestFilmPageAuthorized(BasePage):
     X_BUTTON_PLUS = '/html/body/div/div/div[1]/div/div[2]/div[7]/div/a/div'
@@ -41,17 +36,16 @@ class TestFilmPageAuthorized(BasePage):
     TEXT = '200IQ text'
     TITLE = 'title'
 
-
+    @needed_auth
     def test_click_set_rate(self):
-        helper.login()
-        self.render(f'{URL}/film/1')
+        self.render(f'{DOMAIN}/film/1')
         self.find((By.XPATH, self.X_BUTTON_RATE_9)).click()
 
         self.find((By.XPATH, self.X_TOSTER))
         self.wait_hide((By.XPATH, self.X_TOSTER))
 
     def test_click_update_rate(self):
-        self.render(f'{URL}/film/1')
+        self.render(f'{DOMAIN}/film/1')
         self.find((By.XPATH, self.X_BUTTON_RATE_9)).click()
 
         self.find((By.XPATH, self.X_TOSTER))
@@ -63,7 +57,7 @@ class TestFilmPageAuthorized(BasePage):
         self.wait_hide((By.XPATH, self.X_TOSTER))
 
     def test_click_delete_rate(self):
-        self.render(f'{URL}/film/1')
+        self.render(f'{DOMAIN}/film/1')
         self.find((By.XPATH, self.X_BUTTON_RATE_9)).click()
 
         self.find((By.XPATH, self.X_TOSTER))
@@ -75,14 +69,13 @@ class TestFilmPageAuthorized(BasePage):
         self.find((By.XPATH, self.X_TOSTER))
         self.wait_hide((By.XPATH, self.X_TOSTER))
 
-
     def test_click_review(self):
-        self.render(f'{URL}/film/1')
+        self.render(f'{DOMAIN}/film/1')
         self.find((By.XPATH, self.X_BUTTON_REVIEW)).click()
         self.find((By.XPATH, self.X_BUTTON_REVIEW_CONTAINER))
 
     def test_click_review(self):
-        self.render(f'{URL}/film/1')
+        self.render(f'{DOMAIN}/film/1')
         self.find((By.XPATH, self.X_BUTTON_REVIEW)).click()
         self.find((By.XPATH, self.X_BUTTON_REVIEW_CONTAINER))
 
@@ -98,7 +91,7 @@ class TestFilmPageAuthorized(BasePage):
         self.wait_hide((By.XPATH, self.X_TOSTER))
 
     def test_error_review(self):
-        self.render(f'{URL}/film/1')
+        self.render(f'{DOMAIN}/film/1')
         self.find((By.XPATH, self.X_BUTTON_REVIEW)).click()
         self.find((By.XPATH, self.X_BUTTON_REVIEW_CONTAINER))
 
@@ -113,7 +106,7 @@ class TestFilmPageAuthorized(BasePage):
             self.find((By.XPATH, self.X_BUTTON_SEND_REVIEW))
 
     def test_check_correct_review(self):
-        self.render(f'{URL}/film/1')
+        self.render(f'{DOMAIN}/film/1')
         time.sleep(2)
         self.find((By.XPATH, self.X_BUTTON_REVIEW)).click()
         self.find((By.XPATH, self.X_BUTTON_REVIEW_CONTAINER))
@@ -136,7 +129,7 @@ class TestFilmPageAuthorized(BasePage):
         text = self.find((By.XPATH, self.X_UPPER_REVIEW_TEXT)).text
         if text != self.TEXT:
             raise Exception("names does not equal", text, self.TEXT)
-        
+
 
 class TestFilmPageUnauthorized(BasePage):
     X_BUTTON_PLUS = '/html/body/div/div/div[1]/div/div[2]/div[7]/div/a/div'
@@ -166,8 +159,7 @@ class TestFilmPageUnauthorized(BasePage):
     TITLE = 'title'
 
     def test_click_producer(self):
-        helper.logout()
-        self.render(f'{URL}/film/1')
+        self.render(f'{DOMAIN}/film/1')
 
         prod = self.find((By.XPATH, self.X_PRODUCER), 3).text.strip()
         self.find((By.XPATH, self.X_PRODUCER), 5).click()
@@ -177,7 +169,7 @@ class TestFilmPageUnauthorized(BasePage):
             raise Exception("names does not equal", prod, prod_on_page)
 
     def test_click_plus_unauth(self):
-        self.render(f'{URL}/film/1')
+        self.render(f'{DOMAIN}/film/1')
         time.sleep(2)
         self.find((By.XPATH, self.X_BUTTON_PLUS)).click()
         self.find((By.XPATH, self.X_TOSTER))
@@ -188,18 +180,18 @@ class TestFilmPageUnauthorized(BasePage):
         self.wait_hide((By.XPATH, self.X_TOSTER))
 
     def test_click_trailer(self):
-        self.render(f'{URL}/film/1')
+        self.render(f'{DOMAIN}/film/1')
         self.find((By.XPATH, self.X_BUTTON_TRAILER)).click()
         self.find((By.XPATH, self.X_TRAILER_CONTAINER))
 
     def test_click_review_unauth(self):
-        self.render(f'{URL}/film/1')
+        self.render(f'{DOMAIN}/film/1')
         time.sleep(2)
         self.find((By.XPATH, self.X_BUTTON_REVIEW)).click()
 
         self.find((By.XPATH, self.X_TOSTER))
         self.wait_hide((By.XPATH, self.X_TOSTER))
-    
+
 
 class TestSearch(BasePage):
     X_INPUT_SEARCH = '/html/body/div/header/form/input'
@@ -218,19 +210,19 @@ class TestSearch(BasePage):
     X_TITLE_ON_FILM_PAGE = '/html/body/div/div/div[1]/div/div[2]/div[1]'
 
     def test_check_exists(self):
-        self.render(URL)
+        self.render(DOMAIN)
         self.find((By.XPATH, self.X_INPUT_SEARCH)).send_keys(Keys.ENTER)
         title = self.find((By.XPATH, self.X_TITLE_SEARCH)).text
         if title != self.TITLE_SEARCH:
             raise Exception("stings does not equal", title, self.TITLE_SEARCH)
 
     def test_check_empty(self):
-        self.render(URL)
+        self.render(DOMAIN)
         self.find((By.XPATH, self.X_INPUT_SEARCH)).send_keys(Keys.ENTER)
         self.find((By.XPATH, self.X_BUTTON_RETURN_MAIN)).click()
 
     def test_check_group_category(self):
-        self.render(URL)
+        self.render(DOMAIN)
         self.find((By.XPATH, self.X_INPUT_SEARCH)).send_keys(self.ALL_GROUP_SEARCH, Keys.ENTER)
 
         films_field = self.find((By.XPATH, self.X_SEARCH_GROUP_FILMS)).text
@@ -246,7 +238,7 @@ class TestSearch(BasePage):
             raise Exception("stings does not equal", persons_field, self.SEARCH_GROUP_PERSONS)
 
     def test_correct_results(self):
-        self.render(URL)
+        self.render(DOMAIN)
         self.find((By.XPATH, self.X_INPUT_SEARCH)).send_keys(self.ALL_GROUP_SEARCH, Keys.ENTER)
 
         films_field = self.find((By.XPATH, self.X_FIRST_FOUNDED_TITLE)).text
@@ -255,18 +247,6 @@ class TestSearch(BasePage):
         if films_field != film_title:
             raise Exception("stings does not equal", films_field, film_title)
 
-class TestPerson(BasePage):
-    X_FIRST_FOUNDED_FILM = '/html/body/div/div/div[2]/div/div[2]/div/div/a/div/div[1]'
-    REDIRECTED_PAGE_URL = 'https://movie-gate.online/film/'
-    url = URL
-
-    def test_person(self):
-        self.render(f'{URL}/person/27/')
-        self.find((By.XPATH, self.X_FIRST_FOUNDED_FILM)).click()
-        pattern = self.REDIRECTED_PAGE_URL
-        current__url = dvr.get_instance().current_url
-        if (re.search(current__url, pattern)):
-            raise Exception("wrong redirect", pattern, current__url)
 
 class TestNavigationPanelUnauthorized(BasePage):
     X_LOGO = '/html/body/div/header/a[1]'
@@ -283,7 +263,7 @@ class TestNavigationPanelUnauthorized(BasePage):
     X_LOGIN_BUTTON = '/html/body/div/header/a[5]'
 
     def test_click_logo(self):
-        self.render(f'{URL}/collection/tag-popular/')
+        self.render(f'{DOMAIN}/collection/tag-popular/')
         time.sleep(1)
 
         self.find((By.XPATH, self.X_LOGO), 3).click()
@@ -292,7 +272,7 @@ class TestNavigationPanelUnauthorized(BasePage):
         assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_CLASS_NAME), 3)
 
     def test_click_popular_button(self):
-        self.render(URL)
+        self.render(DOMAIN)
         time.sleep(1)
 
         self.find((By.XPATH, self.X_POPULAR_HEADER_BUTTON), 3).click()
@@ -304,7 +284,7 @@ class TestNavigationPanelUnauthorized(BasePage):
             raise Exception("title does not equal", title, self.POPULAR_COLLECTION_PAGE_TITLE)
 
     def test_click_premieres_button(self):
-        self.render(URL)
+        self.render(DOMAIN)
         time.sleep(1)
 
         self.find((By.XPATH, self.X_PREMIERES_HEADER_BUTTON), 3).click()
@@ -316,7 +296,7 @@ class TestNavigationPanelUnauthorized(BasePage):
             raise Exception("title does not equal", title, self.PREMIERES_PAGE_TITLE)
 
     def test_click_collections_button_unauthorized(self):
-        self.render(URL)
+        self.render(DOMAIN)
         time.sleep(1)
 
         self.find((By.XPATH, self.X_COLLECTIONS_HEADER_BUTTON)).click()
@@ -324,7 +304,7 @@ class TestNavigationPanelUnauthorized(BasePage):
         assert self.find((By.CLASS_NAME, self.MODAL_AUTH_CLASS_NAME))
 
     def test_click_login_button(self):
-        self.render(URL)
+        self.render(DOMAIN)
         time.sleep(1)
 
         self.find((By.XPATH, self.X_LOGIN_BUTTON)).click()
@@ -337,9 +317,9 @@ class TestNavigationPanelAuthorized(BasePage):
     USER_COLLECTION_PAGE_TITLE_CLASS_NAME = 'user-collection-list__title'
     USER_COLLECTION_PAGE_TITLE = 'Ваши коллекции'
 
+    @needed_auth
     def test_click_collections_button_authorized(self):
-        helper.login()
-        self.render(URL)
+        self.render(DOMAIN)
         time.sleep(2)
 
         self.find((By.XPATH, self.X_COLLECTIONS_HEADER_BUTTON)).click()
@@ -369,7 +349,7 @@ class TestMainPage(BasePage):
     PAGE_GENRES_COLLECTION_TITLE = 'Жанры'
 
     def test_preview_film_existing(self):
-        self.render(URL)
+        self.render(DOMAIN)
         time.sleep(1)
 
         assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_CLASS_NAME), 3)
@@ -377,7 +357,7 @@ class TestMainPage(BasePage):
         assert self.find((By.CLASS_NAME, self.PREVIEW_FILM_TITLE_CLASS_NAME), 3)
 
     def test_popular_section(self):
-        self.render(URL)
+        self.render(DOMAIN)
         time.sleep(1)
 
         assert self.find((By.XPATH, self.X_POPULAR_SECTION_SLIDER_FILM), 3)
@@ -391,7 +371,7 @@ class TestMainPage(BasePage):
             raise Exception("title does not equal", title, self.PAGE_POPULAR_COLLECTION_TITLE)
 
     def test_in_cinema_section(self):
-        self.render(URL)
+        self.render(DOMAIN)
         time.sleep(1)
 
         assert self.find((By.XPATH, self.X_IN_CINEMA_SECTION_SLIDER_FILM), 3)
@@ -405,7 +385,7 @@ class TestMainPage(BasePage):
             raise Exception("title does not equal", title, self.PAGE_IN_CINEMA_COLLECTION_TITLE)
 
     def test_genres_section(self):
-        self.render(URL)
+        self.render(DOMAIN)
         time.sleep(1)
 
         assert self.find((By.XPATH, self.X_GENRES_SECTION_SLIDER_GENRE), 3)
@@ -418,111 +398,6 @@ class TestMainPage(BasePage):
         if title != self.PAGE_GENRES_COLLECTION_TITLE:
             raise Exception("title does not equal", title, self.PAGE_GENRES_COLLECTION_TITLE)
 
-class TestCollectionPage(BasePage):
-    CLASS_WILL_WATCH_ICON = "about-film__button_bookmark"
-    CLASS_TITLE_FILM_IN_WILL_WATCH = 'about-film__title'
-    CLASS_LIST_WILL_WATCH_ICON = 'about-film__button_plus'
-    CLASS_DELETE_BUTTON = 'film__delete-svg'
-    CLASS_AUTHOR_NAME = 'header__userbar-name'
-    CLASS_AVATAR_AUTHOR = 'header__avatar'
-    CLASS_SHARE_ICON = 'page__collection__share-icon'
-    X_TOSTER = '/html/body/div/div[2]'
-    REDIRECTED_PAGE_URL = 'https://movie-gate.online/film/'
-    url = URL
-
-    def test_coll_has_film(self):
-        helper.logout()
-        helper.login()
-        self.render(f'{URL}/film/39/')
-        time.sleep(2)
-        film_title = self.find((By.CLASS_NAME, self.CLASS_TITLE_FILM_IN_WILL_WATCH)).text
-        self.find((By.CLASS_NAME, self.CLASS_WILL_WATCH_ICON)).click()
-
-        self.render(f'{URL}/user/collections/')
-        self.find((By.XPATH, "//div[contains(text(), 'Буду смотреть')]//preceding-sibling::div")).click()
-        xpath = f"//div[contains(text(), '{film_title}')]//preceding-sibling::div"
-        self.find((By.XPATH, xpath)).click()
-        pattern = self.REDIRECTED_PAGE_URL
-        current__url = dvr.get_instance().current_url
-        if (re.search(current__url, pattern)):
-            raise Exception("wrong redirect", pattern, current__url)
-
-        self.find((By.CLASS_NAME, self.CLASS_WILL_WATCH_ICON)).click()
-        helper.logout()
-
-    def test_adding_film_in_col(self):
-        helper.logout()
-        helper.login()
-        self.render(f'{URL}/film/39/')
-        time.sleep(2)
-        film_title = self.find((By.CLASS_NAME, self.CLASS_TITLE_FILM_IN_WILL_WATCH)).text
-        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
-        time.sleep(2)
-        self.find((By.XPATH, "//div[contains(text(), 'Избранное')]")).click()
-
-        self.render(f'{URL}/user/collections/')
-        self.find((By.XPATH, "//div[contains(text(), 'Избранное')]//preceding-sibling::div")).click()
-        xpath = f"//div[contains(text(), '{film_title}')]//preceding-sibling::div"
-        self.find((By.XPATH, xpath)).click()
-        pattern = self.REDIRECTED_PAGE_URL
-        current__url = dvr.get_instance().current_url
-        if (re.search(current__url, pattern)):
-            raise Exception("wrong redirect", pattern, current__url)
-
-        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
-        self.find((By.XPATH, "//div[contains(text(), 'Избранное')]")).click()
-        helper.logout()
-
-    def test_delete_film_from_col(self):
-        helper.logout()
-        helper.login()
-        self.render(f'{URL}/film/39/')
-        time.sleep(2)
-        film_title = self.find((By.CLASS_NAME, self.CLASS_TITLE_FILM_IN_WILL_WATCH)).text
-        self.find((By.CLASS_NAME, self.CLASS_WILL_WATCH_ICON)).click()
-
-        self.render(f'{URL}/user/collections/')
-        self.find((By.XPATH, "//div[contains(text(), 'Буду смотреть')]//preceding-sibling::div")).click()
-        xpath = f"//div[contains(text(), '{film_title}')]"
-        self.find((By.XPATH, xpath)).click()
-        self.find((By.CLASS_NAME, self.CLASS_DELETE_BUTTON)).click()
-
-        helper.logout()
-
-    def test_public_coll_has_film(self):
-        helper.logout()
-        helper.login()
-        self.render(f'{URL}/film/39/')
-        time.sleep(2)
-        author_name = self.find((By.CLASS_NAME, self.CLASS_AUTHOR_NAME)).text
-        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
-        time.sleep(2)
-        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]")).click()
-        self.render(f'{URL}/user/collections/')
-        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]//preceding-sibling::div")).click()
-        helper.logout()
-
-        self.find((By.CLASS_NAME, self.CLASS_AVATAR_AUTHOR)).click()
-        xpath = f"//div[contains(text(), '{author_name}')]"
-        public_author_name = self.find((By.XPATH, xpath)).text
-        if (public_author_name != author_name):
-            raise Exception("wrong redirect", public_author_name, author_name)
-
-    def test_public_coll_copy_url(self):
-        helper.logout()
-        helper.login()
-        self.render(f'{URL}/film/39/')
-        time.sleep(2)
-        self.find((By.CLASS_NAME, self.CLASS_LIST_WILL_WATCH_ICON)).click()
-        time.sleep(2)
-        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]")).click()
-        self.render(f'{URL}/user/collections/')
-        self.find((By.XPATH, "//div[contains(text(), 'Мои рекомендации')]//preceding-sibling::div")).click()
-        helper.logout()
-
-        self.find((By.CLASS_NAME, self.CLASS_SHARE_ICON)).click()
-        self.find((By.XPATH, self.X_TOSTER))
-        self.wait_hide((By.XPATH, self.X_TOSTER))
 
 class TestPremieresPage(BasePage):
     X_PREMIERES_TITLE_CLASS_NAME = 'premiere-page__title'
@@ -530,7 +405,7 @@ class TestPremieresPage(BasePage):
     PREMIERES_DAY_CLASS_NAME = 'premiere-day'
 
     def test_premieres_exist(self):
-        self.render(f'{URL}/premieres/')
+        self.render(f'{DOMAIN}/premieres/')
 
         title = self.find((By.CLASS_NAME, self.X_PREMIERES_TITLE_CLASS_NAME), 3).text
 
@@ -539,13 +414,14 @@ class TestPremieresPage(BasePage):
 
         assert self.find((By.CLASS_NAME, self.PREMIERES_DAY_CLASS_NAME), 3)
 
+
 class TestPremieresPage(BasePage):
     X_PREMIERES_TITLE_CLASS_NAME = 'premiere-page__title'
     PREMIERES_TITLE = 'Премьеры'
     PREMIERES_DAY_CLASS_NAME = 'premiere-day'
 
     def test_premieres_exist(self):
-        self.render(f'{URL}/premieres/')
+        self.render(f'{DOMAIN}/premieres/')
 
         title = self.find((By.CLASS_NAME, self.X_PREMIERES_TITLE_CLASS_NAME), 3).text
 
@@ -553,6 +429,7 @@ class TestPremieresPage(BasePage):
             raise Exception("title does not equal", title, self.PREMIERES_TITLE)
 
         assert self.find((By.CLASS_NAME, self.PREMIERES_DAY_CLASS_NAME), 3)
+
 
 class TestSignup(BasePage):
     LOGIN = 'Qwe123@a.a'
@@ -567,8 +444,8 @@ class TestSignup(BasePage):
     X_ALREADY_REGISTER = '/html/body/div/div[1]/div/div/div/div[2]/form/div[2]/div'
     CLASS_WRONG_INPUT = 'modal__input_red_border'
     NICKNAME = 'Admin'
-    URL_PAGE_LOGIN = f'{URL}/login/'
-    URL_PAGE_SIGNUP = f'{URL}/signup/'
+    URL_PAGE_LOGIN = f'{DOMAIN}/login/'
+    URL_PAGE_SIGNUP = f'{DOMAIN}/signup/'
 
     def test_redirect_login(self):
         self.render(self.URL_PAGE_SIGNUP)
@@ -612,7 +489,6 @@ class TestSignup(BasePage):
         if (is_wrong != True):
             raise Exception("wrong check", input_email, wrong_email)
 
-
     def test_invalid_password(self):
         self.render(self.URL_PAGE_SIGNUP)
         wrong_password = 'abcds'
@@ -642,7 +518,9 @@ class TestSignup(BasePage):
         self.find((By.XPATH, self.X_BUTTON_REG)).click()
         msg_already_register = self.find((By.XPATH, self.X_ALREADY_REGISTER)).text
         if (msg_already_register != "Пользователь с таким email уже зарегистрирован"):
-            raise Exception("wrong register msg", msg_already_register, "Пользователь с таким email уже зарегистрирован")
+            raise Exception("wrong register msg", msg_already_register,
+                            "Пользователь с таким email уже зарегистрирован")
+
 
 class TestLogin(BasePage):
     LOGIN = 'Qwe123@a.a'
@@ -654,8 +532,8 @@ class TestLogin(BasePage):
     X_BUTTON_LOGIN = '/html/body/div/div[1]/div/div/div/div[1]/form/button'
     CLASS_WRONG_INPUT = 'modal__input_red_border'
     CLASS_MODAL = 'modal__background'
-    URL_PAGE_LOGIN = f'{URL}/login/'
-    URL_PAGE_SIGNUP = f'{URL}/signup/'
+    URL_PAGE_LOGIN = f'{DOMAIN}/login/'
+    URL_PAGE_SIGNUP = f'{DOMAIN}/signup/'
 
     def test_redirect_signup(self):
         self.render(self.URL_PAGE_LOGIN)
@@ -680,7 +558,7 @@ class TestLogin(BasePage):
         is_wrong = self.CLASS_WRONG_INPUT in input_email.get_attribute("class").split()
         if (is_wrong != True):
             raise Exception("wrong check", input_email, wrong_email)
-        
+
     def test_invalid_password(self):
         self.render(self.URL_PAGE_LOGIN)
         wrong_password = '123456'
@@ -698,8 +576,8 @@ class TestLogin(BasePage):
     def test_correct_login(self):
         self.render(self.URL_PAGE_LOGIN)
 
-        input_email = self.find((By.XPATH, self.X_INPUT_EMAIL)).send_keys(self.LOGIN)
-        input_password = self.find((By.XPATH, self.X_INPUT_PASSWORD)).send_keys(self.PASSWD)
+        self.find((By.XPATH, self.X_INPUT_EMAIL)).send_keys(self.LOGIN)
+        self.find((By.XPATH, self.X_INPUT_PASSWORD)).send_keys(self.PASSWD)
 
         self.find((By.XPATH, self.X_BUTTON_LOGIN)).click()
         try:
@@ -707,17 +585,17 @@ class TestLogin(BasePage):
         except:
             None
 
+
 class TestProfile(BasePage):
     CLASS_CHANGE_SVG = 'profile__change__svg'
     CLASS_FORM_CHANGE = 'profile__change'
     CLASS_FORM_DISPLAY_NONE = 'dysplay-none'
     CLASS_FORM_DISPLAY_FLEX = 'dysplay-flex'
     X_SAVE_NEW_NAME = '/html/body/div/div/div[2]/div[2]/div[2]/form[1]/button'
-    URL_PAGE_PROFILE = f'{URL}/profile/'
+    URL_PAGE_PROFILE = f'{DOMAIN}/profile/'
 
+    @needed_auth
     def test_open_change_input(self):
-        helper.logout()
-        helper.login()
         time.sleep(1)
         self.render(self.URL_PAGE_PROFILE)
         time.sleep(3)
@@ -731,92 +609,83 @@ class TestProfile(BasePage):
         if (is_closed != True):
             raise Exception("can't closen form change", form_change)
 
-
+    @needed_auth
     def test_change_name(self):
-        helper.logout()
-        helper.login()
         time.sleep(1)
         self.render(self.URL_PAGE_PROFILE)
         time.sleep(3)
-        self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG),3).click()
-        field_Input_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"),3)
+        self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG), 3).click()
+        field_Input_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"), 3)
         field_Input_new_name.send_keys('Zxc543')
-        self.find((By.XPATH, self.X_SAVE_NEW_NAME),4).click()
+        self.find((By.XPATH, self.X_SAVE_NEW_NAME), 4).click()
 
-        new_name = self.find((By.XPATH, "//div[contains(text(), 'Zxc543')]"),3)
+        new_name = self.find((By.XPATH, "//div[contains(text(), 'Zxc543')]"), 3)
 
-        if(bool(new_name) != True):
-            raise Exception("can't change name",new_name)
+        if (bool(new_name) != True):
+            raise Exception("can't change name", new_name)
 
         self.render(self.URL_PAGE_PROFILE)
         time.sleep(3)
-        self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG),3).click()
-        field_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"),3)
+        self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG), 3).click()
+        field_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"), 3)
         field_new_name.send_keys('Admin')
-        self.find((By.XPATH, self.X_SAVE_NEW_NAME),3).click()
+        self.find((By.XPATH, self.X_SAVE_NEW_NAME), 3).click()
 
-        new_name = self.find((By.XPATH, "//div[contains(text(), 'Admin')]"),3)
-        if(bool(new_name) != True):
-            raise Exception("can't return name",new_name)
+        new_name = self.find((By.XPATH, "//div[contains(text(), 'Admin')]"), 3)
+        if (bool(new_name) != True):
+            raise Exception("can't return name", new_name)
 
         time.sleep(2)
 
+    @needed_auth
     def test_check_value_num_of_rates(self):
-        helper.logout()
-        helper.login()
         time.sleep(1)
         self.render(self.URL_PAGE_PROFILE)
         time.sleep(2)
-        field_num_of_rates = self.find((By.XPATH, "//div[contains(text(), 'Оценок:')]//following-sibling::div"),3).text
-        if(not field_num_of_rates):
+        field_num_of_rates = self.find((By.XPATH, "//div[contains(text(), 'Оценок:')]//following-sibling::div"), 3).text
+        if (not field_num_of_rates):
             raise Exception("empty field")
-        if(not (field_num_of_rates == "нет оценок" or int(field_num_of_rates) > -1)):
+        if (not (field_num_of_rates == "нет оценок" or int(field_num_of_rates) > -1)):
             raise Exception("wrong format")
 
-
+    @needed_auth
     def test_check_value_num_of_coll(self):
-        helper.logout()
-        helper.login()
         time.sleep(1)
         self.render(self.URL_PAGE_PROFILE)
         time.sleep(2)
-        field_num_of_coll = self.find((By.XPATH, "//div[contains(text(), 'Коллекций:')]//following-sibling::div"),3).text
-        if(not field_num_of_coll):
+        field_num_of_coll = self.find((By.XPATH, "//div[contains(text(), 'Коллекций:')]//following-sibling::div"),
+                                      3).text
+        if (not field_num_of_coll):
             raise Exception("empty field")
-        if(not (int(field_num_of_coll) > -1)):
+        if (not (int(field_num_of_coll) > -1)):
             raise Exception("wrong format")
 
-
-
+    @needed_auth
     def test_check_value_num_of_rewiews(self):
-        helper.logout()
-        helper.login()
         time.sleep(1)
         self.render(self.URL_PAGE_PROFILE)
         time.sleep(2)
-        field_num_of_rewiews = self.find((By.XPATH, "//div[contains(text(), 'Рецензий:')]//following-sibling::div"),3).text
-        if(not field_num_of_rewiews):
+        field_num_of_rewiews = self.find((By.XPATH, "//div[contains(text(), 'Рецензий:')]//following-sibling::div"),
+                                         3).text
+        if (not field_num_of_rewiews):
             raise Exception("empty field")
-        if(not (field_num_of_rewiews == "нет рецензий" or int(field_num_of_rewiews) > -1)):
+        if (not (field_num_of_rewiews == "нет рецензий" or int(field_num_of_rewiews) > -1)):
             raise Exception("wrong format")
 
-
+    @needed_auth
     def test_check_main_fields(self):
-        helper.logout()
-        helper.login()
         time.sleep(1)
         self.render(self.URL_PAGE_PROFILE)
         time.sleep(3)
-        date_of_reg = self.find((By.XPATH, "//div[contains(text(), 'Дата регистрации:')]"),5)
-        if(bool(date_of_reg) != True):
+        date_of_reg = self.find((By.XPATH, "//div[contains(text(), 'Дата регистрации:')]"), 5)
+        if not bool(date_of_reg):
             raise Exception("can't find 'Дата регистрации:' field")
-        num_of_rates = self.find((By.XPATH, "//div[contains(text(), 'Оценок:')]"),5)
-        if(bool(num_of_rates) != True):
+        num_of_rates = self.find((By.XPATH, "//div[contains(text(), 'Оценок:')]"), 5)
+        if not bool(num_of_rates):
             raise Exception("can't find 'Оценок:' field")
-        num_of_coll = self.find((By.XPATH, "//div[contains(text(), 'Коллекций:')]"),5)
-        if(bool(num_of_coll) != True):
+        num_of_coll = self.find((By.XPATH, "//div[contains(text(), 'Коллекций:')]"), 5)
+        if not bool(num_of_coll):
             raise Exception("can't find 'Коллекций:' field")
-        num_of_rewiews = self.find((By.XPATH, "//div[contains(text(), 'Рецензий:')]"),5)
-        if(bool(num_of_rewiews) != True):
+        num_of_rewiews = self.find((By.XPATH, "//div[contains(text(), 'Рецензий:')]"), 5)
+        if not bool(num_of_rewiews):
             raise Exception("can't find 'Рецензий:' field")
-

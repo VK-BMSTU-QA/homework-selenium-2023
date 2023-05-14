@@ -1,4 +1,5 @@
 import os
+import time
 
 from selenium.webdriver.common.by import By
 
@@ -33,6 +34,7 @@ class HelperAuth(BasePage):
         self.IS_LOGIN = False
 
     def register(self):
+        time.sleep(1);
         self.render(self.DOMAIN)
         btn_modal = self.find((By.CLASS_NAME, self.CLASS_BUTTON_OPEN_MODAL), 10)
         btn_modal.click()

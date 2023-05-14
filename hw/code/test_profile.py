@@ -65,29 +65,6 @@ class TestProfile(BasePage):
         if (not (field_num_of_rates == "нет оценок" or int(field_num_of_rates) > -1)):
             raise Exception("wrong format")
 
-    # @needed_auth
-    # def test_check_value_num_of_coll(self):
-
-    #     self.render(self.URL_PAGE_PROFILE)
-
-    #     field_num_of_coll = self.find_group((By.CLASS_NAME, self.CLASS_NAME_INFO_VALUE))[self.COLLS].text
-    #     if (not field_num_of_coll):
-    #         raise Exception("empty field")
-    #     if (not (int(field_num_of_coll) > -1)):
-    #         raise Exception("wrong format")
-
-    # @needed_auth
-    # def test_check_value_num_of_rewiews(self):
-
-    #     self.render(self.URL_PAGE_PROFILE)
-
-    #     field_num_of_rewiews = self.find((By.XPATH, "//div[contains(text(), 'Рецензий:')]//following-sibling::div"),
-    #                                      3).text
-    #     if (not field_num_of_rewiews):
-    #         raise Exception("empty field")
-    #     if (not (field_num_of_rewiews == "нет рецензий" or int(field_num_of_rewiews) > -1)):
-    #         raise Exception("wrong format")
-
     @needed_auth
     def test_check_main_fields(self):
 

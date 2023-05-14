@@ -8,7 +8,7 @@ from const import *
 class TestPersonNotAuthorized(BasePage):
     # check redirect
     CLASS_NAME_FILM = "film__blackout"
-    EXPECTED_REDIRECTED_PAGE_URL = 'https://movie-gate.online/film/19/'
+    EXPECTED_REDIRECTED_PAGE_URL = 'https://movie-gate.online/film/28/'
 
     # check film contains person
     CLASS_NAME_ROLE = "about-film__role"

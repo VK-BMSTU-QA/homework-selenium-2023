@@ -24,8 +24,13 @@ class BasePage(object):
 
     def find(self, locator, timeout=None):
         if timeout is None:
-            timeout = 10
+            timeout = 5
         return self.wait(timeout).until(EC.presence_of_element_located(locator))
+
+    def find_group(self, locator, timeout=None):
+        if timeout is None:
+            timeout = 5
+        return self.wait(timeout).until(EC.presence_of_all_elements_located(locator))
 
     def del_session(self):
         return self.driver.delete_all_cookies()

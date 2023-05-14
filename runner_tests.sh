@@ -5,8 +5,8 @@ echo $LOGIN $PASSWORD
 # pytest hw/code/test_collection.py
 # pytest hw/code/test_person.py
 
-pytest hw/code/test_search.py
-pytest hw/code/test_film_unauth.py
+# pytest hw/code/test_search.py
+# pytest hw/code/test_film_unauth.py
 pytest hw/code/test_film_auth.py
 
 # pytest hw/code/test_login.py

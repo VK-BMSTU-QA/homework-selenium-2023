@@ -10,12 +10,18 @@ from const import DOMAIN
 class HelperAuth(BasePage):
     CLASS_BUTTON_OPEN_MODAL = 'header__login__btn'
     CLASS_BUTTON_OPEN_REG_WINDOW = 'modal__login__switch__btn'
-    X_INPUT_NICKNAME = "//input[@placeholder='Введите имя пользователя']"
-    X_INPUT_EMAIL = "//input[@placeholder='Укажите адрес электронной почты']"
-    X_INPUT_PASSWORD = "//input[@placeholder='Введите пароль']"
-    X_INPUT_REPEAT_PASSWORD = "//input[@placeholder='Подтвердите пароль']"
-    X_BUTTON_REG = "//button[contains(text(), 'Зарегистрироваться')]"
-    X_BUTTON_LOGIN = "//button[contains(text(), 'Войти')]"
+    CLASS_NAME_BUTTON_REG = "modal__input__button-auth"
+    CLASS_NAME_BUTTON_LOGIN = "modal__input__button-auth"
+
+    CLASS_NAME_NO_USER = 'js-modal__input__error'
+    CLASS_NAME_MODAL_INPUT = 'js-modal__input'
+    NICKNAME_INPUT = 0
+    EMAIL_INPUT = 1
+    PASSWORD_INPUT = 2
+    REPEAT_PASSWORD_INPUT = 3
+
+    EMAIL_INPUT_LOGIN = 0
+    PASSWORD_INPUT_LOGIN = 1
 
     def __init__(self, domain):
         self.DOMAIN = domain
@@ -34,21 +40,21 @@ class HelperAuth(BasePage):
         self.IS_LOGIN = False
 
     def register(self):
-        time.sleep(1);
-        self.render(self.DOMAIN)
-        btn_modal = self.find((By.CLASS_NAME, self.CLASS_BUTTON_OPEN_MODAL), 10)
-        btn_modal.click()
+        self.render(f'{self.DOMAIN}/signup/')
 
-        self.find((By.CLASS_NAME, self.CLASS_BUTTON_OPEN_REG_WINDOW), 10).click()
+        input_nickname = self.find_group((By.CLASS_NAME, self.CLASS_NAME_MODAL_INPUT))[self.NICKNAME_INPUT]
+        input_nickname.send_keys(self.NICKNAME)
+        input_email = self.find_group((By.CLASS_NAME, self.CLASS_NAME_MODAL_INPUT))[self.EMAIL_INPUT]
+        input_email.send_keys(self.LOGIN)
+        input_password = self.find_group((By.CLASS_NAME, self.CLASS_NAME_MODAL_INPUT))[self.PASSWORD_INPUT]
+        input_password.send_keys(self.PASSWD)
+        input_repeat_password = self.find_group((By.CLASS_NAME, self.CLASS_NAME_MODAL_INPUT))[self.REPEAT_PASSWORD_INPUT]
+        input_repeat_password.send_keys(self.PASSWD)
 
-        self.find((By.XPATH, self.X_INPUT_NICKNAME)).send_keys(self.NICKNAME)
-        self.find((By.XPATH, self.X_INPUT_EMAIL)).send_keys(self.LOGIN)
-        self.find((By.XPATH, self.X_INPUT_PASSWORD)).send_keys(self.PASSWD)
-        self.find((By.XPATH, self.X_INPUT_REPEAT_PASSWORD)).send_keys(self.PASSWD)
-
-        self.find((By.XPATH, self.X_BUTTON_REG)).click()
+        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REG)).click()
 
         self.IS_REGISTERED = True
+        self.IS_LOGIN = True
 
     def login(self):
         if self.IS_LOGIN:
@@ -57,13 +63,13 @@ class HelperAuth(BasePage):
         self.render(self.DOMAIN)
         self.find((By.CLASS_NAME, self.CLASS_BUTTON_OPEN_MODAL), 10).click()
 
-        self.find((By.XPATH, self.X_INPUT_EMAIL)).send_keys(self.LOGIN)
+        self.find_group((By.CLASS_NAME, self.CLASS_NAME_MODAL_INPUT))[self.EMAIL_INPUT_LOGIN].send_keys(self.LOGIN)
 
-        self.find((By.XPATH, self.X_INPUT_PASSWORD)).send_keys(self.PASSWD)
+        self.find_group((By.CLASS_NAME, self.CLASS_NAME_MODAL_INPUT))[self.PASSWORD_INPUT_LOGIN].send_keys(self.PASSWD)
 
-        self.find((By.XPATH, self.X_BUTTON_LOGIN)).click()
+        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_LOGIN)).click()
         try:
-            err = self.find((By.XPATH, '/html/body/div/div[1]/div/div/div/div[1]/form/div[1]/div'), 2).text
+            err = self.find((By.CLASS_NAME, self.CLASS_NAME_NO_USER), 4).text
             if err == 'Такой пользователь не зарегистирован':
                 self.register()
         except:

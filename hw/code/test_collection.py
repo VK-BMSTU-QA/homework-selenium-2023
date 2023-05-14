@@ -10,15 +10,20 @@ from helper_auth import needed_auth, helper
 class CollectionHelper(BasePage):
     CLASS_NAME_TITLE_FILM_IN_WILL_WATCH = 'about-film__title'
     CLASS_NAME_LIST_WILL_WATCH_ICON = 'about-film__button_plus'
+    X_BUTTON_PLUS = '/html/body/div/div/div[1]/div/div[2]/div[7]/div/a'
 
     # second call is remove
     def add_remove_film_in_collection(self, film_id, collection):
         self.render(f'{DOMAIN}/film/{film_id}/')
         film_title = self.find((By.CLASS_NAME, self.CLASS_NAME_TITLE_FILM_IN_WILL_WATCH)).text
 
-        self.find((By.XPATH, '/html/body/div/div/div[1]/div/div[2]/div[7]/div/a')).click()
+        self.find((By.XPATH, self.X_BUTTON_PLUS)).click()
 
-        self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]')).click()
+        try:
+            self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]')).click()
+        except:
+            self.find((By.XPATH, self.X_BUTTON_PLUS)).click()
+            self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]')).click()
 
         return film_title
 

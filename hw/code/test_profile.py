@@ -10,8 +10,11 @@ class TestProfile(BasePage):
     CLASS_FORM_CHANGE = 'profile__change'
     CLASS_FORM_DISPLAY_NONE = 'dysplay-none'
     CLASS_FORM_DISPLAY_FLEX = 'dysplay-flex'
-    X_SAVE_NEW_NAME = '/html/body/div/div/div[2]/div[2]/div[2]/form[1]/button'
+    CLASS_NAME_SAVE_NEW_NAME = 'profile__input__button'
     URL_PAGE_PROFILE = f'{DOMAIN}/profile/'
+    CLASS_NAME_INFO_VALUE = 'profile__info__value'
+    RATES = 1
+    COLLS = 2
 
     @needed_auth
     def test_open_change_input(self):
@@ -34,7 +37,7 @@ class TestProfile(BasePage):
         self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG), 3).click()
         field_Input_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"), 3)
         field_Input_new_name.send_keys('Zxc543')
-        self.find((By.XPATH, self.X_SAVE_NEW_NAME), 4).click()
+        self.find((By.CLASS_NAME, self.CLASS_NAME_SAVE_NEW_NAME), 4).click()
 
         new_name = self.find((By.XPATH, "//div[contains(text(), 'Zxc543')]"), 3)
 
@@ -45,7 +48,7 @@ class TestProfile(BasePage):
         self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG), 3).click()
         field_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"), 3)
         field_new_name.send_keys('Admin')
-        self.find((By.XPATH, self.X_SAVE_NEW_NAME), 3).click()
+        self.find((By.CLASS_NAME, self.CLASS_NAME_SAVE_NEW_NAME), 3).click()
 
         new_name = self.find((By.XPATH, "//div[contains(text(), 'Admin')]"), 3)
         if (bool(new_name) != True):
@@ -56,7 +59,7 @@ class TestProfile(BasePage):
 
         self.render(self.URL_PAGE_PROFILE)
 
-        field_num_of_rates = self.find((By.XPATH, "//div[contains(text(), 'Оценок:')]//following-sibling::div"), 3).text
+        field_num_of_rates = self.find_group((By.CLASS_NAME, self.CLASS_NAME_INFO_VALUE))[self.RATES].text
         if (not field_num_of_rates):
             raise Exception("empty field")
         if (not (field_num_of_rates == "нет оценок" or int(field_num_of_rates) > -1)):
@@ -67,8 +70,7 @@ class TestProfile(BasePage):
 
         self.render(self.URL_PAGE_PROFILE)
 
-        field_num_of_coll = self.find((By.XPATH, "//div[contains(text(), 'Коллекций:')]//following-sibling::div"),
-                                      3).text
+        field_num_of_coll = self.find_group((By.CLASS_NAME, self.CLASS_NAME_INFO_VALUE))[self.COLLS].text
         if (not field_num_of_coll):
             raise Exception("empty field")
         if (not (int(field_num_of_coll) > -1)):

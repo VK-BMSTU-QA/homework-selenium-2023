@@ -1,10 +1,11 @@
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from driver import dvr
+from utils.driver import dvr
 
 
 class BasePage(object):
+    DOMAIN = 'https://movie-gate.online'
     driver = dvr.get_instance()
 
     def render(self, url):

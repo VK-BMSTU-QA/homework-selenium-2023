@@ -1,8 +1,7 @@
 from selenium.webdriver.common.by import By
 
-from base_page import BasePage
-from driver import dvr
-from const import *
+from utils.base_page import BasePage
+from utils.driver import dvr
 
 
 class TestPersonNotAuthorized(BasePage):
@@ -15,7 +14,7 @@ class TestPersonNotAuthorized(BasePage):
     EXPECTED_PERSON = "Хоакин Феникс"
 
     def test_film_contains_person(self):
-        self.render(f'{DOMAIN}/person/31/')
+        self.render(f'{self.DOMAIN}/person/31/')
         self.find((By.CLASS_NAME, self.CLASS_NAME_FILM)).click()
 
         # check redirect

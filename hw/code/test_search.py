@@ -3,10 +3,9 @@ import time
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
-from driver import dvr
-from base_page import BasePage
-from const import *
-from helper_auth import needed_auth
+from utils.driver import dvr
+from utils.base_page import BasePage
+from utils.helper_auth import needed_auth
 
 class TestSearch(BasePage):
     CLASS_NAME_INPUT_SEARCH = 'js-header__form__input'
@@ -26,19 +25,19 @@ class TestSearch(BasePage):
     CLASS_NAME_TITLE_ON_FILM_PAGE = 'about-film__title'
 
     def test_check_exists(self):
-        self.render(DOMAIN)
+        self.render(self.DOMAIN)
         self.find((By.CLASS_NAME, self.CLASS_NAME_INPUT_SEARCH)).send_keys(Keys.ENTER)
         title = self.find((By.CLASS_NAME, self.CLASS_NAME_TITLE_SEARCH)).text
         if title != self.TITLE_SEARCH:
             raise Exception("stings does not equal", title, self.TITLE_SEARCH)
 
     def test_check_empty(self):
-        self.render(DOMAIN)
+        self.render(self.DOMAIN)
         self.find((By.CLASS_NAME, self.CLASS_NAME_INPUT_SEARCH)).send_keys(Keys.ENTER)
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_RETURN_MAIN)).click()
 
     def test_check_group_category(self):
-        self.render(DOMAIN)
+        self.render(self.DOMAIN)
         self.find((By.CLASS_NAME, self.CLASS_NAME_INPUT_SEARCH)).send_keys(self.ALL_GROUP_SEARCH, Keys.ENTER)
 
         films_field = self.find_group((By.CLASS_NAME, self.CLASS_NAME_CATEGORY_TITLE))[self.CLASS_NAME_SEARCH_GROUP_FILMS].text
@@ -54,7 +53,7 @@ class TestSearch(BasePage):
             raise Exception("stings does not equal", persons_field, self.SEARCH_GROUP_PERSONS)
 
     def test_correct_results(self):
-        self.render(DOMAIN)
+        self.render(self.DOMAIN)
         self.find((By.CLASS_NAME, self.CLASS_NAME_INPUT_SEARCH)).send_keys(self.ALL_GROUP_SEARCH, Keys.ENTER)
 
         films_field = self.find((By.CLASS_NAME, self.CLASS_NAME_FIRST_FOUNDED_TITLE)).text

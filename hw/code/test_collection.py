@@ -1,10 +1,9 @@
 from selenium.webdriver.common.by import By
 import time
 
-from driver import dvr
-from base_page import BasePage
-from const import *
-from helper_auth import needed_auth, helper
+from utils.driver import dvr
+from utils.base_page import BasePage
+from utils.helper_auth import needed_auth, helper
 
 
 class CollectionHelper(BasePage):
@@ -12,8 +11,8 @@ class CollectionHelper(BasePage):
     CLASS_NAME_LIST_WILL_WATCH_ICON = 'about-film__button_plus'
 
     # second call is remove
-    def add_remove_film_in_collection(self, film_id, collection):
-        self.render(f'{DOMAIN}/film/{film_id}/')
+    def add_or_remove_film_in_collection(self, film_id, collection):
+        self.render(f'{self.DOMAIN}/film/{film_id}/')
         film_title = self.find((By.CLASS_NAME, self.CLASS_NAME_TITLE_FILM_IN_WILL_WATCH)).text
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_LIST_WILL_WATCH_ICON)).click()
@@ -45,11 +44,11 @@ class TestPersonalCollectionAddFilm(CollectionHelper):
         # prepare
         collection = "Избранное"
         film_id = 39
-        film_title = self.add_remove_film_in_collection(film_id, collection)
+        film_title = self.add_or_remove_film_in_collection(film_id, collection)
 
         # action
         # to collections
-        self.render(f'{DOMAIN}/user/collections/')
+        self.render(f'{self.DOMAIN}/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
 
         # in collection
@@ -63,7 +62,7 @@ class TestPersonalCollectionAddFilm(CollectionHelper):
             raise Exception("wrong redirect: film not expected", expected_full_url, actual_url)
 
         # rollback env
-        self.add_remove_film_in_collection(film_id, collection)
+        self.add_or_remove_film_in_collection(film_id, collection)
 
 
 class TestPersonalCollectionDeleteFilm(CollectionHelper):
@@ -87,11 +86,11 @@ class TestPersonalCollectionDeleteFilm(CollectionHelper):
         # prepare
         collection = "Избранное"
         film_id = 39
-        film_title = self.add_remove_film_in_collection(film_id, collection)
+        film_title = self.add_or_remove_film_in_collection(film_id, collection)
 
         # action
         # to collections
-        self.render(f'{DOMAIN}/user/collections/')
+        self.render(f'{self.DOMAIN}/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
 
         # to film
@@ -128,10 +127,10 @@ class TestPersonalCollectionHasFilm(CollectionHelper):
         helper.login()
         collection = "Мои рекомендации"
         film_id = 39
-        film_title = self.add_remove_film_in_collection(film_id, collection)
+        film_title = self.add_or_remove_film_in_collection(film_id, collection)
 
         # to collections
-        self.render(f'{DOMAIN}/user/collections/')
+        self.render(f'{self.DOMAIN}/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
 
         # get collection_id
@@ -139,11 +138,11 @@ class TestPersonalCollectionHasFilm(CollectionHelper):
         f = filter(str.isdigit, actual_collection_id)
         collection_id = "".join(f)
 
-        self.render(DOMAIN)
+        self.render(self.DOMAIN)
 
         # action
         # to collection
-        self.render(f'{DOMAIN}/user/collection/{collection_id}')
+        self.render(f'{self.DOMAIN}/user/collection/{collection_id}')
 
         # in collection
         xpath = f'//div[contains(text(), \'{film_title}\')]//preceding-sibling::div'
@@ -156,7 +155,7 @@ class TestPersonalCollectionHasFilm(CollectionHelper):
             raise Exception("wrong redirect: film not expected", expected_full_url, actual_url)
 
         # rollback env
-        self.add_remove_film_in_collection(film_id, collection)
+        self.add_or_remove_film_in_collection(film_id, collection)
 
 
 class TestPersonalCollectionShare(CollectionHelper):
@@ -180,10 +179,10 @@ class TestPersonalCollectionShare(CollectionHelper):
         helper.login()
         collection = "Мои рекомендации"
         film_id = 39
-        self.add_remove_film_in_collection(film_id, collection)
+        self.add_or_remove_film_in_collection(film_id, collection)
 
         # to collections
-        self.render(f'{DOMAIN}/user/collections/')
+        self.render(f'{self.DOMAIN}/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
 
         # get collection_id
@@ -191,11 +190,11 @@ class TestPersonalCollectionShare(CollectionHelper):
         f = filter(str.isdigit, actual_collection_id)
         collection_id = "".join(f)
 
-        self.render(DOMAIN)
+        self.render(self.DOMAIN)
 
         # action
         # to collection
-        self.render(f'{DOMAIN}/user/collection/{collection_id}')
+        self.render(f'{self.DOMAIN}/user/collection/{collection_id}')
 
         # in collection
         self.find((By.CLASS_NAME, self.CLASS_NAME_SHARE_ICON)).click()
@@ -204,4 +203,4 @@ class TestPersonalCollectionShare(CollectionHelper):
         self.wait_hide((By.XPATH, self.X_TOSTER))
 
         # rollback
-        self.add_remove_film_in_collection(film_id, collection)
+        self.add_or_remove_film_in_collection(film_id, collection)

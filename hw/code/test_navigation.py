@@ -1,8 +1,7 @@
 from selenium.webdriver.common.by import By
 
-from base_page import BasePage
-from const import *
-from helper_auth import needed_auth
+from utils.base_page import BasePage
+from utils.helper_auth import needed_auth
 
 
 class TestNavigationPanelUnauthorized(BasePage):
@@ -32,14 +31,14 @@ class TestNavigationPanelUnauthorized(BasePage):
     CLASS_NAME_HEADER_LOGIN_BUTTON = 'js-header__login__btn'
 
     def test_click_logo(self):
-        self.render(f'{DOMAIN}/collection/tag-popular/')
+        self.render(f'{self.DOMAIN}/collection/tag-popular/')
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_LOGO)).click()
 
         assert self.find((By.CLASS_NAME, self.CLASS_NAME_PREVIEW_FILM))
 
     def test_click_popular_button(self):
-        self.render(DOMAIN)
+        self.render(self.DOMAIN)
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_HEADER_POPULAR_BUTTON)).click()
 
@@ -49,7 +48,7 @@ class TestNavigationPanelUnauthorized(BasePage):
             raise Exception("title does not equal", title, self.POPULAR_COLLECTION_PAGE_TITLE)
 
     def test_click_premieres_button(self):
-        self.render(DOMAIN)
+        self.render(self.DOMAIN)
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_HEADER_PREMIERES_BUTTON)).click()
 
@@ -59,14 +58,14 @@ class TestNavigationPanelUnauthorized(BasePage):
             raise Exception("title does not equal", title, self.PREMIERES_PAGE_TITLE)
 
     def test_click_collections_button_unauthorized(self):
-        self.render(DOMAIN)
+        self.render(self.DOMAIN)
 
         self.find((By.XPATH, self.X_PATH_HEADER_COLLECTIONS_BUTTON)).click()
 
         assert self.find((By.CLASS_NAME, self.MODAL_AUTH_CLASS_NAME))
 
     def test_click_login_button(self):
-        self.render(DOMAIN)
+        self.render(self.DOMAIN)
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_HEADER_LOGIN_BUTTON)).click()
 
@@ -74,7 +73,7 @@ class TestNavigationPanelUnauthorized(BasePage):
 
     @needed_auth
     def test_click_collections_button_authorized(self):
-        self.render(DOMAIN)
+        self.render(self.DOMAIN)
 
         self.find((By.XPATH, self.X_PATH_HEADER_COLLECTIONS_BUTTON)).click()
 

@@ -1,7 +1,6 @@
 from selenium.webdriver.common.by import By
 
-from base_page import BasePage
-from const import *
+from utils.base_page import BasePage
 
 
 class TestPremieresPage(BasePage):
@@ -15,7 +14,7 @@ class TestPremieresPage(BasePage):
     CLASS_NAME_FILM_PAGE_ABOUT = 'js-film-page__about'
 
     def test_premieres_exist(self):
-        self.render(f'{DOMAIN}/premieres/')
+        self.render(f'{self.DOMAIN}/premieres/')
 
         title = self.find((By.CLASS_NAME, self.CLASS_NAME_PREMIERES_TITLE)).text
 
@@ -25,7 +24,7 @@ class TestPremieresPage(BasePage):
         assert self.find((By.CLASS_NAME, self.CLASS_NAME_PREMIERES_DAY))
 
     def test_premiers_film_poster_redirect(self):
-        self.render(f'{DOMAIN}/premieres/')
+        self.render(f'{self.DOMAIN}/premieres/')
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_PREMIERES_FILM_POSTER)).click()
 

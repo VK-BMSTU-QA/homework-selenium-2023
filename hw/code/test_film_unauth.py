@@ -3,10 +3,9 @@ import time
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
-from driver import dvr
-from base_page import BasePage
-from const import *
-from helper_auth import needed_auth
+from utils.driver import dvr
+from utils.base_page import BasePage
+from utils.helper_auth import needed_auth
 
 class TestFilmPageUnauthorized(BasePage):
     CLASS_NAME_BUTTON_PLUS = 'about-film__button_plus'
@@ -16,14 +15,10 @@ class TestFilmPageUnauthorized(BasePage):
     CLASS_NAME_PRODUCER_ON_PAGE = 'actor-profile__name'
     CLASS_NAME_TOSTER = 'js-errorMessage'
     CLASS_NAME_TRAILER_CONTAINER = 'trailer__iframe'
-    CLASS_NAME_BUTTON_RATE_9 = '/html/body/div/div/div[2]/div[2]/div[2]/form/div/div[2]/div[1]/button[2]'
-    CLASS_NAME_BUTTON_RATE_1 = '/html/body/div/div/div[2]/div[2]/div[2]/form/div/div[2]/div[1]/button[10]'
-    CLASS_NAME_BUTTON_RATE_CONTAINER = '/html/body/div/div/div[2]/div[2]/div[2]/form/div/div[2]/div[1]'
-    CLASS_NAME_BUTTON_RATE_DELETE = '/html/body/div/div/div[2]/div[2]/div[2]/form/div/div[4]/button'
     CLASS_NAME_BUTTON_REVIEW = 'js-list-reviews__btn-write-review'
 
     def test_click_producer(self):
-        self.render(f'{DOMAIN}/film/1')
+        self.render(f'{self.DOMAIN}/film/1')
 
         prod = self.find((By.CLASS_NAME, self.CLASS_NAME_PRODUCER), 3).text.strip()
         self.find((By.CLASS_NAME, self.CLASS_NAME_PRODUCER), 5).click()
@@ -33,7 +28,7 @@ class TestFilmPageUnauthorized(BasePage):
             raise Exception("names does not equal", prod, prod_on_page)
 
     def test_click_plus_unauth(self):
-        self.render(f'{DOMAIN}/film/1')
+        self.render(f'{self.DOMAIN}/film/1')
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_PLUS)).click()
         self.find((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
@@ -44,12 +39,12 @@ class TestFilmPageUnauthorized(BasePage):
         self.wait_hide((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
 
     def test_click_trailer(self):
-        self.render(f'{DOMAIN}/film/1')
+        self.render(f'{self.DOMAIN}/film/1')
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_TRAILER)).click()
         self.find((By.CLASS_NAME, self.CLASS_NAME_TRAILER_CONTAINER))
 
     def test_click_review_unauth(self):
-        self.render(f'{DOMAIN}/film/1')
+        self.render(f'{self.DOMAIN}/film/1')
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW)).click()
 

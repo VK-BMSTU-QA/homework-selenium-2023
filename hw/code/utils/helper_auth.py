@@ -3,8 +3,7 @@ import time
 
 from selenium.webdriver.common.by import By
 
-from base_page import BasePage
-from const import DOMAIN
+from utils.base_page import BasePage
 
 
 class HelperAuth(BasePage):
@@ -23,10 +22,10 @@ class HelperAuth(BasePage):
     EMAIL_INPUT_LOGIN = 0
     PASSWORD_INPUT_LOGIN = 1
 
-    def __init__(self, domain):
-        self.DOMAIN = domain
-
-        self.NICKNAME = 'Admin'
+    def __init__(self):
+        self.NICKNAME = os.environ.get("NICKNAME")
+        if self.NICKNAME is None:
+            self.NICKNAME = "Admin"
 
         self.LOGIN = os.environ.get("LOGIN")  # 'HW3testname@gmail.com'
         if self.LOGIN is None:
@@ -79,7 +78,7 @@ class HelperAuth(BasePage):
         self.del_session()
 
 
-helper = HelperAuth(DOMAIN)
+helper = HelperAuth()
 
 
 def needed_auth(method):

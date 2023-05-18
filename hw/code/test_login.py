@@ -1,8 +1,7 @@
 from selenium.webdriver.common.by import By
 
-from base_page import BasePage
-from driver import dvr
-from const import *
+from utils.base_page import BasePage
+from utils.driver import dvr
 
 class TestLogin(BasePage):
     LOGIN = 'Qwe123@a.a'
@@ -14,8 +13,8 @@ class TestLogin(BasePage):
     X_BUTTON_LOGIN = "//button[contains(text(), 'Войти')]"
     CLASS_WRONG_INPUT = 'modal__input_red_border'
     CLASS_MODAL = 'modal__background'
-    URL_PAGE_LOGIN = f'{DOMAIN}/login/'
-    URL_PAGE_SIGNUP = f'{DOMAIN}/signup/'
+    URL_PAGE_LOGIN = f'{BasePage.DOMAIN}/login/'
+    URL_PAGE_SIGNUP = f'{BasePage.DOMAIN}/signup/'
 
     def test_redirect_signup(self):
         self.render(self.URL_PAGE_LOGIN)
@@ -64,5 +63,6 @@ class TestLogin(BasePage):
         self.find((By.XPATH, self.X_BUTTON_LOGIN)).click()
         try:
             self.find((By.CLASS, self.CLASS_MODAL))
+            raise Exception('unreachable code')
         except:
             None

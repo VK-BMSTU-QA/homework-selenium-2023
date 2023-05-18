@@ -1,9 +1,8 @@
 from selenium.webdriver.common.by import By
 
-from base_page import BasePage
-from driver import dvr
-from const import *
-from helper_auth import needed_auth
+from utils.base_page import BasePage
+from utils.driver import dvr
+from utils.helper_auth import needed_auth
 
 class TestProfile(BasePage):
     CLASS_CHANGE_SVG = 'profile__change__svg'
@@ -11,7 +10,7 @@ class TestProfile(BasePage):
     CLASS_FORM_DISPLAY_NONE = 'dysplay-none'
     CLASS_FORM_DISPLAY_FLEX = 'dysplay-flex'
     CLASS_NAME_SAVE_NEW_NAME = 'profile__input__button'
-    URL_PAGE_PROFILE = f'{DOMAIN}/profile/'
+    URL_PAGE_PROFILE = f'{BasePage.DOMAIN}/profile/'
     CLASS_NAME_INFO_VALUE = 'profile__info__value'
     RATES = 1
     COLLS = 2

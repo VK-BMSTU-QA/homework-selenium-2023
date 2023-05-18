@@ -3,10 +3,9 @@ import time
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
-from driver import dvr
-from base_page import BasePage
-from const import *
-from helper_auth import needed_auth
+from utils.driver import dvr
+from utils.base_page import BasePage
+from utils.helper_auth import needed_auth
 
 
 class TestFilmPageAuthorized(BasePage):
@@ -32,7 +31,7 @@ class TestFilmPageAuthorized(BasePage):
 
     @needed_auth
     def test_click_set_rate(self):
-        self.render(f'{DOMAIN}/film/1')
+        self.render(f'{self.DOMAIN}/film/1')
         self.find_group((By.CLASS_NAME, self.CLASS_NAME_STAR))[self.RATE_9].click()
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
@@ -40,7 +39,7 @@ class TestFilmPageAuthorized(BasePage):
 
     @needed_auth
     def test_click_update_rate(self):
-        self.render(f'{DOMAIN}/film/1')
+        self.render(f'{self.DOMAIN}/film/1')
         self.find_group((By.CLASS_NAME, self.CLASS_NAME_STAR))[self.RATE_9].click()
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
@@ -53,7 +52,7 @@ class TestFilmPageAuthorized(BasePage):
 
     @needed_auth
     def test_click_delete_rate(self):
-        self.render(f'{DOMAIN}/film/1')
+        self.render(f'{self.DOMAIN}/film/1')
         self.find_group((By.CLASS_NAME, self.CLASS_NAME_STAR))[self.RATE_9].click()
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
@@ -67,13 +66,13 @@ class TestFilmPageAuthorized(BasePage):
 
     @needed_auth
     def test_click_review(self):
-        self.render(f'{DOMAIN}/film/1')
+        self.render(f'{self.DOMAIN}/film/1')
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW)).click()
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
 
     @needed_auth
     def test_send_review(self):
-        self.render(f'{DOMAIN}/film/1')
+        self.render(f'{self.DOMAIN}/film/1')
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW)).click()
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
 
@@ -91,7 +90,7 @@ class TestFilmPageAuthorized(BasePage):
 
     @needed_auth
     def test_error_review(self):
-        self.render(f'{DOMAIN}/film/1')
+        self.render(f'{self.DOMAIN}/film/1')
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW)).click()
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
 
@@ -107,7 +106,7 @@ class TestFilmPageAuthorized(BasePage):
 
     @needed_auth
     def test_check_correct_review(self):
-        self.render(f'{DOMAIN}/film/1')
+        self.render(f'{self.DOMAIN}/film/1')
 
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW)).click()
         self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW_CONTAINER))

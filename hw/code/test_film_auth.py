@@ -7,8 +7,7 @@ from utils.driver import dvr
 from utils.base_page import BasePage
 from utils.helper_auth import needed_auth
 
-
-class TestFilmPageAuthorized(BasePage):
+class SelectorsFilmAuth:
     CLASS_NAME_TOSTER = 'js-errorMessage'
     CLASS_NAME_STAR = 'js-rating__star'
     RATE_9 = 1
@@ -26,107 +25,109 @@ class TestFilmPageAuthorized(BasePage):
     CLASS_NAME_BUTTON_SEND_REVIEW = 'modal__input__button-review'
     CLASS_NAME_REVIEW_TEXT = 'review__text'
     CLASS_NAME_REVIEW_TITLE = 'review__title'
+
+class TestFilmPageAuthorized(BasePage):
     TEXT = '200IQ text'
     TITLE = 'title'
 
     @needed_auth
     def test_click_set_rate(self):
-        self.render(f'{self.DOMAIN}/film/1')
-        self.find_group((By.CLASS_NAME, self.CLASS_NAME_STAR))[self.RATE_9].click()
+        self.render(f'/film/1')
+        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_STAR))[SelectorsFilmAuth.RATE_9].click()
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
 
     @needed_auth
     def test_click_update_rate(self):
-        self.render(f'{self.DOMAIN}/film/1')
-        self.find_group((By.CLASS_NAME, self.CLASS_NAME_STAR))[self.RATE_9].click()
+        self.render(f'/film/1')
+        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_STAR))[SelectorsFilmAuth.RATE_9].click()
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
 
-        self.find_group((By.CLASS_NAME, self.CLASS_NAME_STAR))[self.RATE_1].click()
+        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_STAR))[SelectorsFilmAuth.RATE_1].click()
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
 
     @needed_auth
     def test_click_delete_rate(self):
-        self.render(f'{self.DOMAIN}/film/1')
-        self.find_group((By.CLASS_NAME, self.CLASS_NAME_STAR))[self.RATE_9].click()
+        self.render(f'/film/1')
+        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_STAR))[SelectorsFilmAuth.RATE_9].click()
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_RATE_DELETE)).click()
-        self.wait_hide((By.CLASS_NAME, self.CLASS_NAME_BUTTON_RATE_DELETE))
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_RATE_DELETE)).click()
+        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_RATE_DELETE))
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
 
     @needed_auth
     def test_click_review(self):
-        self.render(f'{self.DOMAIN}/film/1')
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW)).click()
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
+        self.render(f'/film/1')
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW)).click()
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
 
     @needed_auth
     def test_send_review(self):
-        self.render(f'{self.DOMAIN}/film/1')
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW)).click()
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
+        self.render(f'/film/1')
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW)).click()
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_CHOOSE_TYPE)).click()
-        self.find_group((By.CLASS_NAME, self.CLASS_NAME_CHOOSE_TYPE_REVIEW))[self.NEGATIVE_TYPE].click()
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_CHOOSE_TYPE)).click()
+        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_CHOOSE_TYPE_REVIEW))[SelectorsFilmAuth.NEGATIVE_TYPE].click()
 
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_INPUT_TITLE)).send_keys(self.TITLE)
-        self.find((By.CLASS_NAME, self.CLASS_NAME_INPUT_TEXT)).send_keys(self.TEXT)
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TITLE)).send_keys(self.TITLE)
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TEXT)).send_keys(self.TEXT)
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_SEND_REVIEW)).click()
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_SEND_REVIEW)).click()
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
 
     @needed_auth
     def test_error_review(self):
-        self.render(f'{self.DOMAIN}/film/1')
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW)).click()
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
+        self.render(f'/film/1')
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW)).click()
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_INPUT_TITLE)).send_keys(self.TITLE)
-        self.find((By.CLASS_NAME, self.CLASS_NAME_INPUT_TEXT)).send_keys(self.TEXT)
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TITLE)).send_keys(self.TITLE)
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TEXT)).send_keys(self.TEXT)
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_SEND_REVIEW)).click()
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_SEND_REVIEW)).click()
 
         try:
-            self.wait_hide((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW_CONTAINER), 2)
+            self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER), 2)
         except:
-            self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_SEND_REVIEW))
+            self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_SEND_REVIEW))
 
     @needed_auth
     def test_check_correct_review(self):
-        self.render(f'{self.DOMAIN}/film/1')
+        self.render(f'/film/1')
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW)).click()
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW)).click()
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_CHOOSE_TYPE)).click()
-        self.find_group((By.CLASS_NAME, self.CLASS_NAME_CHOOSE_TYPE_REVIEW))[self.NEGATIVE_TYPE].click()
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_CHOOSE_TYPE)).click()
+        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_CHOOSE_TYPE_REVIEW))[SelectorsFilmAuth.NEGATIVE_TYPE].click()
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_INPUT_TITLE)).send_keys(self.TITLE)
-        self.find((By.CLASS_NAME, self.CLASS_NAME_INPUT_TEXT)).send_keys(self.TEXT)
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TITLE)).send_keys(self.TITLE)
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TEXT)).send_keys(self.TEXT)
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_BUTTON_SEND_REVIEW)).click()
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_SEND_REVIEW)).click()
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, self.CLASS_NAME_TOSTER))
+        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
 
-        title = self.find_group((By.CLASS_NAME, self.CLASS_NAME_REVIEW_TITLE))[0].text
+        title = self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_REVIEW_TITLE))[0].text
         if title != self.TITLE:
-            raise Exception("names does not equal", title, self.TITLE)
+            raise Exception("names does not equal", title, SelectorsFilmAuth.TITLE)
 
-        text = self.find_group((By.CLASS_NAME, self.CLASS_NAME_REVIEW_TEXT))[0].text
+        text = self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_REVIEW_TEXT))[0].text
         if text != self.TEXT:
             raise Exception("names does not equal", text, self.TEXT)
 

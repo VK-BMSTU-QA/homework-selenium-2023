@@ -5,28 +5,13 @@ from utils.driver import dvr
 from utils.base_page import BasePage
 from utils.helper_auth import needed_auth, helper
 
-
-class CollectionHelper(BasePage):
+class SelectorsCollections():
     CLASS_NAME_TITLE_FILM_IN_WILL_WATCH = 'about-film__title'
     CLASS_NAME_LIST_WILL_WATCH_ICON = 'about-film__button_plus'
 
-    # second call is remove
-    def add_or_remove_film_in_collection(self, film_id, collection):
-        self.render(f'{self.DOMAIN}/film/{film_id}/')
-        film_title = self.find((By.CLASS_NAME, self.CLASS_NAME_TITLE_FILM_IN_WILL_WATCH)).text
+    CLASS_NAME_WILL_WATCH_ICON = "about-film__button_bookmark"
+    CLASS_NAME_DELETE_BUTTON = 'film__delete-svg'
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_LIST_WILL_WATCH_ICON)).click()
-
-        try:
-            self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]')).click()
-        except:
-            self.find((By.CLASS_NAME, self.CLASS_NAME_LIST_WILL_WATCH_ICON)).click()
-            self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]')).click()
-
-        return film_title
-
-
-class TestPersonalCollectionAddFilm(CollectionHelper):
     EXPECTED_REDIRECTED_PAGE_URL_PART = 'https://movie-gate.online/film/'
 
     CLASS_NAME_FILM_TITLE = 'film__title'
@@ -38,6 +23,25 @@ class TestPersonalCollectionAddFilm(CollectionHelper):
     CLASS_NAME_SHARE_ICON = 'page__collection__share-icon'
 
     CLASS_NAME_PREVIEW_FILM = 'preview-film__container'
+
+class CollectionHelper(BasePage):
+    # second call is remove
+    def add_or_remove_film_in_collection(self, film_id, collection):
+        self.render(f'/film/{film_id}/')
+        film_title = self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_TITLE_FILM_IN_WILL_WATCH)).text
+
+        self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_LIST_WILL_WATCH_ICON)).click()
+
+        try:
+            self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]')).click()
+        except:
+            self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_LIST_WILL_WATCH_ICON)).click()
+            self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]')).click()
+
+        return film_title
+
+
+class TestPersonalCollectionAddFilm(CollectionHelper):
 
     @needed_auth
     def test_adding_film_in_collection(self):
@@ -48,7 +52,7 @@ class TestPersonalCollectionAddFilm(CollectionHelper):
 
         # action
         # to collections
-        self.render(f'{self.DOMAIN}/user/collections/')
+        self.render('/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
 
         # in collection
@@ -56,7 +60,7 @@ class TestPersonalCollectionAddFilm(CollectionHelper):
         self.find((By.XPATH, xpath)).click()
 
         # check redirect film
-        expected_full_url = self.EXPECTED_REDIRECTED_PAGE_URL_PART + f'{film_id}/'
+        expected_full_url = SelectorsCollections.EXPECTED_REDIRECTED_PAGE_URL_PART + f'{film_id}/'
         actual_url = dvr.get_instance().current_url
         if actual_url != expected_full_url:
             raise Exception("wrong redirect: film not expected", expected_full_url, actual_url)
@@ -66,20 +70,6 @@ class TestPersonalCollectionAddFilm(CollectionHelper):
 
 
 class TestPersonalCollectionDeleteFilm(CollectionHelper):
-    CLASS_NAME_WILL_WATCH_ICON = "about-film__button_bookmark"
-    CLASS_NAME_DELETE_BUTTON = 'film__delete-svg'
-
-    EXPECTED_REDIRECTED_PAGE_URL_PART = 'https://movie-gate.online/film/'
-
-    CLASS_NAME_FILM_TITLE = 'film__title'
-    EXPECTED_FILM_TITLE = 'В эфире'
-    X_TOSTER = '/html/body/div/div[2]'
-
-    CLASS_NAME_AUTHOR_NAME = 'header__userbar-name'
-    CLASS_NAME_AVATAR_AUTHOR = 'header__avatar'
-    CLASS_NAME_SHARE_ICON = 'page__collection__share-icon'
-
-    CLASS_NAME_PREVIEW_FILM = 'preview-film__container'
 
     @needed_auth
     def test_delete_film_from_collection(self):
@@ -90,7 +80,7 @@ class TestPersonalCollectionDeleteFilm(CollectionHelper):
 
         # action
         # to collections
-        self.render(f'{self.DOMAIN}/user/collections/')
+        self.render('/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
 
         # to film
@@ -98,30 +88,14 @@ class TestPersonalCollectionDeleteFilm(CollectionHelper):
         self.find((By.XPATH, xpath)).click()
 
         # delete film
-        self.find((By.CLASS_NAME, self.CLASS_NAME_DELETE_BUTTON)).click()
+        self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_DELETE_BUTTON)).click()
 
         # check result. Exception by timeout if wrong
-        self.find((By.XPATH, self.X_TOSTER))
-        self.wait_hide((By.XPATH, self.X_TOSTER))
+        self.find((By.XPATH, SelectorsCollections.X_TOSTER))
+        self.wait_hide((By.XPATH, SelectorsCollections.X_TOSTER))
 
 
 class TestPersonalCollectionHasFilm(CollectionHelper):
-    CLASS_NAME_WILL_WATCH_ICON = "about-film__button_bookmark"
-    CLASS_NAME_DELETE_BUTTON = 'film__delete-svg'
-
-    EXPECTED_REDIRECTED_PAGE_URL_PART = 'https://movie-gate.online/film/'
-
-    CLASS_NAME_FILM_TITLE = 'film__title'
-    EXPECTED_FILM_TITLE = 'В эфире'
-    X_TOSTER = '/html/body/div/div[2]'
-
-    CLASS_NAME_AUTHOR_NAME = 'header__userbar-name'
-    CLASS_NAME_AVATAR_AUTHOR = 'header__avatar'
-    CLASS_NAME_SHARE_ICON = 'page__collection__share-icon'
-
-    CLASS_NAME_PREVIEW_FILM = 'preview-film__container'
-
-    # @needed_auth
     def test_public_collection_has_film(self):
         # prepare
         helper.login()
@@ -130,7 +104,7 @@ class TestPersonalCollectionHasFilm(CollectionHelper):
         film_title = self.add_or_remove_film_in_collection(film_id, collection)
 
         # to collections
-        self.render(f'{self.DOMAIN}/user/collections/')
+        self.render('/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
 
         # get collection_id
@@ -138,18 +112,18 @@ class TestPersonalCollectionHasFilm(CollectionHelper):
         f = filter(str.isdigit, actual_collection_id)
         collection_id = "".join(f)
 
-        self.render(self.DOMAIN)
+        self.render('/')
 
         # action
         # to collection
-        self.render(f'{self.DOMAIN}/user/collection/{collection_id}')
+        self.render(f'/user/collection/{collection_id}')
 
         # in collection
         xpath = f'//div[contains(text(), \'{film_title}\')]//preceding-sibling::div'
         self.find((By.XPATH, xpath)).click()
 
         # check redirect film
-        expected_full_url = self.EXPECTED_REDIRECTED_PAGE_URL_PART + f'{film_id}/'
+        expected_full_url = SelectorsCollections.EXPECTED_REDIRECTED_PAGE_URL_PART + f'{film_id}/'
         actual_url = dvr.get_instance().current_url
         if actual_url != expected_full_url:
             raise Exception("wrong redirect: film not expected", expected_full_url, actual_url)
@@ -159,20 +133,6 @@ class TestPersonalCollectionHasFilm(CollectionHelper):
 
 
 class TestPersonalCollectionShare(CollectionHelper):
-    CLASS_NAME_WILL_WATCH_ICON = "about-film__button_bookmark"
-    CLASS_NAME_DELETE_BUTTON = 'film__delete-svg'
-
-    EXPECTED_REDIRECTED_PAGE_URL_PART = 'https://movie-gate.online/film/'
-
-    CLASS_NAME_FILM_TITLE = 'film__title'
-    EXPECTED_FILM_TITLE = 'В эфире'
-    X_TOSTER = '/html/body/div/div[2]'
-
-    CLASS_NAME_AUTHOR_NAME = 'header__userbar-name'
-    CLASS_NAME_AVATAR_AUTHOR = 'header__avatar'
-    CLASS_NAME_SHARE_ICON = 'page__collection__share-icon'
-
-    CLASS_NAME_PREVIEW_FILM = 'preview-film__container'
 
     def test_public_collection_copy_url(self):
         # prepare
@@ -182,7 +142,7 @@ class TestPersonalCollectionShare(CollectionHelper):
         self.add_or_remove_film_in_collection(film_id, collection)
 
         # to collections
-        self.render(f'{self.DOMAIN}/user/collections/')
+        self.render(f'/user/collections/')
         self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
 
         # get collection_id
@@ -190,17 +150,17 @@ class TestPersonalCollectionShare(CollectionHelper):
         f = filter(str.isdigit, actual_collection_id)
         collection_id = "".join(f)
 
-        self.render(self.DOMAIN)
+        self.render('/')
 
         # action
         # to collection
-        self.render(f'{self.DOMAIN}/user/collection/{collection_id}')
+        self.render(f'/user/collection/{collection_id}')
 
         # in collection
-        self.find((By.CLASS_NAME, self.CLASS_NAME_SHARE_ICON)).click()
+        self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_SHARE_ICON)).click()
 
-        self.find((By.XPATH, self.X_TOSTER))
-        self.wait_hide((By.XPATH, self.X_TOSTER))
+        self.find((By.XPATH, SelectorsCollections.X_TOSTER))
+        self.wait_hide((By.XPATH, SelectorsCollections.X_TOSTER))
 
         # rollback
         self.add_or_remove_film_in_collection(film_id, collection)

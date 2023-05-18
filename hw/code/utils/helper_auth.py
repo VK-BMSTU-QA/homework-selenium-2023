@@ -39,7 +39,7 @@ class HelperAuth(BasePage):
         self.IS_LOGIN = False
 
     def register(self):
-        self.render(f'{self.DOMAIN}/signup/')
+        self.render(f'/signup/')
 
         input_nickname = self.find_group((By.CLASS_NAME, self.CLASS_NAME_MODAL_INPUT))[self.NICKNAME_INPUT]
         input_nickname.send_keys(self.NICKNAME)
@@ -59,7 +59,7 @@ class HelperAuth(BasePage):
         if self.IS_LOGIN:
             return
 
-        self.render(self.DOMAIN)
+        self.render('/')
         self.find((By.CLASS_NAME, self.CLASS_BUTTON_OPEN_MODAL), 10).click()
 
         self.find_group((By.CLASS_NAME, self.CLASS_NAME_MODAL_INPUT))[self.EMAIL_INPUT_LOGIN].send_keys(self.LOGIN)

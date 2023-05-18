@@ -2,8 +2,7 @@ from selenium.webdriver.common.by import By
 
 from utils.base_page import BasePage
 
-
-class TestMainPage(BasePage):
+class SelectorsMainpage:
     # check preview film exist
     CLASS_NAME_PREVIEW = 'js-main-page-preview-film'
     CLASS_NAME_PREVIEW_FILM_TITLE = 'preview-film__film-title'
@@ -25,45 +24,47 @@ class TestMainPage(BasePage):
     X_PATH_GENRES_SECTION_SLIDER_GENRE = "//div[@class='js-collection-genre-genres']/div/div[2]"
     PAGE_GENRES_COLLECTION_TITLE = 'Жанры'
 
+class TestMainPage(BasePage):
+
     def test_preview_film_existing(self):
-        self.render(self.DOMAIN)
+        self.render('/')
 
-        assert self.find((By.CLASS_NAME, self.CLASS_NAME_PREVIEW))
+        assert self.find((By.CLASS_NAME, SelectorsMainpage.CLASS_NAME_PREVIEW))
 
-        assert self.find((By.CLASS_NAME, self.CLASS_NAME_PREVIEW_FILM_TITLE))
+        assert self.find((By.CLASS_NAME, SelectorsMainpage.CLASS_NAME_PREVIEW_FILM_TITLE))
 
     def test_popular_section(self):
-        self.render(self.DOMAIN)
+        self.render('/')
 
-        assert self.find((By.XPATH, self.X_PATH_POPULAR_SECTION_SLIDER_FILM))
+        assert self.find((By.XPATH, SelectorsMainpage.X_PATH_POPULAR_SECTION_SLIDER_FILM))
 
-        self.find((By.XPATH, self.X_PATH_POPULAR_SECTION_BUTTON)).click()
+        self.find((By.XPATH, SelectorsMainpage.X_PATH_POPULAR_SECTION_BUTTON)).click()
 
-        title = self.find((By.CLASS_NAME, self.CLASS_NAME_PAGE_COLLECTION_TITLE)).text
+        title = self.find((By.CLASS_NAME, SelectorsMainpage.CLASS_NAME_PAGE_COLLECTION_TITLE)).text
 
-        if title != self.PAGE_POPULAR_COLLECTION_TITLE:
-            raise Exception("title does not equal", title, self.PAGE_POPULAR_COLLECTION_TITLE)
+        if title != SelectorsMainpage.PAGE_POPULAR_COLLECTION_TITLE:
+            raise Exception("title does not equal", title, SelectorsMainpage.PAGE_POPULAR_COLLECTION_TITLE)
 
     def test_in_cinema_section(self):
-        self.render(self.DOMAIN)
+        self.render('/')
 
-        assert self.find((By.XPATH, self.X_PATH_IN_CINEMA_SECTION_SLIDER_FILM))
+        assert self.find((By.XPATH, SelectorsMainpage.X_PATH_IN_CINEMA_SECTION_SLIDER_FILM))
 
-        self.find((By.XPATH, self.X_PATH_IN_CINEMA_SECTION_BUTTON)).click()
+        self.find((By.XPATH, SelectorsMainpage.X_PATH_IN_CINEMA_SECTION_BUTTON)).click()
 
-        title = self.find((By.CLASS_NAME, self.CLASS_NAME_PAGE_COLLECTION_TITLE)).text
+        title = self.find((By.CLASS_NAME, SelectorsMainpage.CLASS_NAME_PAGE_COLLECTION_TITLE)).text
 
-        if title != self.PAGE_IN_CINEMA_COLLECTION_TITLE:
-            raise Exception("title does not equal", title, self.PAGE_IN_CINEMA_COLLECTION_TITLE)
+        if title != SelectorsMainpage.PAGE_IN_CINEMA_COLLECTION_TITLE:
+            raise Exception("title does not equal", title, SelectorsMainpage.PAGE_IN_CINEMA_COLLECTION_TITLE)
 
     def test_genres_section(self):
-        self.render(self.DOMAIN)
+        self.render('/')
 
-        assert self.find((By.XPATH, self.X_PATH_GENRES_SECTION_SLIDER_GENRE))
+        assert self.find((By.XPATH, SelectorsMainpage.X_PATH_GENRES_SECTION_SLIDER_GENRE))
 
-        self.find((By.XPATH, self.X_PATH_GENRES_SECTION_BUTTON)).click()
+        self.find((By.XPATH, SelectorsMainpage.X_PATH_GENRES_SECTION_BUTTON)).click()
 
-        title = self.find((By.CLASS_NAME, self.CLASS_NAME_PAGE_COLLECTION_TITLE)).text
+        title = self.find((By.CLASS_NAME, SelectorsMainpage.CLASS_NAME_PAGE_COLLECTION_TITLE)).text
 
-        if title != self.PAGE_GENRES_COLLECTION_TITLE:
-            raise Exception("title does not equal", title, self.PAGE_GENRES_COLLECTION_TITLE)
+        if title != SelectorsMainpage.PAGE_GENRES_COLLECTION_TITLE:
+            raise Exception("title does not equal", title, SelectorsMainpage.PAGE_GENRES_COLLECTION_TITLE)

@@ -3,8 +3,7 @@ from selenium.webdriver.common.by import By
 from utils.base_page import BasePage
 from utils.helper_auth import needed_auth
 
-
-class TestNavigationPanelUnauthorized(BasePage):
+class SelectorsNavigation:
     # check logo redirect
     CLASS_NAME_LOGO = 'header__navlink'
     CLASS_NAME_PREVIEW_FILM = 'js-main-page-preview-film'
@@ -30,54 +29,56 @@ class TestNavigationPanelUnauthorized(BasePage):
     # check login button open modal window
     CLASS_NAME_HEADER_LOGIN_BUTTON = 'js-header__login__btn'
 
+class TestNavigationPanelUnauthorized(BasePage):
+
     def test_click_logo(self):
-        self.render(f'{self.DOMAIN}/collection/tag-popular/')
+        self.render(f'/collection/tag-popular/')
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_LOGO)).click()
+        self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_LOGO)).click()
 
-        assert self.find((By.CLASS_NAME, self.CLASS_NAME_PREVIEW_FILM))
+        assert self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_PREVIEW_FILM))
 
     def test_click_popular_button(self):
-        self.render(self.DOMAIN)
+        self.render('/')
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_HEADER_POPULAR_BUTTON)).click()
+        self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_HEADER_POPULAR_BUTTON)).click()
 
-        title = self.find((By.CLASS_NAME, self.CLASS_NAME_COLLECTION_PAGE_TITLE)).text
+        title = self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_COLLECTION_PAGE_TITLE)).text
 
-        if title != self.POPULAR_COLLECTION_PAGE_TITLE:
-            raise Exception("title does not equal", title, self.POPULAR_COLLECTION_PAGE_TITLE)
+        if title != SelectorsNavigation.POPULAR_COLLECTION_PAGE_TITLE:
+            raise Exception("title does not equal", title, SelectorsNavigation.POPULAR_COLLECTION_PAGE_TITLE)
 
     def test_click_premieres_button(self):
-        self.render(self.DOMAIN)
+        self.render('/')
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_HEADER_PREMIERES_BUTTON)).click()
+        self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_HEADER_PREMIERES_BUTTON)).click()
 
-        title = self.find((By.CLASS_NAME, self.CLASS_NAME_PREMIERES_PAGE_TITLE)).text
+        title = self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_PREMIERES_PAGE_TITLE)).text
 
-        if title != self.PREMIERES_PAGE_TITLE:
-            raise Exception("title does not equal", title, self.PREMIERES_PAGE_TITLE)
+        if title != SelectorsNavigation.PREMIERES_PAGE_TITLE:
+            raise Exception("title does not equal", title, SelectorsNavigation.PREMIERES_PAGE_TITLE)
 
     def test_click_collections_button_unauthorized(self):
-        self.render(self.DOMAIN)
+        self.render('/')
 
-        self.find((By.XPATH, self.X_PATH_HEADER_COLLECTIONS_BUTTON)).click()
+        self.find((By.XPATH, SelectorsNavigation.X_PATH_HEADER_COLLECTIONS_BUTTON)).click()
 
-        assert self.find((By.CLASS_NAME, self.MODAL_AUTH_CLASS_NAME))
+        assert self.find((By.CLASS_NAME, SelectorsNavigation.MODAL_AUTH_CLASS_NAME))
 
     def test_click_login_button(self):
-        self.render(self.DOMAIN)
+        self.render('/')
 
-        self.find((By.CLASS_NAME, self.CLASS_NAME_HEADER_LOGIN_BUTTON)).click()
+        self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_HEADER_LOGIN_BUTTON)).click()
 
-        assert self.find((By.CLASS_NAME, self.MODAL_AUTH_CLASS_NAME))
+        assert self.find((By.CLASS_NAME, SelectorsNavigation.MODAL_AUTH_CLASS_NAME))
 
     @needed_auth
     def test_click_collections_button_authorized(self):
-        self.render(self.DOMAIN)
+        self.render('/')
 
-        self.find((By.XPATH, self.X_PATH_HEADER_COLLECTIONS_BUTTON)).click()
+        self.find((By.XPATH, SelectorsNavigation.X_PATH_HEADER_COLLECTIONS_BUTTON)).click()
 
-        title = self.find((By.CLASS_NAME, self.CLASS_NAME_USER_COLLECTION_PAGE_TITLE)).text
+        title = self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_USER_COLLECTION_PAGE_TITLE)).text
 
-        if title != self.USER_COLLECTION_PAGE_TITLE:
-            raise Exception("title does not equal", title, self.USER_COLLECTION_PAGE_TITLE)
+        if title != SelectorsNavigation.USER_COLLECTION_PAGE_TITLE:
+            raise Exception("title does not equal", title, SelectorsNavigation.USER_COLLECTION_PAGE_TITLE)

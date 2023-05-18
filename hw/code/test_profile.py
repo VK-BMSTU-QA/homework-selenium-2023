@@ -4,28 +4,30 @@ from utils.base_page import BasePage
 from utils.driver import dvr
 from utils.helper_auth import needed_auth
 
-class TestProfile(BasePage):
+class SelectorsProfile:
     CLASS_CHANGE_SVG = 'profile__change__svg'
     CLASS_FORM_CHANGE = 'profile__change'
     CLASS_FORM_DISPLAY_NONE = 'dysplay-none'
     CLASS_FORM_DISPLAY_FLEX = 'dysplay-flex'
     CLASS_NAME_SAVE_NEW_NAME = 'profile__input__button'
-    URL_PAGE_PROFILE = f'{BasePage.DOMAIN}/profile/'
     CLASS_NAME_INFO_VALUE = 'profile__info__value'
     RATES = 1
     COLLS = 2
+
+class TestProfile(BasePage):
+    URL_PAGE_PROFILE = '/profile/'
 
     @needed_auth
     def test_open_change_input(self):
 
         self.render(self.URL_PAGE_PROFILE)
-        self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG)).click()
-        form_change = self.find((By.CLASS_NAME, self.CLASS_FORM_CHANGE))
-        is_opened = self.CLASS_FORM_DISPLAY_FLEX in form_change.get_attribute("class").split()
+        self.find((By.CLASS_NAME, SelectorsProfile.CLASS_CHANGE_SVG)).click()
+        form_change = self.find((By.CLASS_NAME, SelectorsProfile.CLASS_FORM_CHANGE))
+        is_opened = SelectorsProfile.CLASS_FORM_DISPLAY_FLEX in form_change.get_attribute("class").split()
         if (is_opened != True):
             raise Exception("can't open form change", form_change)
-        self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG)).click()
-        is_closed = self.CLASS_FORM_DISPLAY_NONE in form_change.get_attribute("class").split()
+        self.find((By.CLASS_NAME, SelectorsProfile.CLASS_CHANGE_SVG)).click()
+        is_closed = SelectorsProfile.CLASS_FORM_DISPLAY_NONE in form_change.get_attribute("class").split()
         if (is_closed != True):
             raise Exception("can't closen form change", form_change)
 
@@ -33,10 +35,10 @@ class TestProfile(BasePage):
     def test_change_name(self):
 
         self.render(self.URL_PAGE_PROFILE)
-        self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG), 3).click()
+        self.find((By.CLASS_NAME, SelectorsProfile.CLASS_CHANGE_SVG), 3).click()
         field_Input_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"), 3)
         field_Input_new_name.send_keys('Zxc543')
-        self.find((By.CLASS_NAME, self.CLASS_NAME_SAVE_NEW_NAME), 4).click()
+        self.find((By.CLASS_NAME, SelectorsProfile.CLASS_NAME_SAVE_NEW_NAME), 4).click()
 
         new_name = self.find((By.XPATH, "//div[contains(text(), 'Zxc543')]"), 3)
 
@@ -44,10 +46,10 @@ class TestProfile(BasePage):
             raise Exception("can't change name", new_name)
 
         self.render(self.URL_PAGE_PROFILE)
-        self.find((By.CLASS_NAME, self.CLASS_CHANGE_SVG), 3).click()
+        self.find((By.CLASS_NAME, SelectorsProfile.CLASS_CHANGE_SVG), 3).click()
         field_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"), 3)
         field_new_name.send_keys('Admin')
-        self.find((By.CLASS_NAME, self.CLASS_NAME_SAVE_NEW_NAME), 3).click()
+        self.find((By.CLASS_NAME, SelectorsProfile.CLASS_NAME_SAVE_NEW_NAME), 3).click()
 
         new_name = self.find((By.XPATH, "//div[contains(text(), 'Admin')]"), 3)
         if (bool(new_name) != True):
@@ -58,7 +60,7 @@ class TestProfile(BasePage):
 
         self.render(self.URL_PAGE_PROFILE)
 
-        field_num_of_rates = self.find_group((By.CLASS_NAME, self.CLASS_NAME_INFO_VALUE))[self.RATES].text
+        field_num_of_rates = self.find_group((By.CLASS_NAME, SelectorsProfile.CLASS_NAME_INFO_VALUE))[SelectorsProfile.RATES].text
         if (not field_num_of_rates):
             raise Exception("empty field")
         if (not (field_num_of_rates == "нет оценок" or int(field_num_of_rates) > -1)):

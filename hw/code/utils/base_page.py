@@ -10,7 +10,7 @@ class BasePage(object):
 
     def render(self, url):
         self.driver.maximize_window()
-        self.driver.get(url)
+        self.driver.get(f'{self.DOMAIN}{url}')
 
     def refresh(self):
         self.driver.refresh()

@@ -19,7 +19,7 @@ class ElementCheckException(Exception):
 class BasePage(object):
 
     locators = basic_locators.BasePageLocators()
-    url = 'https://95.163.213.142/'
+    url = 'https://target.my.com/'
 
     def is_opened(self, timeout=15):
         started = time.time()

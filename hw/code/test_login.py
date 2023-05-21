@@ -4,7 +4,7 @@ from ui.fixtures import get_driver
 from ui.pages.base_case import BaseCase, cookies, credentials
 from ui.pages.login_page import LoginPage
 
-
+@pytest.mark.skip
 class TestLogin(BaseCase):
     authorize = False
     

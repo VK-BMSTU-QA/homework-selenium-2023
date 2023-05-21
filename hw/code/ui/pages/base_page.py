@@ -6,6 +6,7 @@ from ui.locators import basic_locators
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.common.action_chains import ActionChains
 
 class PageNotOpenedExeption(Exception):
     pass
@@ -30,6 +31,7 @@ class BasePage(object):
 
     def __init__(self, driver):
         self.driver = driver
+        self.driver.get(self.url)
         self.is_opened()
 
     def wait(self, timeout=None):
@@ -52,6 +54,7 @@ class BasePage(object):
         except TimeoutException:
             return False
         return True
+
 
     @allure.step('Click')
     def click(self, locator, timeout=None) -> WebElement:

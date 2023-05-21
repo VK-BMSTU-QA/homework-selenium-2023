@@ -36,7 +36,6 @@ def cookies(credentials, config):
     driver.get(config['url'])
     login_page = LoginPage(driver)
     login_page.login(*credentials)
-    WebDriverWait(driver, timeout=5).until(lambda d: d.get_cookie('session_id'))
     cookies = driver.get_cookies()
     driver.quit()
     return cookies

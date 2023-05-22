@@ -15,24 +15,16 @@ class BasePage(object):
     def refresh(self):
         self.driver.refresh()
 
-    def wait(self, timeout=None):
-        if timeout is None:
-            timeout = 5
+    def wait(self, timeout=5):
         return WebDriverWait(self.driver, timeout=timeout)
 
-    def wait_hide(self, locator, timeout=None):
-        if timeout is None:
-            timeout = 5
+    def wait_hide(self, locator, timeout=5):
         return self.wait(timeout).until(EC.invisibility_of_element_located(locator))
 
-    def find(self, locator, timeout=None):
-        if timeout is None:
-            timeout = 5
+    def find(self, locator, timeout=5):
         return self.wait(timeout).until(EC.presence_of_element_located(locator))
 
-    def find_group(self, locator, timeout=None):
-        if timeout is None:
-            timeout = 5
+    def find_group(self, locator, timeout=5):
         return self.wait(timeout).until(EC.presence_of_all_elements_located(locator))
 
     def del_session(self):

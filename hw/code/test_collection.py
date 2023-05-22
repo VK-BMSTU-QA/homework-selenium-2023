@@ -17,7 +17,7 @@ class SelectorsCollections:
 
     CLASS_NAME_FILM_TITLE = 'film__title'
     EXPECTED_FILM_TITLE = 'В эфире'
-    X_TOSTER = '/html/body/div/div[2]'
+    CLASS_NAME_TOSTER = 'js-errorMessage'
 
     CLASS_NAME_AUTHOR_NAME = 'header__userbar-name'
     CLASS_NAME_AVATAR_AUTHOR = 'header__avatar'
@@ -44,7 +44,6 @@ class CollectionHelper(BasePage):
 
 
 class TestPersonalCollectionAddFilm(unittest.TestCase, CollectionHelper):
-
     @needed_auth
     def test_adding_film_in_collection(self):
         # prepare
@@ -72,7 +71,6 @@ class TestPersonalCollectionAddFilm(unittest.TestCase, CollectionHelper):
 
 
 class TestPersonalCollectionDeleteFilm(unittest.TestCase, CollectionHelper):
-
     @needed_auth
     def test_delete_film_from_collection(self):
         # prepare
@@ -93,8 +91,8 @@ class TestPersonalCollectionDeleteFilm(unittest.TestCase, CollectionHelper):
         self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_DELETE_BUTTON)).click()
 
         # check result. Exception by timeout if wrong
-        self.find((By.XPATH, SelectorsCollections.X_TOSTER))
-        self.wait_hide((By.XPATH, SelectorsCollections.X_TOSTER))
+        self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_TOSTER))
+        self.wait_hide((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_TOSTER))
 
 
 class TestPersonalCollectionHasFilm(unittest.TestCase, CollectionHelper):
@@ -135,7 +133,6 @@ class TestPersonalCollectionHasFilm(unittest.TestCase, CollectionHelper):
 
 
 class TestPersonalCollectionShare(unittest.TestCase, CollectionHelper):
-
     def test_public_collection_copy_url(self):
         # prepare
         helper.login()
@@ -161,8 +158,8 @@ class TestPersonalCollectionShare(unittest.TestCase, CollectionHelper):
         # in collection
         self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_SHARE_ICON)).click()
 
-        self.find((By.XPATH, SelectorsCollections.X_TOSTER))
-        self.wait_hide((By.XPATH, SelectorsCollections.X_TOSTER))
+        self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_TOSTER))
+        self.wait_hide((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_TOSTER))
 
         # rollback
         self.add_or_remove_film_in_collection(film_id, collection)

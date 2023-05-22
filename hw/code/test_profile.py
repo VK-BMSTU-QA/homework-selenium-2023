@@ -1,8 +1,11 @@
+import time
+
 from selenium.webdriver.common.by import By
+import unittest
 
 from utils.base_page import BasePage
-from utils.driver import dvr
 from utils.helper_auth import needed_auth
+
 
 class SelectorsProfile:
     CLASS_CHANGE_SVG = 'profile__change__svg'
@@ -14,36 +17,37 @@ class SelectorsProfile:
     RATES = 1
     COLLS = 2
 
-class TestProfile(BasePage):
+
+class TestProfile(unittest.TestCase, BasePage):
     URL_PAGE_PROFILE = '/profile/'
 
     @needed_auth
     def test_open_change_input(self):
-
         self.render(self.URL_PAGE_PROFILE)
+
         self.find((By.CLASS_NAME, SelectorsProfile.CLASS_CHANGE_SVG)).click()
+
         form_change = self.find((By.CLASS_NAME, SelectorsProfile.CLASS_FORM_CHANGE))
         is_opened = SelectorsProfile.CLASS_FORM_DISPLAY_FLEX in form_change.get_attribute("class").split()
-        if (is_opened != True):
-            raise Exception("can't open form change", form_change)
+
+        self.assertTrue(is_opened, "can't open form change")
+
         self.find((By.CLASS_NAME, SelectorsProfile.CLASS_CHANGE_SVG)).click()
         is_closed = SelectorsProfile.CLASS_FORM_DISPLAY_NONE in form_change.get_attribute("class").split()
-        if (is_closed != True):
-            raise Exception("can't closen form change", form_change)
+
+        self.assertTrue(is_closed, "can't closen form change")
 
     @needed_auth
     def test_change_name(self):
-
         self.render(self.URL_PAGE_PROFILE)
         self.find((By.CLASS_NAME, SelectorsProfile.CLASS_CHANGE_SVG), 3).click()
-        field_Input_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"), 3)
-        field_Input_new_name.send_keys('Zxc543')
+        field_input_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"), 3)
+        field_input_new_name.send_keys('Zxc543')
         self.find((By.CLASS_NAME, SelectorsProfile.CLASS_NAME_SAVE_NEW_NAME), 4).click()
 
         new_name = self.find((By.XPATH, "//div[contains(text(), 'Zxc543')]"), 3)
 
-        if (bool(new_name) != True):
-            raise Exception("can't change name", new_name)
+        self.assertTrue(bool(new_name), "can't change name")
 
         self.render(self.URL_PAGE_PROFILE)
         self.find((By.CLASS_NAME, SelectorsProfile.CLASS_CHANGE_SVG), 3).click()
@@ -52,33 +56,31 @@ class TestProfile(BasePage):
         self.find((By.CLASS_NAME, SelectorsProfile.CLASS_NAME_SAVE_NEW_NAME), 3).click()
 
         new_name = self.find((By.XPATH, "//div[contains(text(), 'Admin')]"), 3)
-        if (bool(new_name) != True):
-            raise Exception("can't return name", new_name)
+
+        self.assertTrue(bool(new_name), "can't return name")
 
     @needed_auth
     def test_check_value_num_of_rates(self):
-
         self.render(self.URL_PAGE_PROFILE)
 
         field_num_of_rates = self.find_group((By.CLASS_NAME, SelectorsProfile.CLASS_NAME_INFO_VALUE))[SelectorsProfile.RATES].text
-        if (not field_num_of_rates):
-            raise Exception("empty field")
-        if (not (field_num_of_rates == "нет оценок" or int(field_num_of_rates) > -1)):
-            raise Exception("wrong format")
+
+        self.assertTrue(field_num_of_rates, "empty field")
+
+        self.assertTrue((field_num_of_rates == "нет оценок" or int(field_num_of_rates) > -1), "wrong format")
 
     @needed_auth
     def test_check_main_fields(self):
-
         self.render(self.URL_PAGE_PROFILE)
+
         date_of_reg = self.find((By.XPATH, "//div[contains(text(), 'Дата регистрации:')]"), 5)
-        if not bool(date_of_reg):
-            raise Exception("can't find 'Дата регистрации:' field")
+        self.assertTrue(bool(date_of_reg), "can't find 'Дата регистрации:' field")
+
         num_of_rates = self.find((By.XPATH, "//div[contains(text(), 'Оценок:')]"), 5)
-        if not bool(num_of_rates):
-            raise Exception("can't find 'Оценок:' field")
+        self.assertTrue(bool(num_of_rates), "can't find 'Оценок:' field")
+
         num_of_coll = self.find((By.XPATH, "//div[contains(text(), 'Коллекций:')]"), 5)
-        if not bool(num_of_coll):
-            raise Exception("can't find 'Коллекций:' field")
-        num_of_rewiews = self.find((By.XPATH, "//div[contains(text(), 'Рецензий:')]"), 5)
-        if not bool(num_of_rewiews):
-            raise Exception("can't find 'Рецензий:' field")
+        self.assertTrue(bool(num_of_coll), "can't find 'Коллекций:' field")
+
+        num_of_reviews = self.find((By.XPATH, "//div[contains(text(), 'Рецензий:')]"), 5)
+        self.assertTrue(bool(num_of_reviews), "can't find 'Рецензий:' field")

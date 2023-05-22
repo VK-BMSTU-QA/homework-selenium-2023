@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
+import unittest
 
 from utils.base_page import BasePage
 from utils.driver import dvr
+
 
 class SelectorsPerson:
     # check redirect
@@ -11,7 +13,8 @@ class SelectorsPerson:
     # check film contains person
     CLASS_NAME_ROLE = "about-film__role"
 
-class TestPersonNotAuthorized(BasePage):
+
+class TestPersonNotAuthorized(unittest.TestCase, BasePage):
     EXPECTED_PERSON = "Хоакин Феникс"
 
     def test_film_contains_person(self):
@@ -20,10 +23,8 @@ class TestPersonNotAuthorized(BasePage):
 
         # check redirect
         actual_url = dvr.get_instance().current_url
-        if actual_url != SelectorsPerson.EXPECTED_REDIRECTED_PAGE_URL:
-            raise Exception("wrong redirect: not expected film", SelectorsPerson.EXPECTED_REDIRECTED_PAGE_URL, actual_url)
+        self.assertEqual(actual_url, SelectorsPerson.EXPECTED_REDIRECTED_PAGE_URL, "wrong redirect: not expected film")
 
         # check film contains person
         actual_person = self.find((By.CLASS_NAME, SelectorsPerson.CLASS_NAME_ROLE)).text
-        if self.EXPECTED_PERSON not in actual_person:
-            raise Exception("wrong name: not expected name", actual_person, self.EXPECTED_PERSON)
+        self.assertIn(self.EXPECTED_PERSON, actual_person, SelectorsPerson.EXPECTED_REDIRECTED_PAGE_URL)

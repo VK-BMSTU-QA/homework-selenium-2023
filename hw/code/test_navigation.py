@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
+import unittest
 
 from utils.base_page import BasePage
 from utils.helper_auth import needed_auth
+
 
 class SelectorsNavigation:
     # check logo redirect
@@ -29,14 +31,15 @@ class SelectorsNavigation:
     # check login button open modal window
     CLASS_NAME_HEADER_LOGIN_BUTTON = 'js-header__login__btn'
 
-class TestNavigationPanelUnauthorized(BasePage):
+
+class TestNavigationPanelUnauthorized(unittest.TestCase, BasePage):
 
     def test_click_logo(self):
         self.render(f'/collection/tag-popular/')
 
         self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_LOGO)).click()
 
-        assert self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_PREVIEW_FILM))
+        self.assertIsNotNone(self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_PREVIEW_FILM)))
 
     def test_click_popular_button(self):
         self.render('/')
@@ -45,8 +48,7 @@ class TestNavigationPanelUnauthorized(BasePage):
 
         title = self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_COLLECTION_PAGE_TITLE)).text
 
-        if title != SelectorsNavigation.POPULAR_COLLECTION_PAGE_TITLE:
-            raise Exception("title does not equal", title, SelectorsNavigation.POPULAR_COLLECTION_PAGE_TITLE)
+        self.assertEqual(title, SelectorsNavigation.POPULAR_COLLECTION_PAGE_TITLE, "title does not equal")
 
     def test_click_premieres_button(self):
         self.render('/')
@@ -55,22 +57,21 @@ class TestNavigationPanelUnauthorized(BasePage):
 
         title = self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_PREMIERES_PAGE_TITLE)).text
 
-        if title != SelectorsNavigation.PREMIERES_PAGE_TITLE:
-            raise Exception("title does not equal", title, SelectorsNavigation.PREMIERES_PAGE_TITLE)
+        self.assertEqual(title, SelectorsNavigation.PREMIERES_PAGE_TITLE, "title does not equal")
 
     def test_click_collections_button_unauthorized(self):
         self.render('/')
 
         self.find((By.XPATH, SelectorsNavigation.X_PATH_HEADER_COLLECTIONS_BUTTON)).click()
 
-        assert self.find((By.CLASS_NAME, SelectorsNavigation.MODAL_AUTH_CLASS_NAME))
+        self.assertIsNotNone(self.find((By.CLASS_NAME, SelectorsNavigation.MODAL_AUTH_CLASS_NAME)))
 
     def test_click_login_button(self):
         self.render('/')
 
         self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_HEADER_LOGIN_BUTTON)).click()
 
-        assert self.find((By.CLASS_NAME, SelectorsNavigation.MODAL_AUTH_CLASS_NAME))
+        self.assertIsNotNone(self.find((By.CLASS_NAME, SelectorsNavigation.MODAL_AUTH_CLASS_NAME)))
 
     @needed_auth
     def test_click_collections_button_authorized(self):
@@ -80,5 +81,5 @@ class TestNavigationPanelUnauthorized(BasePage):
 
         title = self.find((By.CLASS_NAME, SelectorsNavigation.CLASS_NAME_USER_COLLECTION_PAGE_TITLE)).text
 
-        if title != SelectorsNavigation.USER_COLLECTION_PAGE_TITLE:
-            raise Exception("title does not equal", title, SelectorsNavigation.USER_COLLECTION_PAGE_TITLE)
+        self.assertEqual(title, SelectorsNavigation.USER_COLLECTION_PAGE_TITLE, "title does not equal")
+

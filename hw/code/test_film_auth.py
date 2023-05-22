@@ -1,11 +1,11 @@
 import time
 
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+import unittest
 
-from utils.driver import dvr
 from utils.base_page import BasePage
 from utils.helper_auth import needed_auth
+
 
 class SelectorsFilmAuth:
     CLASS_NAME_TOSTER = 'js-errorMessage'
@@ -26,7 +26,8 @@ class SelectorsFilmAuth:
     CLASS_NAME_REVIEW_TEXT = 'review__text'
     CLASS_NAME_REVIEW_TITLE = 'review__title'
 
-class TestFilmPageAuthorized(BasePage):
+
+class TestFilmPageAuthorized(unittest.TestCase, BasePage):
     TEXT = '200IQ text'
     TITLE = 'title'
 
@@ -78,8 +79,8 @@ class TestFilmPageAuthorized(BasePage):
         self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
 
         self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_CHOOSE_TYPE)).click()
-        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_CHOOSE_TYPE_REVIEW))[SelectorsFilmAuth.NEGATIVE_TYPE].click()
-
+        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_CHOOSE_TYPE_REVIEW))[
+            SelectorsFilmAuth.NEGATIVE_TYPE].click()
 
         self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TITLE)).send_keys(self.TITLE)
         self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TEXT)).send_keys(self.TEXT)
@@ -113,7 +114,8 @@ class TestFilmPageAuthorized(BasePage):
         self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
 
         self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_CHOOSE_TYPE)).click()
-        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_CHOOSE_TYPE_REVIEW))[SelectorsFilmAuth.NEGATIVE_TYPE].click()
+        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_CHOOSE_TYPE_REVIEW))[
+            SelectorsFilmAuth.NEGATIVE_TYPE].click()
 
         self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TITLE)).send_keys(self.TITLE)
         self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TEXT)).send_keys(self.TEXT)
@@ -124,10 +126,9 @@ class TestFilmPageAuthorized(BasePage):
         self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
 
         title = self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_REVIEW_TITLE))[0].text
-        if title != self.TITLE:
-            raise Exception("names does not equal", title, SelectorsFilmAuth.TITLE)
+
+        self.assertEqual(title, self.TITLE, "title does not equal")
 
         text = self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_REVIEW_TEXT))[0].text
-        if text != self.TEXT:
-            raise Exception("names does not equal", text, self.TEXT)
 
+        self.assertEqual(text, self.self.TEXT, "text does not equal")

@@ -21,6 +21,8 @@ class BasePage(object):
         return WebDriverWait(self.driver, timeout=timeout)
 
     def wait_hide(self, locator, timeout=None):
+        if timeout is None:
+            timeout = 5
         return self.wait(timeout).until(EC.invisibility_of_element_located(locator))
 
     def find(self, locator, timeout=None):

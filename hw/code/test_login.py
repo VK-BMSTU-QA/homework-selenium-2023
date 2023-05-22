@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
+import unittest
 
 from utils.base_page import BasePage
 from utils.driver import dvr
+
 
 class SelectorsLogin:
     CLASS_BUTTON_OPEN_REG_WINDOW = 'modal__login__switch__btn'
@@ -13,7 +15,7 @@ class SelectorsLogin:
     CLASS_MODAL = 'modal__background'
 
 
-class TestLogin(BasePage):
+class TestLogin(unittest.TestCase, BasePage):
     LOGIN = 'Qwe123@a.a'
     PASSWD = 'Qwe123@a.a'
 
@@ -27,10 +29,10 @@ class TestLogin(BasePage):
         btn_login.click()
         pattern = f'{BasePage.DOMAIN}{self.URL_PAGE_SIGNUP}'
         current__url = dvr.get_instance().current_url
-        if (pattern != current__url):
-            raise Exception("wrong redirect", pattern, current__url)
 
-    def test_invalid_emeil(self):
+        self.assertEqual(pattern, current__url, "wrong redirect")
+
+    def test_invalid_email(self):
         self.render(self.URL_PAGE_LOGIN)
         wrong_email = '123456'
 
@@ -41,8 +43,8 @@ class TestLogin(BasePage):
         self.find((By.XPATH, SelectorsLogin.X_BUTTON_LOGIN)).click()
 
         is_wrong = SelectorsLogin.CLASS_WRONG_INPUT in input_email.get_attribute("class").split()
-        if (is_wrong != True):
-            raise Exception("wrong check", input_email, wrong_email)
+
+        self.assertTrue(is_wrong, "wrong check")
 
     def test_invalid_password(self):
         self.render(self.URL_PAGE_LOGIN)
@@ -55,8 +57,8 @@ class TestLogin(BasePage):
         self.find((By.XPATH, SelectorsLogin.X_BUTTON_LOGIN)).click()
 
         is_wrong = SelectorsLogin.CLASS_WRONG_INPUT in input_password.get_attribute("class").split()
-        if (is_wrong != True):
-            raise Exception("wrong check", input_password, input_password)
+
+        self.assertTrue(is_wrong, "wrong check")
 
     def test_correct_login(self):
         self.render(self.URL_PAGE_LOGIN)
@@ -67,6 +69,6 @@ class TestLogin(BasePage):
         self.find((By.XPATH, SelectorsLogin.X_BUTTON_LOGIN)).click()
         try:
             self.find((By.CLASS, SelectorsLogin.CLASS_MODAL))
-            raise Exception('unreachable code')
+            assert 'unreachable code'
         except:
             None

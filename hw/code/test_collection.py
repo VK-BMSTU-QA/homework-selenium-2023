@@ -1,11 +1,12 @@
 from selenium.webdriver.common.by import By
-import time
+import unittest
 
 from utils.driver import dvr
 from utils.base_page import BasePage
 from utils.helper_auth import needed_auth, helper
 
-class SelectorsCollections():
+
+class SelectorsCollections:
     CLASS_NAME_TITLE_FILM_IN_WILL_WATCH = 'about-film__title'
     CLASS_NAME_LIST_WILL_WATCH_ICON = 'about-film__button_plus'
 
@@ -24,6 +25,7 @@ class SelectorsCollections():
 
     CLASS_NAME_PREVIEW_FILM = 'preview-film__container'
 
+
 class CollectionHelper(BasePage):
     # second call is remove
     def add_or_remove_film_in_collection(self, film_id, collection):
@@ -41,7 +43,7 @@ class CollectionHelper(BasePage):
         return film_title
 
 
-class TestPersonalCollectionAddFilm(CollectionHelper):
+class TestPersonalCollectionAddFilm(unittest.TestCase, CollectionHelper):
 
     @needed_auth
     def test_adding_film_in_collection(self):
@@ -62,14 +64,14 @@ class TestPersonalCollectionAddFilm(CollectionHelper):
         # check redirect film
         expected_full_url = SelectorsCollections.EXPECTED_REDIRECTED_PAGE_URL_PART + f'{film_id}/'
         actual_url = dvr.get_instance().current_url
-        if actual_url != expected_full_url:
-            raise Exception("wrong redirect: film not expected", expected_full_url, actual_url)
+
+        self.assertEqual(actual_url, expected_full_url, "wrong redirect: film not expected")
 
         # rollback env
         self.add_or_remove_film_in_collection(film_id, collection)
 
 
-class TestPersonalCollectionDeleteFilm(CollectionHelper):
+class TestPersonalCollectionDeleteFilm(unittest.TestCase, CollectionHelper):
 
     @needed_auth
     def test_delete_film_from_collection(self):
@@ -95,7 +97,7 @@ class TestPersonalCollectionDeleteFilm(CollectionHelper):
         self.wait_hide((By.XPATH, SelectorsCollections.X_TOSTER))
 
 
-class TestPersonalCollectionHasFilm(CollectionHelper):
+class TestPersonalCollectionHasFilm(unittest.TestCase, CollectionHelper):
     def test_public_collection_has_film(self):
         # prepare
         helper.login()
@@ -125,14 +127,14 @@ class TestPersonalCollectionHasFilm(CollectionHelper):
         # check redirect film
         expected_full_url = SelectorsCollections.EXPECTED_REDIRECTED_PAGE_URL_PART + f'{film_id}/'
         actual_url = dvr.get_instance().current_url
-        if actual_url != expected_full_url:
-            raise Exception("wrong redirect: film not expected", expected_full_url, actual_url)
+
+        self.assertEqual(actual_url, expected_full_url, "wrong redirect: film not expected")
 
         # rollback env
         self.add_or_remove_film_in_collection(film_id, collection)
 
 
-class TestPersonalCollectionShare(CollectionHelper):
+class TestPersonalCollectionShare(unittest.TestCase, CollectionHelper):
 
     def test_public_collection_copy_url(self):
         # prepare

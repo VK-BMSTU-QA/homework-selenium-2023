@@ -1,11 +1,9 @@
-import time
-
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+import unittest
 
-from utils.driver import dvr
 from utils.base_page import BasePage
-from utils.helper_auth import needed_auth
+
 
 class SelectorsSearch:
     CLASS_NAME_FIRST_FOUNDED_FILM = 'premiere-film__blackout'
@@ -20,19 +18,20 @@ class SelectorsSearch:
     ALL_GROUP_SEARCH = 'a'
     CLASS_NAME_SEARCH_GROUP_FILMS = 0
 
-class TestSearch(BasePage):
+
+class TestSearch(unittest.TestCase, BasePage):
     TITLE_SEARCH = 'Результаты поиска'
     SEARCH_GROUP_FILMS = 'Найденные фильмы:'
     SEARCH_GROUP_SERAILS = 'Найденные сериалы:'
     SEARCH_GROUP_PERSONS = 'Найденные имена:'
 
-
     def test_check_exists(self):
         self.render('/')
+
         self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_INPUT_SEARCH)).send_keys(Keys.ENTER)
         title = self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_TITLE_SEARCH)).text
-        if title != self.TITLE_SEARCH:
-            raise Exception("stings does not equal", title, self.TITLE_SEARCH)
+
+        self.assertEqual(title, self.TITLE_SEARCH, "stings does not equal")
 
     def test_check_empty(self):
         self.render('/')
@@ -41,26 +40,28 @@ class TestSearch(BasePage):
 
     def test_check_group_category(self):
         self.render('/')
-        self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_INPUT_SEARCH)).send_keys(SelectorsSearch.ALL_GROUP_SEARCH, Keys.ENTER)
+        self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_INPUT_SEARCH)).send_keys(SelectorsSearch.ALL_GROUP_SEARCH,
+                                                                                      Keys.ENTER)
 
-        films_field = self.find_group((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_CATEGORY_TITLE))[SelectorsSearch.CLASS_NAME_SEARCH_GROUP_FILMS].text
-        if films_field != self.SEARCH_GROUP_FILMS:
-            raise Exception("stings does not equal", films_field, self.SEARCH_GROUP_FILMS)
+        films_field = self.find_group((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_CATEGORY_TITLE))[
+            SelectorsSearch.CLASS_NAME_SEARCH_GROUP_FILMS].text
+        self.assertEqual(films_field, self.SEARCH_GROUP_FILMS, "stings does not equal")
 
-        serials_field = self.find_group((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_CATEGORY_TITLE))[SelectorsSearch.CLASS_NAME_SEARCH_GROUP_SERAILS].text
-        if serials_field != self.SEARCH_GROUP_SERAILS:
-            raise Exception("stings does not equal", serials_field, self.SEARCH_GROUP_SERAILS)
+        serials_field = self.find_group((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_CATEGORY_TITLE))[
+            SelectorsSearch.CLASS_NAME_SEARCH_GROUP_SERAILS].text
+        self.assertEqual(serials_field, self.SEARCH_GROUP_SERAILS, "stings does not equal")
 
-        persons_field = self.find_group((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_CATEGORY_TITLE))[SelectorsSearch.CLASS_NAME_SEARCH_GROUP_PERSONS].text
-        if persons_field != self.SEARCH_GROUP_PERSONS:
-            raise Exception("stings does not equal", persons_field, self.SEARCH_GROUP_PERSONS)
+        persons_field = self.find_group((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_CATEGORY_TITLE))[
+            SelectorsSearch.CLASS_NAME_SEARCH_GROUP_PERSONS].text
+        self.assertEqual(persons_field, self.SEARCH_GROUP_PERSONS, "stings does not equal")
 
     def test_correct_results(self):
         self.render('/')
-        self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_INPUT_SEARCH)).send_keys(SelectorsSearch.ALL_GROUP_SEARCH, Keys.ENTER)
+        self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_INPUT_SEARCH)).send_keys(SelectorsSearch.ALL_GROUP_SEARCH,
+                                                                                      Keys.ENTER)
 
         films_field = self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_FIRST_FOUNDED_TITLE)).text
         self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_FIRST_FOUNDED_FILM)).click()
         film_title = self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_TITLE_ON_FILM_PAGE)).text
-        if films_field != film_title:
-            raise Exception("stings does not equal", films_field, film_title)
+
+        self.assertEqual(film_title, films_field, "stings does not equal")

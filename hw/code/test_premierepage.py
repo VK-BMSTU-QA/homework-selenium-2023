@@ -1,6 +1,8 @@
 from selenium.webdriver.common.by import By
+import unittest
 
 from utils.base_page import BasePage
+
 
 class SelectorsPremierePage:
     # check premiere page's content
@@ -11,7 +13,8 @@ class SelectorsPremierePage:
     CLASS_NAME_PREMIERES_FILM_POSTER = 'premiere-film__poster-container'
     CLASS_NAME_FILM_PAGE_ABOUT = 'js-film-page__about'
 
-class TestPremieresPage(BasePage):
+
+class TestPremieresPage(unittest.TestCase, BasePage):
     PREMIERES_TITLE = 'Премьеры'
 
     def test_premieres_exist(self):
@@ -19,14 +22,13 @@ class TestPremieresPage(BasePage):
 
         title = self.find((By.CLASS_NAME, SelectorsPremierePage.CLASS_NAME_PREMIERES_TITLE)).text
 
-        if title != self.PREMIERES_TITLE:
-            raise Exception("title does not equal", title, self.PREMIERES_TITLE)
+        self.assertEqual(title, self.PREMIERES_TITLE, "title does not equal")
 
-        assert self.find((By.CLASS_NAME, SelectorsPremierePage.CLASS_NAME_PREMIERES_DAY))
+        self.assertIsNotNone(self.find((By.CLASS_NAME, SelectorsPremierePage.CLASS_NAME_PREMIERES_DAY)))
 
     def test_premiers_film_poster_redirect(self):
         self.render(f'/premieres/')
 
         self.find((By.CLASS_NAME, SelectorsPremierePage.CLASS_NAME_PREMIERES_FILM_POSTER)).click()
 
-        assert self.find((By.CLASS_NAME, SelectorsPremierePage.CLASS_NAME_FILM_PAGE_ABOUT))
+        self.assertIsNotNone(self.find((By.CLASS_NAME, SelectorsPremierePage.CLASS_NAME_FILM_PAGE_ABOUT)))

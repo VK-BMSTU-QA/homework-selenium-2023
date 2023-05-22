@@ -1,11 +1,8 @@
-import time
-
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+import unittest
 
-from utils.driver import dvr
 from utils.base_page import BasePage
-from utils.helper_auth import needed_auth
+
 
 class SelectorsFilmUnauth():
     CLASS_NAME_BUTTON_PLUS = 'about-film__button_plus'
@@ -17,7 +14,8 @@ class SelectorsFilmUnauth():
     CLASS_NAME_TRAILER_CONTAINER = 'trailer__iframe'
     CLASS_NAME_BUTTON_REVIEW = 'js-list-reviews__btn-write-review'
 
-class TestFilmPageUnauthorized(BasePage):
+
+class TestFilmPageUnauthorized(unittest.TestCase, BasePage):
 
     def test_click_producer(self):
         self.render(f'/film/1')
@@ -26,8 +24,8 @@ class TestFilmPageUnauthorized(BasePage):
         self.find((By.CLASS_NAME, SelectorsFilmUnauth.CLASS_NAME_PRODUCER), 5).click()
 
         prod_on_page = self.find((By.CLASS_NAME, SelectorsFilmUnauth.CLASS_NAME_PRODUCER_ON_PAGE), 3).text.strip()
-        if prod != prod_on_page:
-            raise Exception("names does not equal", prod, prod_on_page)
+
+        self.assertEqual(prod, prod_on_page, "names does not equal")
 
     def test_click_plus_unauth(self):
         self.render(f'/film/1')

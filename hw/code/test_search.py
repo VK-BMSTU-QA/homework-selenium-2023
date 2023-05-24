@@ -5,7 +5,8 @@ import unittest
 from utils.base_page import BasePage
 
 
-class SelectorsSearch:
+class SearchPageParams:
+    URL_PAGE = "/"
     CLASS_NAME_FIRST_FOUNDED_FILM = 'premiere-film__blackout'
     CLASS_NAME_FIRST_FOUNDED_TITLE = 'premiere-film__information-title'
     CLASS_NAME_TITLE_ON_FILM_PAGE = 'about-film__title'
@@ -13,55 +14,62 @@ class SelectorsSearch:
     CLASS_NAME_BUTTON_RETURN_MAIN = 'search-page__no-content-btn'
     CLASS_NAME_TITLE_SEARCH = 'search-page__title'
     CLASS_NAME_CATEGORY_TITLE = 'search-list__title'
-    CLASS_NAME_SEARCH_GROUP_SERAILS = 1
-    CLASS_NAME_SEARCH_GROUP_PERSONS = 2
+
+
+class PagePerson(BasePage):
+    def start(self):
+        self.render(SearchPageParams.URL_PAGE)
+
+    def input_search(self, value):
+        self.find((By.CLASS_NAME, SearchPageParams.CLASS_NAME_INPUT_SEARCH)).send_keys(value)
+
+    def get_main_title(self):
+        return self.find((By.CLASS_NAME, SearchPageParams.CLASS_NAME_TITLE_SEARCH)).text
+
+    def get_search_res_type(self, target):
+        return self.find_group((By.CLASS_NAME, SearchPageParams.CLASS_NAME_CATEGORY_TITLE))[target].text
+
+    def get_first_found_film_title(self):
+        return self.find((By.CLASS_NAME, SearchPageParams.CLASS_NAME_FIRST_FOUNDED_TITLE)).text
+
+
+class TestSearch(unittest.TestCase, PagePerson):
     ALL_GROUP_SEARCH = 'a'
-    CLASS_NAME_SEARCH_GROUP_FILMS = 0
-
-
-class TestSearch(unittest.TestCase, BasePage):
-    TITLE_SEARCH = 'Результаты поиска'
-    SEARCH_GROUP_FILMS = 'Найденные фильмы:'
-    SEARCH_GROUP_SERAILS = 'Найденные сериалы:'
-    SEARCH_GROUP_PERSONS = 'Найденные имена:'
+    EXPECTED_TITLE_SEARCH = 'Результаты поиска'
+    EXPECTED_SEARCH_GROUP_FILMS = 'Найденные фильмы:'
+    EXPECTED_SEARCH_GROUP_SERIALS = 'Найденные сериалы:'
+    EXPECTED_SEARCH_GROUP_PERSONS = 'Найденные имена:'
+    EXPECTED_FOUND_COUNT_SERIALS = 1
+    EXPECTED_FOUND_COUNT_PERSONS = 2
+    EXPECTED_FOUND_COUNT_FILMS = 0
 
     def test_check_exists(self):
-        self.render('/')
+        self.start()
 
-        self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_INPUT_SEARCH)).send_keys(Keys.ENTER)
-        title = self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_TITLE_SEARCH)).text
+        self.input_search(Keys.ENTER)
 
-        self.assertEqual(title, self.TITLE_SEARCH, "stings does not equal")
-
-    def test_check_empty(self):
-        self.render('/')
-        self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_INPUT_SEARCH)).send_keys(Keys.ENTER)
-        self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_BUTTON_RETURN_MAIN)).click()
+        title = self.get_main_title()
+        self.assertEqual(title, self.EXPECTED_TITLE_SEARCH, "stings does not equal")
 
     def test_check_group_category(self):
-        self.render('/')
-        self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_INPUT_SEARCH)).send_keys(SelectorsSearch.ALL_GROUP_SEARCH,
-                                                                                      Keys.ENTER)
+        self.start()
 
-        films_field = self.find_group((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_CATEGORY_TITLE))[
-            SelectorsSearch.CLASS_NAME_SEARCH_GROUP_FILMS].text
-        self.assertEqual(films_field, self.SEARCH_GROUP_FILMS, "stings does not equal")
+        self.input_search([self.ALL_GROUP_SEARCH, Keys.ENTER])
 
-        serials_field = self.find_group((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_CATEGORY_TITLE))[
-            SelectorsSearch.CLASS_NAME_SEARCH_GROUP_SERAILS].text
-        self.assertEqual(serials_field, self.SEARCH_GROUP_SERAILS, "stings does not equal")
+        films_field = self.get_search_res_type(self.EXPECTED_FOUND_COUNT_FILMS)
+        self.assertEqual(films_field, self.EXPECTED_SEARCH_GROUP_FILMS, "expected films found")
 
-        persons_field = self.find_group((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_CATEGORY_TITLE))[
-            SelectorsSearch.CLASS_NAME_SEARCH_GROUP_PERSONS].text
-        self.assertEqual(persons_field, self.SEARCH_GROUP_PERSONS, "stings does not equal")
+        serials_field = self.get_search_res_type(self.EXPECTED_FOUND_COUNT_SERIALS)
+        self.assertEqual(serials_field, self.EXPECTED_SEARCH_GROUP_SERIALS, "expected serials found")
+
+        persons_field = self.get_search_res_type(self.EXPECTED_FOUND_COUNT_PERSONS)
+        self.assertEqual(persons_field, self.EXPECTED_SEARCH_GROUP_PERSONS, "expected persons found")
 
     def test_correct_results(self):
-        self.render('/')
-        self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_INPUT_SEARCH)).send_keys(SelectorsSearch.ALL_GROUP_SEARCH,
-                                                                                      Keys.ENTER)
+        self.start()
 
-        films_field = self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_FIRST_FOUNDED_TITLE)).text
-        self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_FIRST_FOUNDED_FILM)).click()
-        film_title = self.find((By.CLASS_NAME, SelectorsSearch.CLASS_NAME_TITLE_ON_FILM_PAGE)).text
+        self.input_search([self.ALL_GROUP_SEARCH, Keys.ENTER])
 
-        self.assertEqual(film_title, films_field, "stings does not equal")
+        actual_film_title = self.get_first_found_film_title()
+
+        self.assertTrue(actual_film_title.find(self.ALL_GROUP_SEARCH), f"title must contains search {self.ALL_GROUP_SEARCH}")

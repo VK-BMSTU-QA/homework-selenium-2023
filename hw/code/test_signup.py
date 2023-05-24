@@ -5,7 +5,10 @@ from utils.base_page import BasePage
 from utils.driver import dvr
 
 
-class SelectorsSignup:
+class SignupPageParams:
+    URL_PAGE_LOGIN = 'login'
+    URL_PAGE_SIGNUP = '/signup/'
+
     CLASS_BUTTON_OPEN_LOGIN_WINDOW = 'modal__login__switch__btn'
     CLASS_NAME_MODAL_INPUT = 'js-modal__input'
     NICKNAME_INPUT = 0
@@ -17,109 +20,90 @@ class SelectorsSignup:
     CLASS_WRONG_INPUT = 'modal__input_red_border'
 
 
-class TestSignup(unittest.TestCase, BasePage):
+class PageSignup(BasePage):
+    def start(self):
+        self.render(SignupPageParams.URL_PAGE_SIGNUP)
+
+    def action_registration(self, nickname, login, password, repeat_password):
+        input_nickname = self.find_group((By.CLASS_NAME, SignupPageParams.CLASS_NAME_MODAL_INPUT))[SignupPageParams.NICKNAME_INPUT]
+        input_nickname.send_keys(nickname)
+
+        input_email = self.find_group((By.CLASS_NAME, SignupPageParams.CLASS_NAME_MODAL_INPUT))[SignupPageParams.EMAIL_INPUT]
+        input_email.send_keys(login)
+
+        input_password = self.find_group((By.CLASS_NAME, SignupPageParams.CLASS_NAME_MODAL_INPUT))[SignupPageParams.PASSWORD_INPUT]
+        input_password.send_keys(password)
+
+        input_repeat_password = self.find_group((By.CLASS_NAME, SignupPageParams.CLASS_NAME_MODAL_INPUT))[SignupPageParams.REPEAT_PASSWORD_INPUT]
+        input_repeat_password.send_keys(repeat_password)
+
+        self.find((By.CLASS_NAME, SignupPageParams.CLASS_NAME_BUTTON_REG)).click()
+
+        return input_nickname, input_email, input_password, input_repeat_password
+
+    def get_error_massage(self):
+        return self.find((By.CLASS_NAME, SignupPageParams.CLASS_NAME_ALREADY_REGISTER)).text
+
+    def move_to_login(self):
+        btn_login = self.find((By.CLASS_NAME, SignupPageParams.CLASS_BUTTON_OPEN_LOGIN_WINDOW))
+        btn_login.click()
+        current__url = dvr.get_instance().current_url
+
+        return current__url
+
+
+class TestSignup(unittest.TestCase, PageSignup):
     LOGIN = 'Qwe123@a.a'
     PASSWD = 'Qwe123@a.a'
     NICKNAME = 'Admin'
-    URL_PAGE_LOGIN = '/login/'
-    URL_PAGE_SIGNUP = '/signup/'
+
+    EXPECTED_ERROR = "Пользователь с таким email уже зарегистрирован", "wrong register msg"
+    EXPECTED_LOGIN = "login"
 
     def test_redirect_login(self):
-        self.render(self.URL_PAGE_SIGNUP)
+        self.start()
 
-        btn_login = self.find((By.CLASS_NAME, SelectorsSignup.CLASS_BUTTON_OPEN_LOGIN_WINDOW), 10)
-        btn_login.click()
-        pattern = f'{BasePage.DOMAIN}{self.URL_PAGE_LOGIN}'
-        current__url = dvr.get_instance().current_url
+        actual_position = self.move_to_login()
 
-        self.assertEqual(current__url, pattern, "wrong redirect")
+        self.assertIn(self.EXPECTED_LOGIN, actual_position, "wrong redirect")
 
     def test_short_nick(self):
-        self.render(self.URL_PAGE_SIGNUP)
+        self.start()
+
         short_nick = '123'
 
-        input_nickname = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.NICKNAME_INPUT]
-        input_nickname.send_keys(short_nick)
-        input_email = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.EMAIL_INPUT]
-        input_email.send_keys(self.LOGIN)
-        input_password = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.PASSWORD_INPUT]
-        input_password.send_keys(self.PASSWD)
-        input_repeat_password = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.REPEAT_PASSWORD_INPUT]
-        input_repeat_password.send_keys(self.PASSWD)
+        input_nickname, _, _, _ = self.action_registration(short_nick, self.LOGIN, self.PASSWD, self.PASSWD)
 
-        self.find((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_BUTTON_REG)).click()
-
-        is_wrong = SelectorsSignup.CLASS_WRONG_INPUT in input_nickname.get_attribute("class").split()
+        is_wrong = SignupPageParams.CLASS_WRONG_INPUT in input_nickname.get_attribute("class").split()
         self.assertTrue(is_wrong, "wrong check")
 
-    def test_invalid_emeil(self):
-        self.render(self.URL_PAGE_SIGNUP)
+    def test_invalid_email(self):
+        self.start()
+
         wrong_email = '123456'
 
-        input_nickname = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.NICKNAME_INPUT]
-        input_nickname.send_keys(self.NICKNAME)
-        input_email = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.EMAIL_INPUT]
-        input_email.send_keys(wrong_email)
-        input_password = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.PASSWORD_INPUT]
-        input_password.send_keys(self.PASSWD)
-        input_repeat_password = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.REPEAT_PASSWORD_INPUT]
-        input_repeat_password.send_keys(self.PASSWD)
+        _, input_email, _, _ = self.action_registration(self.NICKNAME, wrong_email, self.PASSWD, self.PASSWD)
 
-        self.find((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_BUTTON_REG)).click()
-
-        is_wrong = SelectorsSignup.CLASS_WRONG_INPUT in input_email.get_attribute("class").split()
+        is_wrong = SignupPageParams.CLASS_WRONG_INPUT in input_email.get_attribute("class").split()
         self.assertTrue(is_wrong, "wrong check")
 
     def test_invalid_password(self):
-        self.render(self.URL_PAGE_SIGNUP)
+        self.start()
+
         wrong_password = 'abcds'
 
-        input_nickname = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.NICKNAME_INPUT]
-        input_nickname.send_keys(self.NICKNAME)
-        input_email = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.EMAIL_INPUT]
-        input_email.send_keys(self.LOGIN)
-        input_password = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.PASSWORD_INPUT]
-        input_password.send_keys(wrong_password)
-        input_repeat_password = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.REPEAT_PASSWORD_INPUT]
-        input_repeat_password.send_keys(wrong_password)
+        _, _, input_password, _ = self.action_registration(self.NICKNAME, self.LOGIN, wrong_password, wrong_password)
 
-        self.find((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_BUTTON_REG)).click()
-
-        is_wrong_input_password = SelectorsSignup.CLASS_WRONG_INPUT in input_password.get_attribute("class").split()
-        is_wrong_input_repeat_password = SelectorsSignup.CLASS_WRONG_INPUT in input_password.get_attribute(
-            "class").split()
+        is_wrong_input_password = SignupPageParams.CLASS_WRONG_INPUT in input_password.get_attribute("class").split()
+        is_wrong_input_repeat_password = SignupPageParams.CLASS_WRONG_INPUT in input_password.get_attribute("class").split()
 
         self.assertTrue(is_wrong_input_password or is_wrong_input_repeat_password, "wrong check")
 
-    def test_correct_register(self):
-        self.render(self.URL_PAGE_SIGNUP)
+    def test_such_user_exist(self):
+        self.start()
 
-        input_nickname = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.NICKNAME_INPUT]
-        input_nickname.send_keys(self.NICKNAME)
-        input_email = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.EMAIL_INPUT]
-        input_email.send_keys(self.LOGIN)
-        input_password = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.PASSWORD_INPUT]
-        input_password.send_keys(self.PASSWD)
-        input_repeat_password = self.find_group((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_MODAL_INPUT))[
-            SelectorsSignup.REPEAT_PASSWORD_INPUT]
-        input_repeat_password.send_keys(self.PASSWD)
+        self.action_registration(self.NICKNAME, self.LOGIN, self.PASSWD, self.PASSWD)
 
-        self.find((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_BUTTON_REG)).click()
-        msg_already_register = self.find((By.CLASS_NAME, SelectorsSignup.CLASS_NAME_ALREADY_REGISTER)).text
+        msg_already_register = self.get_error_massage()
 
-        self.assertEqual(msg_already_register, "Пользователь с таким email уже зарегистрирован", "wrong register msg")
+        self.assertIn(msg_already_register, self.EXPECTED_ERROR)

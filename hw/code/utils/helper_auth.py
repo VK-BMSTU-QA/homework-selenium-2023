@@ -23,16 +23,10 @@ class HelperAuth(BasePage):
 
     def __init__(self):
         self.NICKNAME = os.environ.get("NICKNAME")
-        if self.NICKNAME is None:
-            self.NICKNAME = "Admin"
 
-        self.LOGIN = os.environ.get("LOGIN")  # 'HW3testname@gmail.com'
-        if self.LOGIN is None:
-            self.LOGIN = "HW3testname@gmail.com"
+        self.LOGIN = os.environ.get("LOGIN")
 
-        self.PASSWD = os.environ.get("PASSWORD")  # 'HW3testname'
-        if self.PASSWD is None:
-            self.PASSWD = "HW3testname"
+        self.PASSWD = os.environ.get("PASSWORD")
 
         self.IS_REGISTERED = False
         self.IS_LOGIN = False

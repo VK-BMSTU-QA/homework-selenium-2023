@@ -1,17 +1,13 @@
-# from selenium.webdriver.common.by import By
-# import unittest
-
-# from utils.base_page import BasePage
-# from utils.driver import dvr
 import unittest
 
 from pages.pageLogin import PageLogin
 from locators.pageLoginLocators import SelectorsLogin
 
+from utils.helper_auth import helper
 
 class TestLogin(unittest.TestCase, PageLogin):
-    LOGIN = 'Qwe123@a.a'
-    PASSWD = 'Qwe123@a.a'
+    LOGIN = helper.LOGIN
+    PASSWD = helper.PASSWD
 
     EXPECTED_LOGIN = "signup"
     EXPECTED_MODAL_STATUS = 'modal_does_not_exist'

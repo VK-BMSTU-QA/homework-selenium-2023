@@ -2,10 +2,10 @@ from selenium.webdriver.common.keys import Keys
 import unittest
 
 
-from pages.pageSearch import PageSearch
+from pages.pageSearch import SearchPage
 
 
-class TestSearch(unittest.TestCase, PageSearch):
+class TestSearch(unittest.TestCase, SearchPage):
     ALL_GROUP_SEARCH = 'a'
     EXPECTED_TITLE_SEARCH = 'Результаты поиска'
     EXPECTED_SEARCH_GROUP_FILMS = 'Найденные фильмы:'

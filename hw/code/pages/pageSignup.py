@@ -5,7 +5,7 @@ from locators.pageSignupLocators import SelectorsSignup
 from utils.driver import dvr
 
 
-class PageSignup(BasePage):
+class SignupPage(BasePage):
     def render_page(self):
         self.render(SelectorsSignup.URL_PAGE_SIGNUP)
 

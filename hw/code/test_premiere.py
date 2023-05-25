@@ -1,9 +1,9 @@
 import unittest
 
-from pages.pagePremiere import PagePremieres
+from pages.pagePremiere import PremieresPage
 
 
-class TestPremieresPage(unittest.TestCase, PagePremieres):
+class TestPremieresPage(unittest.TestCase, PremieresPage):
     EXPECTED_PREMIERES_TITLE = 'Премьеры'
     EXPECTED_FILM_ABOUT = """В эфире
 On the Line

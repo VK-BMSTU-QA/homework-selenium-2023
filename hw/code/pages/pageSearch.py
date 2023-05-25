@@ -4,7 +4,7 @@ from utils.base_page import BasePage
 from locators.pageSearchLocators import SelectorsSearch
 
 
-class PageSearch(BasePage):
+class SearchPage(BasePage):
     def render_page(self):
         self.render(SelectorsSearch.URL_PAGE_SEARCH)
 

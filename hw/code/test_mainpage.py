@@ -5,42 +5,46 @@ from pages.pageMainPage import PageMainPage
 
 
 class TestMainPage(unittest.TestCase, PageMainPage):
+    EXPECTED_TITLE_POPULAR = 'Популярное'
+    EXPECTED_TITLE_IN_CINEMA = 'Сейчас в кино'
+    EXPECTED_TITLE_GENRES = 'Жанры'
+
     def test_preview_film_existing(self):
         self.render_page()
 
-        self.assertIsNotNone(self.find((By.CLASS_NAME, MainPageParams.CLASS_NAME_PREVIEW)))
+        self.assertIsNotNone(self.get_meny_preview(), "preview meny not available")
 
-        self.assertIsNotNone(self.find((By.CLASS_NAME, MainPageParams.CLASS_NAME_PREVIEW_FILM_TITLE)))
+        self.assertIsNotNone(self.get_preview_title(), "preview film not available")
 
     def test_popular_section(self):
         self.render_page()
 
-        self.assertIsNotNone(self.find((By.XPATH, MainPageParams.X_PATH_POPULAR_SECTION_SLIDER_FILM)))
+        self.assertIsNotNone(self.get_meny_popular())
 
-        self.find((By.XPATH, MainPageParams.X_PATH_POPULAR_SECTION_BUTTON)).click()
+        self.move_to_popular_collection()
 
-        title = self.find((By.CLASS_NAME, MainPageParams.CLASS_NAME_PAGE_COLLECTION_TITLE)).text
+        title = self.get_title_cur_collection()
 
-        self.assertEqual(title, MainPageParams.PAGE_POPULAR_COLLECTION_TITLE, "title does not equal")
+        self.assertEqual(title, self.EXPECTED_TITLE_POPULAR, "title does not equal")
 
     def test_in_cinema_section(self):
         self.render_page()
 
-        self.assertIsNotNone(self.find((By.XPATH, MainPageParams.X_PATH_IN_CINEMA_SECTION_SLIDER_FILM)))
+        self.assertIsNotNone(self.get_meny_in_cinema(), "meny in cinema collection not available")
 
-        self.find((By.XPATH, MainPageParams.X_PATH_IN_CINEMA_SECTION_BUTTON)).click()
+        self.move_to_in_cinema_collection()
 
-        title = self.find((By.CLASS_NAME, MainPageParams.CLASS_NAME_PAGE_COLLECTION_TITLE)).text
+        title = self.get_title_cur_collection()
 
-        self.assertEqual(title, MainPageParams.PAGE_IN_CINEMA_COLLECTION_TITLE, "title does not equal")
+        self.assertEqual(title, self.EXPECTED_TITLE_IN_CINEMA, "title does not equal")
 
     def test_genres_section(self):
         self.render_page()
 
-        self.assertIsNotNone(self.find((By.XPATH, MainPageParams.X_PATH_GENRES_SECTION_SLIDER_GENRE)))
+        self.assertIsNotNone(self.get_meny_genres())
 
-        self.find((By.XPATH, MainPageParams.X_PATH_GENRES_SECTION_BUTTON)).click()
+        self.move_to_genres()
 
-        title = self.find((By.CLASS_NAME, MainPageParams.CLASS_NAME_PAGE_COLLECTION_TITLE)).text
+        title = self.get_title_cur_collection()
 
-        self.assertEqual(title, MainPageParams.PAGE_GENRES_COLLECTION_TITLE, "title does not equal")
+        self.assertEqual(title, self.EXPECTED_TITLE_GENRES, "title does not equal")

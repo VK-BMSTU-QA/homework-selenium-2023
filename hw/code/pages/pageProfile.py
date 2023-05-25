@@ -4,7 +4,7 @@ from utils.base_page import BasePage
 from locators.pageProfileLocators import SelectorsProfile
 
 
-class PageProfile(BasePage):
+class ProfilePage(BasePage):
     def render_page(self):
         self.render(SelectorsProfile.URL_PAGE_PROFILE)
 

@@ -4,7 +4,7 @@ from utils.base_page import BasePage
 from locators.pagePremiereLocators import SelectorsPremiere
 
 
-class PagePremieres(BasePage):
+class PremieresPage(BasePage):
     def render_page(self):
         self.render(SelectorsPremiere.URL_PAGE)
 

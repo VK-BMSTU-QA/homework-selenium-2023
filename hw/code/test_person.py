@@ -1,9 +1,9 @@
 import unittest
 
-from pages.pagePerson import PagePerson
+from pages.pagePerson import PersonPage
 
 
-class TestPersonNotAuthorized(unittest.TestCase, PagePerson):
+class TestPersonNotAuthorized(unittest.TestCase, PersonPage):
     EXPECTED_PERSON = "Хоакин Феникс"
     EXPECTED_FILM_ID = '28'
 

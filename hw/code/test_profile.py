@@ -4,10 +4,10 @@ import random
 import string
 
 from utils.helper_auth import needed_auth
-from pages.pageProfile import PageProfile
+from pages.pageProfile import ProfilePage
 
 
-class TestProfile(unittest.TestCase, PageProfile):
+class TestProfile(unittest.TestCase, ProfilePage):
     @staticmethod
     def generate_alphanum_random_string(length):
         letters_and_digits = string.ascii_letters + string.digits

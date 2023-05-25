@@ -1,10 +1,10 @@
 import unittest
 
-from pages.pageSignup import PageSignup
+from pages.pageSignup import SignupPage
 from locators.pageSignupLocators import SelectorsSignup
 
 
-class TestSignup(unittest.TestCase, PageSignup):
+class TestSignup(unittest.TestCase, SignupPage):
     LOGIN = 'Qwe123@a.a'
     PASSWD = 'Qwe123@a.a'
     NICKNAME = 'Admin'

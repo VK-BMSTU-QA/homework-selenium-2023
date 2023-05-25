@@ -5,7 +5,7 @@ from locators.pagePersonLocators import SelectorsPerson
 from utils.driver import dvr
 
 
-class PagePerson(BasePage):
+class PersonPage(BasePage):
     def render_page(self):
         self.render(SelectorsPerson.URL_PAGE)
 

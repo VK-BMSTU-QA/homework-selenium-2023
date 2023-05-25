@@ -1,36 +1,44 @@
-from selenium.webdriver.common.by import By
+# from selenium.webdriver.common.by import By
+# import unittest
+
+# from utils.base_page import BasePage
+# from utils.driver import dvr
 import unittest
 
-from utils.base_page import BasePage
-from utils.driver import dvr
+from pages.pageLogin import PageLogin
+from locators.pageLoginLocators import LoginPageParams
 
-
-class SelectorsLogin:
-    CLASS_BUTTON_OPEN_REG_WINDOW = 'modal__login__switch__btn'
-    X_BUTTON_OPEN_REG_WINDOW = "/html/body/div/div[1]/div/div/div/div[2]/div/a"
-    X_INPUT_EMAIL = "//input[@placeholder='Укажите адрес электронной почты']"
-    X_INPUT_PASSWORD = "//input[@placeholder='Введите пароль']"
-    X_BUTTON_LOGIN = "//button[contains(text(), 'Войти')]"
-    CLASS_WRONG_INPUT = 'modal__input_red_border'
-    CLASS_MODAL = 'modal__background'
+# class SelectorsLogin:
+#     CLASS_BUTTON_OPEN_REG_WINDOW = 'modal__login__switch__btn'
+#     X_BUTTON_OPEN_REG_WINDOW = "/html/body/div/div[1]/div/div/div/div[2]/div/a"
+#     X_INPUT_EMAIL = "//input[@placeholder='Укажите адрес электронной почты']"
+#     X_INPUT_PASSWORD = "//input[@placeholder='Введите пароль']"
+#     X_BUTTON_LOGIN = "//button[contains(text(), 'Войти')]"
+#     CLASS_WRONG_INPUT = 'modal__input_red_border'
+#     CLASS_MODAL = 'modal__background'
 
 
 class TestLogin(unittest.TestCase, BasePage):
     LOGIN = 'Qwe123@a.a'
     PASSWD = 'Qwe123@a.a'
 
-    URL_PAGE_LOGIN = '/login/'
-    URL_PAGE_SIGNUP_CUR = '/signup/'
+    # URL_PAGE_LOGIN = '/login/'
+    # URL_PAGE_SIGNUP_CUR = '/signup/'
 
     def test_redirect_signup(self):
-        self.render(self.URL_PAGE_LOGIN)
+        self.render_page()
 
-        btn_login = self.find((By.XPATH, SelectorsLogin.X_BUTTON_OPEN_REG_WINDOW), 10)
-        btn_login.click()
-        pattern = f'{BasePage.DOMAIN}{self.URL_PAGE_SIGNUP_CUR}'
-        current__url = dvr.get_instance().current_url
+        actual_position = self.move_to_login()
 
-        self.assertEqual(pattern, current__url, "wrong redirect")
+        self.assertIn(self.EXPECTED_LOGIN, actual_position, "wrong redirect")
+        # self.render(self.URL_PAGE_LOGIN)
+
+        # btn_login = self.find((By.XPATH, SelectorsLogin.X_BUTTON_OPEN_REG_WINDOW), 10)
+        # btn_login.click()
+        # pattern = f'{BasePage.DOMAIN}{self.URL_PAGE_SIGNUP_CUR}'
+        # current__url = dvr.get_instance().current_url
+
+        # self.assertEqual(pattern, current__url, "wrong redirect")
 
     def test_invalid_email(self):
         self.render(self.URL_PAGE_LOGIN)

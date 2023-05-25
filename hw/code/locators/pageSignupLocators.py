@@ -3,7 +3,7 @@ class SignupPageParams:
     URL_PAGE_SIGNUP = '/signup/'
 
     CLASS_BUTTON_OPEN_LOGIN_WINDOW = 'modal__login__switch__btn'
-    CLASS_NAME_MODAL_INPUT = 'js-modal__input'
+    CLASS_NAME_MODAL_INPUT = 'js-modal__input' 
     NICKNAME_INPUT = 0
     EMAIL_INPUT = 1
     PASSWORD_INPUT = 2

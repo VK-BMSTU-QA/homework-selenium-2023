@@ -4,7 +4,7 @@ from utils.base_page import BasePage
 from locators.pageSignupLocators import SignupPageParams
 from utils.driver import dvr
 
-
+ 
 class PageSignup(BasePage):
     def render_page(self):
         self.render(SignupPageParams.URL_PAGE_SIGNUP)

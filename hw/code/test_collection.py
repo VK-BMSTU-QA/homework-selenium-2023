@@ -1,165 +1,77 @@
 from selenium.webdriver.common.by import By
 import unittest
 
-from utils.driver import dvr
+
 from utils.base_page import BasePage
 from utils.helper_auth import needed_auth, helper
+from pages.commonPage import CommonPage
+from pages.pageFilm import FilmPage
+from pages.pageCollection import PageCollection
+from locators.pageFilmLocators import SelectorsFilm
+from locators.pageCollectionsLocators import SelectorsCollections
 
 
-class SelectorsCollections:
-    CLASS_NAME_TITLE_FILM_IN_WILL_WATCH = 'about-film__title'
-    CLASS_NAME_LIST_WILL_WATCH_ICON = 'about-film__button_plus'
-
-    CLASS_NAME_WILL_WATCH_ICON = "about-film__button_bookmark"
-    CLASS_NAME_DELETE_BUTTON = 'film__delete-svg'
-
-    EXPECTED_REDIRECTED_PAGE_URL_PART = 'https://movie-gate.online/film/'
-
-    CLASS_NAME_FILM_TITLE = 'film__title'
-    EXPECTED_FILM_TITLE = 'В эфире'
-    CLASS_NAME_TOSTER = 'js-errorMessage'
-
-    CLASS_NAME_AUTHOR_NAME = 'header__userbar-name'
-    CLASS_NAME_AVATAR_AUTHOR = 'header__avatar'
-    CLASS_NAME_SHARE_ICON = 'page__collection__share-icon'
-
-    CLASS_NAME_PREVIEW_FILM = 'preview-film__container'
-
-
-class CollectionHelper(BasePage):
-    # second call is remove
-    def add_or_remove_film_in_collection(self, film_id, collection):
-        self.render(f'/film/{film_id}/')
-        film_title = self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_TITLE_FILM_IN_WILL_WATCH)).text
-
-        self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_LIST_WILL_WATCH_ICON)).click()
-
-        try:
-            self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]')).click()
-        except:
-            self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_LIST_WILL_WATCH_ICON)).click()
-            self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]')).click()
-
-        return film_title
-
-
-class TestPersonalCollectionAddFilm(unittest.TestCase, CollectionHelper):
+class TestPersonalCollectionAddFilm(unittest.TestCase, PageCollection):
     @needed_auth
     def test_adding_film_in_collection(self):
         # prepare
         collection = "Избранное"
         film_id = 39
-        film_title = self.add_or_remove_film_in_collection(film_id, collection)
+        FilmPage.render_film(self=self, film_id=film_id)
+        film_title = FilmPage.add_or_remove_in_collection(self=self, collection=collection)
 
-        # action
-        # to collections
-        self.render('/user/collections/')
-        self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
+        self.open_collection(collection)
+        self.open_film_in_collection(film_title)
 
-        # in collection
-        xpath = f'//div[contains(text(), \'{film_title}\')]//preceding-sibling::div'
-        self.find((By.XPATH, xpath)).click()
-
-        # check redirect film
-        expected_full_url = SelectorsCollections.EXPECTED_REDIRECTED_PAGE_URL_PART + f'{film_id}/'
-        actual_url = dvr.get_instance().current_url
-
-        self.assertEqual(actual_url, expected_full_url, "wrong redirect: film not expected")
+        self.assertEqual(FilmPage.get_title_film(self=self), film_title)
 
         # rollback env
-        self.add_or_remove_film_in_collection(film_id, collection)
+        FilmPage.add_or_remove_in_collection(self=self, collection=collection)
 
-
-class TestPersonalCollectionDeleteFilm(unittest.TestCase, CollectionHelper):
     @needed_auth
     def test_delete_film_from_collection(self):
         # prepare
-        collection = "Избранное"
+        collection = "Буду смотреть"
         film_id = 39
-        film_title = self.add_or_remove_film_in_collection(film_id, collection)
+        FilmPage.render_film(self=self, film_id=film_id)
+        film_title = FilmPage.add_or_remove_in_collection(self=self, collection=collection)
 
-        # action
-        # to collections
-        self.render('/user/collections/')
-        self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
+        self.open_collection(collection)
+        self.delete_film()
 
-        # to film
-        xpath = f"//div[contains(text(), '{film_title}')]"
-        self.find((By.XPATH, xpath)).click()
+        self.assertEqual(CommonPage.get_toster_suc_msg(self=self), 'Фильм удалён из коллекции')
 
-        # delete film
-        self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_DELETE_BUTTON)).click()
-
-        # check result. Exception by timeout if wrong
-        self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_TOSTER))
-
-
-class TestPersonalCollectionHasFilm(unittest.TestCase, CollectionHelper):
     def test_public_collection_has_film(self):
-        # prepare
         helper.login()
         collection = "Мои рекомендации"
         film_id = 39
-        film_title = self.add_or_remove_film_in_collection(film_id, collection)
+        FilmPage.render_film(self=self, film_id=film_id)
+        film_title = FilmPage.add_or_remove_in_collection(self=self, collection=collection)
 
-        # to collections
-        self.render('/user/collections/')
-        self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
+        self.open_collection(collection)
+        collection_id = self.get_id_collection()
+        self.open_public_collection_by_id(collection_id)
+        self.open_film_in_collection(film_title)
 
-        # get collection_id
-        actual_collection_id = dvr.get_instance().current_url
-        f = filter(str.isdigit, actual_collection_id)
-        collection_id = "".join(f)
-
-        self.render('/')
-
-        # action
-        # to collection
-        self.render(f'/user/collection/{collection_id}')
-
-        # in collection
-        xpath = f'//div[contains(text(), \'{film_title}\')]//preceding-sibling::div'
-        self.find((By.XPATH, xpath)).click()
-
-        # check redirect film
-        expected_full_url = SelectorsCollections.EXPECTED_REDIRECTED_PAGE_URL_PART + f'{film_id}/'
-        actual_url = dvr.get_instance().current_url
-
-        self.assertEqual(actual_url, expected_full_url, "wrong redirect: film not expected")
+        self.assertEqual(FilmPage.get_title_film(self=self), film_title)
 
         # rollback env
-        self.add_or_remove_film_in_collection(film_id, collection)
+        FilmPage.add_or_remove_in_collection(self=self, collection=collection)
 
-
-class TestPersonalCollectionShare(unittest.TestCase, CollectionHelper):
+    # @needed_auth
     def test_public_collection_copy_url(self):
-        # prepare
         helper.login()
         collection = "Мои рекомендации"
         film_id = 39
-        self.add_or_remove_film_in_collection(film_id, collection)
+        FilmPage.render_film(self=self, film_id=film_id)
+        film_title = FilmPage.add_or_remove_in_collection(self=self, collection=collection)
 
-        # to collections
-        self.render(f'/user/collections/')
-        self.find((By.XPATH, f'//div[contains(text(), \'{collection}\')]//preceding-sibling::div')).click()
+        self.open_collection(collection)
+        collection_id = self.get_id_collection()
+        self.open_public_collection_by_id(collection_id)
 
-        # get collection_id
-        actual_collection_id = dvr.get_instance().current_url
-        f = filter(str.isdigit, actual_collection_id)
-        collection_id = "".join(f)
+        self.click_share()
 
-        self.render('/')
+        self.assertEqual(CommonPage.get_toster_suc_msg(self=self), 'Скопировано!')
+        self.delete_film()
 
-        # action
-        # to collection
-        self.render(f'/user/collection/{collection_id}')
-
-        # in collection
-        self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_SHARE_ICON)).click()
-
-        self.find((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, SelectorsCollections.CLASS_NAME_TOSTER))
-
-        # rollback
-        self.add_or_remove_film_in_collection(film_id, collection)

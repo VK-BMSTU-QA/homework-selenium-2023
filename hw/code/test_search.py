@@ -16,7 +16,7 @@ class SearchPageParams:
     CLASS_NAME_CATEGORY_TITLE = 'search-list__title'
 
 
-class PagePerson(BasePage):
+class PageSearch(BasePage):
     def start(self):
         self.render(SearchPageParams.URL_PAGE)
 
@@ -33,7 +33,7 @@ class PagePerson(BasePage):
         return self.find((By.CLASS_NAME, SearchPageParams.CLASS_NAME_FIRST_FOUNDED_TITLE)).text
 
 
-class TestSearch(unittest.TestCase, PagePerson):
+class TestSearch(unittest.TestCase, PageSearch):
     ALL_GROUP_SEARCH = 'a'
     EXPECTED_TITLE_SEARCH = 'Результаты поиска'
     EXPECTED_SEARCH_GROUP_FILMS = 'Найденные фильмы:'

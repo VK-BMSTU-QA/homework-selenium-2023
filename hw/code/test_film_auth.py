@@ -3,130 +3,76 @@ import unittest
 
 from utils.base_page import BasePage
 from utils.helper_auth import needed_auth
+from pages.commonPage import CommonPage
+from pages.pageFilm import FilmPage
+from locators.pageFilmLocators import SelectorsFilm
 
 
-class SelectorsFilmAuth:
-    CLASS_NAME_TOSTER = 'js-errorMessage'
-    CLASS_NAME_STAR = 'js-rating__star'
-    RATE_9 = 1
-    RATE_1 = 9
-    CLASS_NAME_CHOOSE_TYPE_REVIEW = 'js-input-review__select-item'
-    POSITIVE_TYPE = 0
-    NEUTRAL_TYPE = 1
-    NEGATIVE_TYPE = 2
-    CLASS_NAME_BUTTON_RATE_DELETE = 'rating__setted-delete-btn'
-    CLASS_NAME_BUTTON_REVIEW = 'rating__button-write-review'
-    CLASS_NAME_BUTTON_REVIEW_CONTAINER = 'input-review__container'
-    CLASS_NAME_BUTTON_CHOOSE_TYPE = 'js-input-review__select-head'
-    CLASS_NAME_INPUT_TITLE = 'input-review__input-title'
-    CLASS_NAME_INPUT_TEXT = 'js-input-review__input-text'
-    CLASS_NAME_BUTTON_SEND_REVIEW = 'modal__input__button-review'
-    CLASS_NAME_REVIEW_TEXT = 'review__text'
-    CLASS_NAME_REVIEW_TITLE = 'review__title'
-
-
-class TestFilmPageAuthorized(unittest.TestCase, BasePage):
+class TestFilmPageAuthorized(unittest.TestCase, FilmPage):
     TEXT = '200IQ text'
     TITLE = 'title'
 
     @needed_auth
     def test_click_set_rate(self):
-        self.render(f'/film/1')
-        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_STAR))[SelectorsFilmAuth.RATE_9].click()
-
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.render_film(film_id=1)
+        self.set_rate(9)
+        self.assertEqual(CommonPage.get_toster_suc_msg(self=self), 'Успех!')
 
     @needed_auth
     def test_click_update_rate(self):
-        self.render(f'/film/1')
-        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_STAR))[SelectorsFilmAuth.RATE_9].click()
+        self.render_film(film_id=1)
+        self.set_rate(9)
+        self.assertEqual(CommonPage.get_toster_suc_msg(self=self), 'Успех!')
 
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
-
-        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_STAR))[SelectorsFilmAuth.RATE_1].click()
-
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.set_rate(1)
+        self.assertEqual(CommonPage.get_toster_suc_msg(self=self), 'Успех!')
 
     @needed_auth
     def test_click_delete_rate(self):
-        self.render(f'/film/1')
-        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_STAR))[SelectorsFilmAuth.RATE_9].click()
+        self.render_film(film_id=1)
+        self.set_rate(9)
+        self.assertEqual(CommonPage.get_toster_suc_msg(self=self), 'Успех!')
 
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.del_rate()
+        self.assertTrue(self.is_del_block_absent())
 
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_RATE_DELETE)).click()
-        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_RATE_DELETE))
-
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.assertEqual(CommonPage.get_toster_suc_msg(self=self), 'Оценка успешно удалена')
 
     @needed_auth
     def test_click_review(self):
-        self.render(f'/film/1')
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW)).click()
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
+        self.render_film(film_id=1)
+        self.open_review()
+        self.assertTrue(self.is_review_open())
 
     @needed_auth
     def test_send_review(self):
-        self.render(f'/film/1')
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW)).click()
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
+        self.render_film(film_id=1)
+        self.open_review()
+        self.assertTrue(self.is_review_open())
 
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_CHOOSE_TYPE)).click()
-        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_CHOOSE_TYPE_REVIEW))[
-            SelectorsFilmAuth.NEGATIVE_TYPE].click()
+        self.write_review(SelectorsFilm.POSITIVE_TYPE, self.TITLE, self.TEXT)
 
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TITLE)).send_keys(self.TITLE)
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TEXT)).send_keys(self.TEXT)
-
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_SEND_REVIEW)).click()
-
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
+        self.assertEqual(CommonPage.get_toster_suc_msg(self=self), 'Спасибо за вашу рецензию')
 
     @needed_auth
     def test_error_review(self):
-        self.render(f'/film/1')
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW)).click()
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
+        self.render_film(film_id=1)
+        self.open_review()
+        self.assertTrue(self.is_review_open())
 
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TITLE)).send_keys(self.TITLE)
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TEXT)).send_keys(self.TEXT)
+        self.write_review(None, self.TITLE, self.TEXT)
+        self.assertEqual(self.get_err_msg_review(), 'Укажите тип рецензии')
 
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_SEND_REVIEW)).click()
-
-        try:
-            self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER), 2)
-        except:
-            self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_SEND_REVIEW))
 
     @needed_auth
     def test_check_correct_review(self):
-        self.render(f'/film/1')
+        self.render_film(film_id=1)
+        self.open_review()
+        self.assertTrue(self.is_review_open())
 
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW)).click()
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_REVIEW_CONTAINER))
+        self.write_review(SelectorsFilm.NEGATIVE_TYPE, self.TITLE, self.TEXT)
+        self.assertEqual(CommonPage.get_toster_suc_msg(self=self), 'Спасибо за вашу рецензию')
 
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_CHOOSE_TYPE)).click()
-        self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_CHOOSE_TYPE_REVIEW))[
-            SelectorsFilmAuth.NEGATIVE_TYPE].click()
+        self.assertEqual(self.get_upper_title_review(), self.TITLE)
+        self.assertEqual(self.get_upper_message_review(), self.TEXT)
 
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TITLE)).send_keys(self.TITLE)
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_INPUT_TEXT)).send_keys(self.TEXT)
-
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_BUTTON_SEND_REVIEW)).click()
-
-        self.find((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
-        self.wait_hide((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_TOSTER))
-
-        title = self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_REVIEW_TITLE))[0].text
-
-        self.assertEqual(title, self.TITLE, "title does not equal")
-
-        text = self.find_group((By.CLASS_NAME, SelectorsFilmAuth.CLASS_NAME_REVIEW_TEXT))[0].text
-
-        self.assertEqual(text, self.self.TEXT, "text does not equal")

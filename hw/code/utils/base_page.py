@@ -4,7 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from utils.driver import dvr
 
 
-class BasePage(object):
+class BasePage():
     DOMAIN = 'https://movie-gate.online'
     driver = dvr.get_instance()
 

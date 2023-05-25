@@ -9,3 +9,11 @@ class SelectorsProfile:
     RATES = 1
     COLLS = 2
     CLASS_NAME_FIELD_NAME = "profile__username"
+
+    XPATH_DATE_REG_BLOCK = "//div[contains(text(), 'Дата регистрации:')]"
+    XPATH_COUNT_RATE_BLOCK = "//div[contains(text(), 'Оценок:')]"
+    XPATH_COUNT_COLLECTIONS_BLOCK = "//div[contains(text(), 'Коллекций:')]"
+    XPATH_COUNT_REVIEWS_BLOCK = "//div[contains(text(), 'Рецензий:')]"
+
+    XPATH_INPUT_NEW_USERNAME = "//input[@placeholder='Введите новое имя пользователя']"
+

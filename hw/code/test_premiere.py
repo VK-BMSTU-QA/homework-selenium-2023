@@ -1,36 +1,6 @@
-from selenium.webdriver.common.by import By
 import unittest
 
-from utils.base_page import BasePage
-
-
-class PremierePageParams:
-    URL_PAGE = f'/premieres/'
-
-    # check premiere page's content
-    CLASS_NAME_PREMIERES_TITLE = 'premiere-page__title'
-    CLASS_NAME_PREMIERES_DAY = 'premiere-day'
-
-    # check film poster redirect
-    CLASS_NAME_PREMIERES_FILM_POSTER = 'premiere-film__poster-container'
-    CLASS_NAME_FILM_PAGE_ABOUT = 'js-film-page__about'
-
-
-class PagePremieres(BasePage):
-    def start(self):
-        self.render(PremierePageParams.URL_PAGE)
-
-    def get_premiere_title(self):
-        return self.find((By.CLASS_NAME, PremierePageParams.CLASS_NAME_PREMIERES_TITLE)).text
-
-    def get_premiere_date(self):
-        return self.find((By.CLASS_NAME, PremierePageParams.CLASS_NAME_PREMIERES_DAY)).text
-
-    def move_to_premiere_film(self):
-        return self.find((By.CLASS_NAME, PremierePageParams.CLASS_NAME_PREMIERES_FILM_POSTER)).click()
-
-    def get_premiere_film_about(self):
-        return self.find((By.CLASS_NAME, PremierePageParams.CLASS_NAME_FILM_PAGE_ABOUT)).text
+from pages.pagePremiere import PagePremieres
 
 
 class TestPremieresPage(unittest.TestCase, PagePremieres):
@@ -48,7 +18,7 @@ On the Line
 Трейлер"""
 
     def test_premieres_exist(self):
-        self.start()
+        self.render_page()
 
         actual_title = self.get_premiere_title()
         self.assertEqual(actual_title, self.EXPECTED_PREMIERES_TITLE, "premieres not available")
@@ -57,7 +27,7 @@ On the Line
         self.assertIsNotNone(actual_date_premiere, "premiere date not available")
 
     def test_premiers_film_poster_redirect(self):
-        self.start()
+        self.render_page()
 
         self.move_to_premiere_film()
 

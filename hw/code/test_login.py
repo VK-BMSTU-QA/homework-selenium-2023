@@ -20,14 +20,14 @@ class TestLogin(unittest.TestCase, BasePage):
     PASSWD = 'Qwe123@a.a'
 
     URL_PAGE_LOGIN = '/login/'
-    URL_PAGE_SIGNUP = '/signup/'
+    URL_PAGE_SIGNUP_CUR = '/signup/'
 
     def test_redirect_signup(self):
         self.render(self.URL_PAGE_LOGIN)
 
         btn_login = self.find((By.XPATH, SelectorsLogin.X_BUTTON_OPEN_REG_WINDOW), 10)
         btn_login.click()
-        pattern = f'{BasePage.DOMAIN}{self.URL_PAGE_SIGNUP}'
+        pattern = f'{BasePage.DOMAIN}{self.URL_PAGE_SIGNUP_CUR}'
         current__url = dvr.get_instance().current_url
 
         self.assertEqual(pattern, current__url, "wrong redirect")

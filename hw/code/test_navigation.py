@@ -33,7 +33,6 @@ class SelectorsNavigation:
 
 
 class TestNavigationPanelUnauthorized(unittest.TestCase, BasePage):
-
     def test_click_logo(self):
         self.render(f'/collection/tag-popular/')
 

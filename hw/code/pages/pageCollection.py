@@ -1,10 +1,7 @@
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-import unittest
 from utils.driver import dvr
 
 from utils.base_page import BasePage
-from locators.pageFilmLocators import SelectorsFilm
 from locators.pageCollectionsLocators import SelectorsCollections
 
 

@@ -1,7 +1,5 @@
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-import unittest
-import time
+
 from utils.base_page import BasePage
 from locators.pageFilmLocators import SelectorsFilm
 

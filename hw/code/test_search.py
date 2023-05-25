@@ -1,36 +1,8 @@
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
 import unittest
 
-from utils.base_page import BasePage
 
-
-class SearchPageParams:
-    URL_PAGE = "/"
-    CLASS_NAME_FIRST_FOUNDED_FILM = 'premiere-film__blackout'
-    CLASS_NAME_FIRST_FOUNDED_TITLE = 'premiere-film__information-title'
-    CLASS_NAME_TITLE_ON_FILM_PAGE = 'about-film__title'
-    CLASS_NAME_INPUT_SEARCH = 'js-header__form__input'
-    CLASS_NAME_BUTTON_RETURN_MAIN = 'search-page__no-content-btn'
-    CLASS_NAME_TITLE_SEARCH = 'search-page__title'
-    CLASS_NAME_CATEGORY_TITLE = 'search-list__title'
-
-
-class PageSearch(BasePage):
-    def start(self):
-        self.render(SearchPageParams.URL_PAGE)
-
-    def input_search(self, value):
-        self.find((By.CLASS_NAME, SearchPageParams.CLASS_NAME_INPUT_SEARCH)).send_keys(value)
-
-    def get_main_title(self):
-        return self.find((By.CLASS_NAME, SearchPageParams.CLASS_NAME_TITLE_SEARCH)).text
-
-    def get_search_res_type(self, target):
-        return self.find_group((By.CLASS_NAME, SearchPageParams.CLASS_NAME_CATEGORY_TITLE))[target].text
-
-    def get_first_found_film_title(self):
-        return self.find((By.CLASS_NAME, SearchPageParams.CLASS_NAME_FIRST_FOUNDED_TITLE)).text
+from pages.pageSearch import PageSearch
 
 
 class TestSearch(unittest.TestCase, PageSearch):
@@ -44,7 +16,7 @@ class TestSearch(unittest.TestCase, PageSearch):
     EXPECTED_FOUND_COUNT_FILMS = 0
 
     def test_check_exists(self):
-        self.start()
+        self.render_page()
 
         self.input_search(Keys.ENTER)
 
@@ -52,7 +24,7 @@ class TestSearch(unittest.TestCase, PageSearch):
         self.assertEqual(title, self.EXPECTED_TITLE_SEARCH, "stings does not equal")
 
     def test_check_group_category(self):
-        self.start()
+        self.render_page()
 
         self.input_search([self.ALL_GROUP_SEARCH, Keys.ENTER])
 
@@ -66,7 +38,7 @@ class TestSearch(unittest.TestCase, PageSearch):
         self.assertEqual(persons_field, self.EXPECTED_SEARCH_GROUP_PERSONS, "expected persons found")
 
     def test_correct_results(self):
-        self.start()
+        self.render_page()
 
         self.input_search([self.ALL_GROUP_SEARCH, Keys.ENTER])
 

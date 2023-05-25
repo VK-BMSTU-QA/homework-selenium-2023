@@ -1,5 +1,4 @@
 from selenium.webdriver.common.by import By
-import unittest
 
 from utils.base_page import BasePage
 from locators.commonPage import CommonPageSelectors

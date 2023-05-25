@@ -18,4 +18,4 @@ echo $LOGIN $PASSWORD $NICKNAME
 # pytest hw/code/test_premiere.py
 
 pytest hw/code/test_login.py
-# pytest hw/code/test_signup.py
+pytest hw/code/test_signup.py

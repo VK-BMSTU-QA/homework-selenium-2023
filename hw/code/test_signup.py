@@ -2,12 +2,12 @@ import unittest
 
 from pages.pageSignup import SignupPage
 from locators.pageSignupLocators import SelectorsSignup
-
+from utils.helper_auth import helper
 
 class TestSignup(unittest.TestCase, SignupPage):
-    LOGIN = 'Qwe123@a.a'
-    PASSWD = 'Qwe123@a.a'
-    NICKNAME = 'Admin'
+    LOGIN = helper.LOGIN
+    PASSWD = helper.PASSWD
+    NICKNAME = helper.NICKNAME
 
     EXPECTED_ERROR = "Пользователь с таким email уже зарегистрирован", "wrong register msg"
     EXPECTED_LOGIN = "login"

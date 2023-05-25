@@ -20,7 +20,7 @@ class TestLogin(unittest.TestCase, PageLogin):
         self.render_page()
 
         actual_position = self.move_to_signup()
-
+ 
         self.assertIn(self.EXPECTED_LOGIN, actual_position, "wrong redirect")
 
     def test_invalid_email(self):

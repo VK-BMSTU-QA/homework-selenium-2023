@@ -46,6 +46,10 @@ class TestProfile(unittest.TestCase, ProfilePage):
         actual_new_name_rollback = self.get_name()
         self.assertEqual(actual_new_name_rollback, cur_name, "can't return name")
 
+        # rollback
+        self.render_page()
+        self.update_name("Admin")
+
     @needed_auth
     def test_check_main_fields(self):
         self.render_page()

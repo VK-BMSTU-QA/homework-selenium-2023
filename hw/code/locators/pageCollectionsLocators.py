@@ -1,4 +1,3 @@
-
 class SelectorsCollections:
     CLASS_NAME_TITLE_FILM_IN_WILL_WATCH = 'about-film__title'
     CLASS_NAME_LIST_WILL_WATCH_ICON = 'about-film__button_plus'

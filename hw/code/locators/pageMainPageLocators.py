@@ -1,4 +1,4 @@
-class MainPageParams:
+class SelectorsMainPage:
     URL_PAGE_MAIN = "/"
     # check preview film exist
     CLASS_NAME_PREVIEW = 'js-main-page-preview-film'

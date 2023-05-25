@@ -1,4 +1,4 @@
-class SelectorsFilm():
+class SelectorsFilm:
     CLASS_NAME_BUTTON_PLUS = 'about-film__button_plus'
     CLASS_NAME_BUTTON_BOOKMARK = 'about-film__button_bookmark'
     CLASS_NAME_BUTTON_TRAILER = 'js-btn-watch-trailer'

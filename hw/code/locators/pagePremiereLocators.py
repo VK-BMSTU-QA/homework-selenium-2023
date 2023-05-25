@@ -1,4 +1,4 @@
-class PremierePageParams:
+class SelectorsPremiere:
     URL_PAGE = f'/premieres/'
 
     # check premiere page's content

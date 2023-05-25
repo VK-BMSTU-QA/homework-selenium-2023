@@ -1,7 +1,7 @@
 import unittest
 
 from pages.pageSignup import PageSignup
-from locators.pageSignupLocators import SignupPageParams
+from locators.pageSignupLocators import SelectorsSignup
 
 
 class TestSignup(unittest.TestCase, PageSignup):
@@ -26,7 +26,7 @@ class TestSignup(unittest.TestCase, PageSignup):
 
         input_nickname, _, _, _ = self.action_registration(short_nick, self.LOGIN, self.PASSWD, self.PASSWD)
 
-        is_wrong = SignupPageParams.CLASS_WRONG_INPUT in input_nickname.get_attribute("class").split()
+        is_wrong = SelectorsSignup.CLASS_WRONG_INPUT in input_nickname.get_attribute("class").split()
         self.assertTrue(is_wrong, "wrong check")
 
     def test_invalid_email(self):
@@ -36,7 +36,7 @@ class TestSignup(unittest.TestCase, PageSignup):
 
         _, input_email, _, _ = self.action_registration(self.NICKNAME, wrong_email, self.PASSWD, self.PASSWD)
 
-        is_wrong = SignupPageParams.CLASS_WRONG_INPUT in input_email.get_attribute("class").split()
+        is_wrong = SelectorsSignup.CLASS_WRONG_INPUT in input_email.get_attribute("class").split()
         self.assertTrue(is_wrong, "wrong check")
 
     def test_invalid_password(self):
@@ -46,8 +46,8 @@ class TestSignup(unittest.TestCase, PageSignup):
 
         _, _, input_password, _ = self.action_registration(self.NICKNAME, self.LOGIN, wrong_password, wrong_password)
 
-        is_wrong_input_password = SignupPageParams.CLASS_WRONG_INPUT in input_password.get_attribute("class").split()
-        is_wrong_input_repeat_password = SignupPageParams.CLASS_WRONG_INPUT in input_password.get_attribute("class").split()
+        is_wrong_input_password = SelectorsSignup.CLASS_WRONG_INPUT in input_password.get_attribute("class").split()
+        is_wrong_input_repeat_password = SelectorsSignup.CLASS_WRONG_INPUT in input_password.get_attribute("class").split()
 
         self.assertTrue(is_wrong_input_password or is_wrong_input_repeat_password, "wrong check")
 

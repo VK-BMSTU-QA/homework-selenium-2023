@@ -1,4 +1,4 @@
-class SignupPageParams:
+class SelectorsSignup:
     URL_PAGE_LOGIN = 'login'
     URL_PAGE_SIGNUP = '/signup/'
 

@@ -6,77 +6,41 @@
 import unittest
 
 from pages.pageLogin import PageLogin
-from locators.pageLoginLocators import LoginPageParams
-
-# class SelectorsLogin:
-#     CLASS_BUTTON_OPEN_REG_WINDOW = 'modal__login__switch__btn'
-#     X_BUTTON_OPEN_REG_WINDOW = "/html/body/div/div[1]/div/div/div/div[2]/div/a"
-#     X_INPUT_EMAIL = "//input[@placeholder='Укажите адрес электронной почты']"
-#     X_INPUT_PASSWORD = "//input[@placeholder='Введите пароль']"
-#     X_BUTTON_LOGIN = "//button[contains(text(), 'Войти')]"
-#     CLASS_WRONG_INPUT = 'modal__input_red_border'
-#     CLASS_MODAL = 'modal__background'
+from locators.pageLoginLocators import SelectorsLogin
 
 
-class TestLogin(unittest.TestCase, BasePage):
+class TestLogin(unittest.TestCase, PageLogin):
     LOGIN = 'Qwe123@a.a'
     PASSWD = 'Qwe123@a.a'
 
-    # URL_PAGE_LOGIN = '/login/'
-    # URL_PAGE_SIGNUP_CUR = '/signup/'
+    EXPECTED_LOGIN = "signup"
+    EXPECTED_MODAL_STATUS = 'modal_does_not_exist'
 
     def test_redirect_signup(self):
         self.render_page()
 
-        actual_position = self.move_to_login()
+        actual_position = self.move_to_signup()
 
         self.assertIn(self.EXPECTED_LOGIN, actual_position, "wrong redirect")
-        # self.render(self.URL_PAGE_LOGIN)
-
-        # btn_login = self.find((By.XPATH, SelectorsLogin.X_BUTTON_OPEN_REG_WINDOW), 10)
-        # btn_login.click()
-        # pattern = f'{BasePage.DOMAIN}{self.URL_PAGE_SIGNUP_CUR}'
-        # current__url = dvr.get_instance().current_url
-
-        # self.assertEqual(pattern, current__url, "wrong redirect")
 
     def test_invalid_email(self):
-        self.render(self.URL_PAGE_LOGIN)
+        self.render_page()
+
         wrong_email = '123456'
 
-        input_email = self.find((By.XPATH, SelectorsLogin.X_INPUT_EMAIL))
-        input_email.send_keys(wrong_email)
-        input_password = self.find((By.XPATH, SelectorsLogin.X_INPUT_PASSWORD)).send_keys(self.PASSWD)
-
-        self.find((By.XPATH, SelectorsLogin.X_BUTTON_LOGIN)).click()
+        input_email, _ = self.action_login(wrong_email, self.PASSWD)
 
         is_wrong = SelectorsLogin.CLASS_WRONG_INPUT in input_email.get_attribute("class").split()
-
         self.assertTrue(is_wrong, "wrong check")
 
     def test_invalid_password(self):
-        self.render(self.URL_PAGE_LOGIN)
-        wrong_password = '123456'
+        self.render_page()
 
-        input_email = self.find((By.XPATH, SelectorsLogin.X_INPUT_EMAIL)).send_keys(self.LOGIN)
-        input_password = self.find((By.XPATH, SelectorsLogin.X_INPUT_PASSWORD))
-        input_password.send_keys(wrong_password)
+        wrong_password = 'abcds'
 
-        self.find((By.XPATH, SelectorsLogin.X_BUTTON_LOGIN)).click()
+        _, input_password = self.action_login(self.LOGIN, wrong_password)
 
-        is_wrong = SelectorsLogin.CLASS_WRONG_INPUT in input_password.get_attribute("class").split()
+        is_wrong_input_password = SelectorsLogin.CLASS_WRONG_INPUT in input_password.get_attribute("class").split()
+        is_wrong_input_repeat_password = SelectorsLogin.CLASS_WRONG_INPUT in input_password.get_attribute("class").split()
 
-        self.assertTrue(is_wrong, "wrong check")
-
-    def test_correct_login(self):
-        self.render(self.URL_PAGE_LOGIN)
-
-        self.find((By.XPATH, SelectorsLogin.X_INPUT_EMAIL)).send_keys(self.LOGIN)
-        self.find((By.XPATH, SelectorsLogin.X_INPUT_PASSWORD)).send_keys(self.PASSWD)
-
-        self.find((By.XPATH, SelectorsLogin.X_BUTTON_LOGIN)).click()
-        try:
-            self.find((By.CLASS, SelectorsLogin.CLASS_MODAL))
-            assert 'unreachable code'
-        except:
-            None
+        self.assertTrue(is_wrong_input_password or is_wrong_input_repeat_password, "wrong check")

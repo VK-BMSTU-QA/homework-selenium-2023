@@ -1,37 +1,29 @@
 from selenium.webdriver.common.by import By
 
 from utils.base_page import BasePage
-from locators.pageLoginLocators import LoginPageParams
+from locators.pageLoginLocators import SelectorsLogin
 from utils.driver import dvr
 
 
 class PageLogin(BasePage): 
     def render_page(self):
-        self.render(LoginPageParams.URL_PAGE_SIGNUP)
+        self.render(SelectorsLogin.URL_PAGE_LOGIN)
 
-    def action_registration(self, nickname, login, password, repeat_password):
-        input_nickname = self.find_group((By.CLASS_NAME, SignupPageParams.CLASS_NAME_MODAL_INPUT))[SignupPageParams.NICKNAME_INPUT]
-        input_nickname.send_keys(nickname)
-
-        input_email = self.find_group((By.CLASS_NAME, SignupPageParams.CLASS_NAME_MODAL_INPUT))[SignupPageParams.EMAIL_INPUT]
+    def action_login(self, login, password):
+        input_email = self.find_group((By.CLASS_NAME, SelectorsLogin.CLASS_NAME_MODAL_INPUT))[SelectorsLogin.EMAIL_INPUT]
         input_email.send_keys(login)
 
-        input_password = self.find_group((By.CLASS_NAME, SignupPageParams.CLASS_NAME_MODAL_INPUT))[SignupPageParams.PASSWORD_INPUT]
+        input_password = self.find_group((By.CLASS_NAME, SelectorsLogin.CLASS_NAME_MODAL_INPUT))[SelectorsLogin.PASSWORD_INPUT]
         input_password.send_keys(password)
 
-        input_repeat_password = self.find_group((By.CLASS_NAME, SignupPageParams.CLASS_NAME_MODAL_INPUT))[SignupPageParams.REPEAT_PASSWORD_INPUT]
-        input_repeat_password.send_keys(repeat_password)
+        self.find((By.CLASS_NAME, SelectorsLogin.CLASS_NAME_BUTTON_LOGIN)).click()
 
-        self.find((By.CLASS_NAME, SignupPageParams.CLASS_NAME_BUTTON_REG)).click()
+        return input_email, input_password
 
-        return input_nickname, input_email, input_password, input_repeat_password
-
-    def get_error_massage(self):
-        return self.find((By.CLASS_NAME, SignupPageParams.CLASS_NAME_ALREADY_REGISTER)).text
-
-    def move_to_login(self):
-        btn_login = self.find((By.CLASS_NAME, SignupPageParams.CLASS_BUTTON_OPEN_LOGIN_WINDOW))
-        btn_login.click()
+    def move_to_signup(self):
+        btn_reg = self.find((By.XPATH, SelectorsLogin.X_BUTTON_OPEN_REG_WINDOW))
+        btn_reg.click()
         current__url = dvr.get_instance().current_url
 
         return current__url
+    

@@ -18,8 +18,8 @@ class TestPersonalCollectionAddFilm(unittest.TestCase, PageCollection):
     MSG_SUC = 'Фильм удалён из коллекции'
     MSG_SUC_COPY = 'Скопировано!'
 
-    @needed_auth
     def test_adding_film_in_collection(self):
+        helper.login()
         collection = self.COLL_FAV
         film_id = 39
         FilmPage.render_film(self=self, film_id=film_id)
@@ -32,8 +32,8 @@ class TestPersonalCollectionAddFilm(unittest.TestCase, PageCollection):
 
         FilmPage.add_or_remove_in_collection(self=self, collection=collection)
 
-    @needed_auth
     def test_delete_film_from_collection(self):
+        helper.login()
         collection = self.COLL_WILL
         film_id = 39
         FilmPage.render_film(self=self, film_id=film_id)

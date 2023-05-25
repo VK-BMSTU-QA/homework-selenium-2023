@@ -26,20 +26,20 @@ class ProfilePage(BasePage):
         return is_closed
 
     def get_profile_date_registration(self):
-        return self.find((By.XPATH, "//div[contains(text(), 'Дата регистрации:')]"))
+        return self.find((By.XPATH, SelectorsProfile.XPATH_DATE_REG_BLOCK))
 
     def get_profile_count_rates(self):
-        return self.find((By.XPATH, "//div[contains(text(), 'Оценок:')]"))
+        return self.find((By.XPATH, SelectorsProfile.XPATH_COUNT_RATE_BLOCK))
 
     def get_profile_count_coll(self):
-        return self.find((By.XPATH, "//div[contains(text(), 'Коллекций:')]"))
+        return self.find((By.XPATH, SelectorsProfile.XPATH_COUNT_COLLECTIONS_BLOCK))
 
     def get_profile_count_reviews(self):
-        return self.find((By.XPATH, "//div[contains(text(), 'Рецензий:')]"))
+        return self.find((By.XPATH, SelectorsProfile.XPATH_COUNT_REVIEWS_BLOCK))
 
     def update_name(self, name):
         self.find((By.CLASS_NAME, SelectorsProfile.CLASS_CHANGE_SVG)).click()
-        field_input_new_name = self.find((By.XPATH, "//input[@placeholder='Введите новое имя пользователя']"))
+        field_input_new_name = self.find((By.XPATH, SelectorsProfile.XPATH_INPUT_NEW_USERNAME))
         field_input_new_name.send_keys(name)
         self.find((By.CLASS_NAME, SelectorsProfile.CLASS_NAME_SAVE_NEW_NAME)).click()
 

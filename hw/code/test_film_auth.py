@@ -1,6 +1,6 @@
 import unittest
 
-from utils.helper_auth import needed_auth
+from utils.helper_auth import needed_auth, helper
 from pages.commonPage import CommonPage
 from pages.pageFilm import FilmPage
 from locators.pageFilmLocators import SelectorsFilm
@@ -14,14 +14,17 @@ class TestFilmPageAuthorized(unittest.TestCase, FilmPage):
     MSG_SUC_REVIEW = 'Спасибо за вашу рецензию'
     MSG_ERR_NO_TYPE = 'Укажите тип рецензии'
 
-    @needed_auth
+
     def test_click_set_rate(self):
+        helper.login()
+
         self.render_film(film_id=1)
         self.set_rate(9)
         self.assertEqual(CommonPage.get_toster_suc_msg(self=self), self.MSG_SUCCESS)
 
-    @needed_auth
     def test_click_update_rate(self):
+        helper.login()
+
         self.render_film(film_id=1)
         self.set_rate(9)
         self.assertEqual(CommonPage.get_toster_suc_msg(self=self), self.MSG_SUCCESS)
@@ -29,8 +32,10 @@ class TestFilmPageAuthorized(unittest.TestCase, FilmPage):
         self.set_rate(1)
         self.assertEqual(CommonPage.get_toster_suc_msg(self=self), self.MSG_SUCCESS)
 
-    @needed_auth
+
     def test_click_delete_rate(self):
+        helper.login()
+
         self.render_film(film_id=1)
         self.set_rate(9)
         self.assertEqual(CommonPage.get_toster_suc_msg(self=self), self.MSG_SUCCESS)
@@ -40,14 +45,17 @@ class TestFilmPageAuthorized(unittest.TestCase, FilmPage):
 
         self.assertEqual(CommonPage.get_toster_suc_msg(self=self), self.MSG_SUC_DEL_RATE)
 
-    @needed_auth
+
     def test_click_review(self):
+        helper.login()
+
         self.render_film(film_id=1)
         self.open_review()
         self.assertTrue(self.is_review_open())
 
-    @needed_auth
     def test_send_review(self):
+        helper.login()
+
         self.render_film(film_id=1)
         self.open_review()
         self.assertTrue(self.is_review_open())
@@ -56,8 +64,9 @@ class TestFilmPageAuthorized(unittest.TestCase, FilmPage):
 
         self.assertEqual(CommonPage.get_toster_suc_msg(self=self), self.MSG_SUC_REVIEW)
 
-    @needed_auth
     def test_error_review(self):
+        helper.login()
+
         self.render_film(film_id=1)
         self.open_review()
         self.assertTrue(self.is_review_open())
@@ -66,8 +75,9 @@ class TestFilmPageAuthorized(unittest.TestCase, FilmPage):
         self.assertEqual(self.get_err_msg_review(), self.MSG_ERR_NO_TYPE)
 
 
-    @needed_auth
     def test_check_correct_review(self):
+        helper.login()
+
         self.render_film(film_id=1)
         self.open_review()
         self.assertTrue(self.is_review_open())

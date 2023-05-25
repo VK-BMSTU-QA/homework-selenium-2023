@@ -3,11 +3,12 @@ import unittest
 
 from pages.pageNavigation import pageNavigation
 from locators.pageNavigationLocators import SelectorsNavigation
-from utils.helper_auth import needed_auth
+from utils.helper_auth import needed_auth, helper
 
 class TestNavigationPanelAuthorized(unittest.TestCase, pageNavigation):
-    @needed_auth
     def test_click_collections_button_authorized(self):
+        helper.login()
+
         self.render_main()
 
         title = self.click_collections_button_authorized()

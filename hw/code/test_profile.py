@@ -3,7 +3,7 @@ import unittest
 import random
 import string
 
-from utils.helper_auth import needed_auth
+from utils.helper_auth import needed_auth, helper
 from pages.pageProfile import ProfilePage
 
 
@@ -14,8 +14,9 @@ class TestProfile(unittest.TestCase, ProfilePage):
         rand_string = ''.join(random.sample(letters_and_digits, length))
         return rand_string
 
-    @needed_auth
     def test_open_change_input(self):
+        helper.login()
+
         self.render_page()
 
         self.start_change_image_flow()
@@ -26,8 +27,10 @@ class TestProfile(unittest.TestCase, ProfilePage):
         actual_close = self.get_close_opportunity_change_image(form_change)
         self.assertTrue(actual_close, "can't close image change opportunity")
 
-    @needed_auth
+
     def test_change_name(self):
+        helper.login()
+
         self.render_page()
 
         cur_name = self.get_name()
@@ -49,8 +52,9 @@ class TestProfile(unittest.TestCase, ProfilePage):
         self.render_page()
         self.update_name("Admin")
 
-    @needed_auth
     def test_check_main_fields(self):
+        helper.login()
+
         self.render_page()
 
         date_of_reg = self.get_profile_date_registration()

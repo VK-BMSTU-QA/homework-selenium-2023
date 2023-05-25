@@ -1,19 +1,19 @@
 from selenium.webdriver.common.by import By
 import unittest
 
-from utils.base_page import BasePage
+from pages.pageMainPage import PageMainPage
 
 
-class TestMainPage(unittest.TestCase, BasePage):
+class TestMainPage(unittest.TestCase, PageMainPage):
     def test_preview_film_existing(self):
-        self.render('/')
+        self.render_page()
 
         self.assertIsNotNone(self.find((By.CLASS_NAME, MainPageParams.CLASS_NAME_PREVIEW)))
 
         self.assertIsNotNone(self.find((By.CLASS_NAME, MainPageParams.CLASS_NAME_PREVIEW_FILM_TITLE)))
 
     def test_popular_section(self):
-        self.render('/')
+        self.render_page()
 
         self.assertIsNotNone(self.find((By.XPATH, MainPageParams.X_PATH_POPULAR_SECTION_SLIDER_FILM)))
 
@@ -24,7 +24,7 @@ class TestMainPage(unittest.TestCase, BasePage):
         self.assertEqual(title, MainPageParams.PAGE_POPULAR_COLLECTION_TITLE, "title does not equal")
 
     def test_in_cinema_section(self):
-        self.render('/')
+        self.render_page()
 
         self.assertIsNotNone(self.find((By.XPATH, MainPageParams.X_PATH_IN_CINEMA_SECTION_SLIDER_FILM)))
 
@@ -35,7 +35,7 @@ class TestMainPage(unittest.TestCase, BasePage):
         self.assertEqual(title, MainPageParams.PAGE_IN_CINEMA_COLLECTION_TITLE, "title does not equal")
 
     def test_genres_section(self):
-        self.render('/')
+        self.render_page()
 
         self.assertIsNotNone(self.find((By.XPATH, MainPageParams.X_PATH_GENRES_SECTION_SLIDER_GENRE)))
 

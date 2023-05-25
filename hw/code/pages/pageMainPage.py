@@ -5,6 +5,6 @@ from locators.pageMainPageLocators import MainPageLocators
 from utils.driver import dvr
 
 
-class PageMainPAge(BasePage):
+class PageMainPage(BasePage):
     def render_page(self):
         self.render(MainPageLocators.URL_PAGE_MAIN)

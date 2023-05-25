@@ -1,4 +1,4 @@
-class ProfilePageParams:
+class SelectorsProfile:
     URL_PAGE_PROFILE = '/profile/'
     CLASS_CHANGE_SVG = 'profile__change__svg'
     CLASS_FORM_CHANGE = 'profile__change'

@@ -1,4 +1,4 @@
-class PersonPageParams:
+class SelectorsPerson:
     URL_PAGE = f'/person/31/'
 
     # check redirect

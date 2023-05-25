@@ -1,4 +1,4 @@
-class SearchPageParams:
+class SelectorsSearch:
     URL_PAGE_SEARCH = "/"
     CLASS_NAME_FIRST_FOUNDED_FILM = 'premiere-film__blackout'
     CLASS_NAME_FIRST_FOUNDED_TITLE = 'premiere-film__information-title'
